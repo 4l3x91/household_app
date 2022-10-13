@@ -4,7 +4,7 @@ import RootStackNavigator from "./RootStackNavigator";
 
 export default function Navigation() {
   return (
-    <NavigationContainer >
+    <NavigationContainer>
       <RootStackNavigator />
     </NavigationContainer>
   );
