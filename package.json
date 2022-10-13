@@ -8,7 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "format": "prettier ./ --check",
-    "prettier": "npm run format -- --write"
+    "prettier": "npm run format -- --write",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.4.0",
