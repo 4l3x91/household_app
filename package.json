@@ -6,11 +6,15 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "format": "prettier ./ --check",
+    "prettier": "npm run format -- --write",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/native-stack": "^6.9.1",
+    "@reduxjs/toolkit": "^1.8.6",
     "expo": "~46.0.13",
     "expo-status-bar": "~1.4.0",
     "react": "18.0.0",
@@ -20,12 +24,20 @@
     "react-native-safe-area-context": "4.3.1",
     "react-native-screens": "~3.15.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-web": "~0.18.7"
+    "react-native-web": "~0.18.7",
+    "react-redux": "^8.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@types/react": "~18.0.14",
     "@types/react-native": "~0.69.1",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-native": "^4.0.0",
+    "prettier": "2.7.1",
     "typescript": "~4.3.5"
   },
   "private": true
