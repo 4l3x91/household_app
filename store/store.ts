@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { profileReducer } from "./profile/profileSlice";
 
 const store = configureStore({
   reducer: {
+    profile: profileReducer,
     // household: householdReducer
   },
 });
