@@ -1,10 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 import React from "react";
+import { ColorSchemeName } from "react-native";
+import { getTheme } from "../theme";
 import RootStackNavigator from "./RootStackNavigator";
 
-export default function Navigation() {
+export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={getTheme(colorScheme)}>
+      <StatusBar />
       <RootStackNavigator />
     </NavigationContainer>
   );
