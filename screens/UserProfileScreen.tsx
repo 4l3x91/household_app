@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Text } from "react-native-paper";
 import { UserStackParams } from "../navigation/UserStackNavigator";
 
 type Props = NativeStackScreenProps<UserStackParams>;
