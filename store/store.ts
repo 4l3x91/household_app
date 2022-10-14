@@ -5,7 +5,6 @@ import { profileReducer } from "./profile/profileSlice";
 const store = configureStore({
   reducer: {
     profile: profileReducer,
-    // household: householdReducer
   },
 });
 
