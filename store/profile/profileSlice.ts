@@ -11,7 +11,6 @@ const setProfile = createAsyncThunk<Profile, Profile, { rejectValue: string }>("
   }
 });
 
-const test = createAsyncThunk;
 
 const profileSlice = createSlice({
   name: "profile",
