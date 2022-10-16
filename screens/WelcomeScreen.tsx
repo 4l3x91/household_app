@@ -10,9 +10,16 @@ type Props = NativeStackScreenProps<RootStackParams>;
 const WelcomeScreen = ({ navigation }: Props) => {
   const theme = useTheme();
   console.log(getTheme(theme).dark);
+
+  //TEST FUNCTION TO ADD DOCUMENT TO A COLLECTION WITH FIREBASE
+  // async function postData() {
+  //   await addDoc(collection(db, "testCollection"), { test: "test" });
+  // }
+
   return (
     <View style={styles.container}>
       <Surface elevation={0} style={styles.surface}>
+        {/* <Button onPress={() => postData()}>Test Firebase</Button> BUTTON TO TEST postDataFUNCTION! */}
         <Button
           contentStyle={styles.button}
           labelStyle={styles.buttonText}
