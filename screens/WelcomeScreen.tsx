@@ -1,9 +1,7 @@
-import { addDoc, collection } from "@firebase/firestore";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
-import { db } from "../config/firebase";
 import { RootStackParams } from "../navigation/RootStackNavigator";
 import { getTheme } from "../theme";
 
@@ -13,14 +11,15 @@ const WelcomeScreen = ({ navigation }: Props) => {
   const theme = useTheme();
   console.log(getTheme(theme).dark);
 
-  async function postData() {
-    await addDoc(collection(db, "testCollection"), { test: "test" });
-  }
+  //TEST FUNCTION TO ADD DOCUMENT TO A COLLECTION WITH FIREBASE
+  // async function postData() {
+  //   await addDoc(collection(db, "testCollection"), { test: "test" });
+  // }
 
   return (
     <View style={styles.container}>
       <Surface elevation={0} style={styles.surface}>
-        <Button onPress={postData}>Test Firebase</Button>
+        {/* <Button onPress={() => postData()}>Test Firebase</Button> BUTTON TO TEST postDataFUNCTION! */}
         <Button
           contentStyle={styles.button}
           labelStyle={styles.buttonText}
