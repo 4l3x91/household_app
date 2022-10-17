@@ -2,18 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Chore } from "./choreModel";
 import { initialState } from "./choreState";
 
-const setChore = createAsyncThunk<Chore, Chore, { rejectValue: string }>("chore/setChore", async (chore, thunkAPI) => {
+const setChore = createAsyncThunk<Chore[], Chore[], { rejectValue: string }>("chore/setChore", async (chores, thunkAPI) => {
   // Api call to set chore
   try {
-    return chore;
+    return chores;
   } catch (error) {
     return thunkAPI.rejectWithValue("Error setting chore");
   }
 });
 
-
 const choreSlice = createSlice({
-  name: "chore",
+  name: "chores",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -22,7 +21,7 @@ const choreSlice = createSlice({
     });
     builder.addCase(setChore.fulfilled, (state, action) => {
       state.pending = false;
-      state.chore = action.payload;
+      state.chores = action.payload;
     });
     builder.addCase(setChore.rejected, (state, action) => {
       state.pending = false;

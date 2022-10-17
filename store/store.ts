@@ -10,7 +10,7 @@ const store = configureStore({
   reducer: {
     user: userReducer,
     profile: profileReducer,
-    chore: choreReducer,
+    chores: choreReducer,
     household: householdReducer,
     completedChores: completedChoresReducer,
   },
