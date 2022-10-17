@@ -36,7 +36,7 @@ export const initialState: ChoreState = {
       id: "321acab",
       householdId: "abc123",
       name: "Rasta Dixon",
-      description: "Chore 2 description",
+      description: "Dixon behöver rastas, gå gärna till parken",
       interval: 5,
       energy: 10,
     },
