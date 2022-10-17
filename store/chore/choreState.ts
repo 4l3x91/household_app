@@ -17,14 +17,6 @@ export const initialState: ChoreState = {
       energy: 4,
     },
     {
-      id: "cbaa321",
-      householdId: "abc123",
-      name: "Diskmaskinen",
-      description: "Chore 1 description",
-      interval: 1,
-      energy: 2,
-    },
-    {
       id: "1a2c3ba",
       householdId: "abc123",
       name: "Tvätta kläder",
