@@ -1,39 +1,39 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { completedChoreModel } from "./completedChoreModel";
-import { CompletedChoreState, initialState } from "./completedChoreState";
+import { CompletedChoresState, initialState } from "./completedChoreState";
 
-const setCompletedChoreThunk = createAsyncThunk<completedChoreModel, completedChoreModel, { rejectValue: string }>(
-  "completedChore/setCompletedChore",
-  async (completedChore, thunkApi) => {
+export const setCompletedChoresThunk = createAsyncThunk<completedChoreModel[], completedChoreModel[], { rejectValue: string }>(
+  "completedChores/setCompletedChores",
+  async (completedChores, thunkApi) => {
     try {
-      return completedChore;
+      return completedChores;
     } catch (error) {
-      return thunkApi.rejectWithValue("error with setting completedChore");
+      return thunkApi.rejectWithValue("error with setting completedChores");
     }
   }
 );
 
-const completedChoreSlice = createSlice({
-  name: "completedChore",
+const completedChoresSlice = createSlice({
+  name: "completedChores",
   initialState,
   reducers: {
-    setCompletedChore: (state, action: PayloadAction<CompletedChoreState>) => (state = action.payload),
+    setCompletedChores: (state, action: PayloadAction<CompletedChoresState>) => (state = action.payload),
   },
   extraReducers: (builder) => {
-    builder.addCase(setCompletedChoreThunk.pending, (state) => {
+    builder.addCase(setCompletedChoresThunk.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(setCompletedChoreThunk.fulfilled, (state, action) => {
+    builder.addCase(setCompletedChoresThunk.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.completedChore = action.payload;
+      state.completedChores = action.payload;
     });
-    builder.addCase(setCompletedChoreThunk.rejected, (state) => {
+    builder.addCase(setCompletedChoresThunk.rejected, (state) => {
       state.isLoading = false;
       state.error = "Error: no completed chore data found";
     });
   },
 });
 
-export const completedChoreReducer = completedChoreSlice.reducer;
+export const completedChoresReducer = completedChoresSlice.reducer;
 
-export const { setCompletedChore } = completedChoreSlice.actions;
+export const { setCompletedChores } = completedChoresSlice.actions;

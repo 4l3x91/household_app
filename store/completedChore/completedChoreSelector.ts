@@ -1,3 +1,3 @@
 import { AppState } from "../store";
 
-export const selectCompletedChore = (state: AppState) => state.completedChore;
+export const selectCompletedChores = (state: AppState) => state.completedChores;
