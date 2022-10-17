@@ -20,13 +20,7 @@ const WelcomeScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <Surface elevation={0} style={styles.surface}>
         {/* <Button onPress={() => postData()}>Test Firebase</Button> BUTTON TO TEST postDataFUNCTION! */}
-        <Button
-          contentStyle={styles.button}
-          labelStyle={styles.buttonText}
-          icon="login"
-          mode="contained"
-          onPress={() => navigation.replace("TabStack")}
-        >
+        <Button contentStyle={styles.button} labelStyle={styles.buttonText} icon="login" mode="contained" onPress={() => navigation.replace("Login")}>
           Logga in
         </Button>
         <Surface style={[styles.dividerContainer, styles.surface]}>
