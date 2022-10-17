@@ -1,9 +1,12 @@
+import { addDoc, collection } from "@firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { db } from "../../config/firebase";
 import { User } from "./userModel";
 import { initialState } from "./userState";
 
-const setUser = createAsyncThunk<User, User, { rejectValue: string }>("user/setUser", async (user, thunkAPI) => {
+export const setUser = createAsyncThunk<User, User, { rejectValue: string }>("user/setUser", async (user, thunkAPI) => {
   try {
+    await addDoc(collection(db, "users"), { user });
     return user;
   } catch (error) {
     return thunkAPI.rejectWithValue("Error setting user");
