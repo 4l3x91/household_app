@@ -5,7 +5,7 @@ import ChoresScreen from "../screens/ChoresScreen";
 
 export type ChoreStackParams = {
   ChoresScreen: undefined;
-  ChoreDetailsScreen: undefined;
+  ChoreDetailsScreen: { id: string };
 };
 const ChoreStack = createNativeStackNavigator<ChoreStackParams>();
 
