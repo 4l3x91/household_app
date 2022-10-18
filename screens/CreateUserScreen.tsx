@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import CreateUser from "../components/CreateUser";
 import { useAuthentication } from "../hooks/useAuthentication";
@@ -10,7 +10,17 @@ type Props = NativeStackScreenProps<RootStackParams>;
 const CreateUserScreen = ({ navigation }: Props) => {
   const { user } = useAuthentication();
 
-  return <View>{user ? <>{navigation.navigate("TabStack")}</> : <CreateUser />}</View>;
+  useEffect(() => {
+    if (user) {
+      navigation.replace("TabStack");
+    }
+  }, [user]);
+
+  return (
+    <View>
+      <CreateUser />
+    </View>
+  );
 };
 
 export default CreateUserScreen;
