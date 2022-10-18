@@ -34,8 +34,9 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.7",
     "react-redux": "^8.0.4",
-    "styled-components": "^5.3.6",
-    "yup": "^0.32.11"
+    "uuidv4": "^6.2.13",
+    "yup": "^0.32.11",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
