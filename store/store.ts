@@ -8,12 +8,13 @@ import { userReducer } from "./user/userSlice";
 
 const store = configureStore({
   reducer: {
-    user: userReducer,
+    userState: userReducer,
     profile: profileReducer,
     chores: choreReducer,
     household: householdReducer,
     completedChores: completedChoresReducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type AppState = ReturnType<typeof store.getState>;
