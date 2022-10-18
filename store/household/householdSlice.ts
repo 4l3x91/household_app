@@ -1,12 +1,16 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { addDoc, collection } from "@firebase/firestore";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { db } from "../../config/firebase";
 import { HouseholdModel } from "./householdModel";
-import { HouseholdState, initialState } from "./householdState";
+import { initialState } from "./householdState";
 
-const setHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdModel, { rejectValue: string }>(
+export const createHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdModel, { rejectValue: string }>(
   "household/setHousehold",
   async (household, thunkAPI) => {
     // TODO: get household from firestore by loggedin profile
+
     try {
+      await addDoc(collection(db, "households"), household);
       return household;
     } catch (error) {
       return thunkAPI.rejectWithValue("something went wrong");
@@ -18,17 +22,17 @@ const householdSlice = createSlice({
   name: "household",
   initialState,
   reducers: {
-    setHousehold: (state, action: PayloadAction<HouseholdState>) => (state = action.payload),
+    // setHousehold: (state, action: PayloadAction<HouseholdModel>) => (state.household = action.payload),
   },
   extraReducers: (builder) => {
-    builder.addCase(setHouseholdThunk.pending, (state) => {
+    builder.addCase(createHouseholdThunk.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(setHouseholdThunk.fulfilled, (state, action) => {
+    builder.addCase(createHouseholdThunk.fulfilled, (state, action) => {
       state.isLoading = false;
       state.household = action.payload;
     });
-    builder.addCase(setHouseholdThunk.rejected, (state) => {
+    builder.addCase(createHouseholdThunk.rejected, (state) => {
       state.isLoading = false;
       state.error = "Error: no household data found";
     });
@@ -37,4 +41,4 @@ const householdSlice = createSlice({
 
 export const householdReducer = householdSlice.reducer;
 
-export const { setHousehold } = householdSlice.actions;
+// export const { setHousehold } = householdSlice.actions;

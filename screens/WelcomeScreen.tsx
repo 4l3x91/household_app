@@ -33,7 +33,7 @@ const WelcomeScreen = ({ navigation }: Props) => {
           labelStyle={styles.buttonText}
           icon="account-plus"
           mode="outlined"
-          onPress={() => navigation.replace("TabStack")}
+          onPress={() => navigation.replace("CreateUser")}
         >
           Skapa nytt konto
         </Button>
