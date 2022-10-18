@@ -12,7 +12,7 @@ const LoginScreen = ({ navigation }: Props) => {
   return (
     <>
       <Main>
-        <Surface>
+        <Surface style={{justifyContent: 'center', alignItems: 'center', marginTop: 100}}>
           <View>
             <HeaderText>Logga in</HeaderText>
           </View>
@@ -60,7 +60,6 @@ const FooterText = styled.Text`
 `;
 
 const Main = styled.View`
-  flex: 1;
 `;
 
 const InputView = styled.View`
