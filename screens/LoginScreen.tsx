@@ -1,42 +1,65 @@
-import { AntDesign } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
-import { View } from "react-native";
-import { Surface, TextInput } from "react-native-paper";
+import { Formik } from "formik";
+import React, { useEffect } from "react";
+import { Button, Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
+import * as Yup from "yup";
+import { useAuthentication } from "../hooks/useAuthentication";
 import { RootStackParams } from "../navigation/RootStackNavigator";
+import { useAppDispatch } from "../store/store";
+import { signInUser } from "../store/user/userSlice";
 
 type Props = NativeStackScreenProps<RootStackParams>;
 
+const validation = Yup.object().shape({
+  email: Yup.string().required("Email kan inte vara tomt"),
+  password: Yup.string().required("Lösenord kan inte vara tomt"),
+});
+
 const LoginScreen = ({ navigation }: Props) => {
+  const dispatch = useAppDispatch();
+  const { user } = useAuthentication();
+
+  useEffect(() => {
+    if (user) {
+      navigation.navigate("TabStack");
+    }
+  }, [user]);
   return (
     <>
       <Main>
-        <Surface>
-          <View>
-            <HeaderText>Logga in</HeaderText>
-          </View>
-        </Surface>
-
-        <Surface style={{ flex: 1, justifyContent: "center" }}>
-          <InputView>
-            <TextInput placeholder="Användarnamn" style={{ marginBottom: 10 }} />
-            <TextInput placeholder="Lösenord" />
-          </InputView>
-        </Surface>
-
-        <Surface>
-          <Footer>
-            <FooterButton onPress={() => navigation.replace("TabStack")}>
-              <AntDesign name="pluscircleo" size={24} color="black" />
-              <FooterText>Logga in</FooterText>
-            </FooterButton>
-            <FooterButton onPress={() => navigation.navigate("Welcome")}>
-              <AntDesign name="closecircleo" size={24} color="black" />
-              <FooterText>Stäng</FooterText>
-            </FooterButton>
-          </Footer>
-        </Surface>
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={validation}
+          onSubmit={(values) => {
+            dispatch(
+              signInUser({
+                email: values.email,
+                password: values.password,
+              })
+            );
+          }}
+        >
+          {({ handleChange, handleSubmit, values, errors }) => {
+            return (
+              <>
+                <TextInput label="Email" mode={"outlined"} value={values.email} onChangeText={handleChange("email")} />
+                {errors.email && <Text>{errors.email}</Text>}
+                <TextInput
+                  label="Lösenord"
+                  mode={"outlined"}
+                  value={values.password}
+                  onChangeText={handleChange("password")}
+                  secureTextEntry={true}
+                />
+                {errors.password && <Text>{errors.password}</Text>}
+                <Button mode={"contained"} style={{ marginTop: 10 }} onPress={handleSubmit}>
+                  Logga in
+                </Button>
+              </>
+            );
+          }}
+        </Formik>
       </Main>
     </>
   );
@@ -44,32 +67,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
 export default LoginScreen;
 
-const HeaderText = styled.Text`
-  font-size: 30px;
-  margin: 20px 20px;
-  font-weight: 500;
-`;
-const Footer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const FooterText = styled.Text`
-  font-size: 20px;
-  margin-left: 10px;
-`;
-
 const Main = styled.View`
   flex: 1;
-`;
-
-const InputView = styled.View`
-  justify-content: space-between;
-  margin: 0 30px;
-`;
-
-const FooterButton = styled.Pressable`
-  flex-direction: row;
-  align-items: center;
-  margin: 20px 30px;
+  padding: 10px;
 `;
