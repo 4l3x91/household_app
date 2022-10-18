@@ -1,17 +1,13 @@
 import { User } from "./userModel";
 
 export interface UserState {
-  user: User;
+  user: User | null;
   pending: boolean;
   error: string;
 }
 
 export const initialState: UserState = {
-  user: {
-    id: "",
-    email: "",
-    password: "",
-  },
+  user: null,
   pending: false,
   error: "",
 };
