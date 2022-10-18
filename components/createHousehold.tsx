@@ -23,45 +23,45 @@ const CreateHousehold = () => {
   };
 
   return (
-    // <View style={styles.container}>
-    <Formik
-      validationSchema={householdNameSchema}
-      initialValues={{
-        householdName: "",
-      }}
-      onSubmit={(values) => {
-        const newHousehold: HouseholdModel = {
-          name: values.householdName,
-          id: uuidv4(),
-          code: generateHouseholdCode(),
-        };
-        dispatch(createHouseholdThunk(newHousehold));
-      }}
-    >
-      {({ handleChange, handleSubmit, values, errors }) => {
-        return (
-          <View style={styles.container}>
-            <Text>Create your household</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.textInputField}
-                label="householdName"
-                mode={"outlined"}
-                activeOutlineColor={"blue"}
-                outlineColor={"green"}
-                value={values.householdName}
-                onChangeText={handleChange("householdName")}
-              />
-              {errors.householdName && <Text>{errors.householdName}</Text>}
+    <View style={styles.container}>
+      <Formik
+        validationSchema={householdNameSchema}
+        initialValues={{
+          householdName: "",
+        }}
+        onSubmit={(values) => {
+          const newHousehold: HouseholdModel = {
+            name: values.householdName,
+            id: uuidv4(),
+            code: generateHouseholdCode(),
+          };
+          dispatch(createHouseholdThunk(newHousehold));
+        }}
+      >
+        {({ handleChange, handleSubmit, values, errors }) => {
+          return (
+            <View style={styles.container}>
+              <Text>Create your household</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInputField}
+                  label="householdName"
+                  mode={"outlined"}
+                  activeOutlineColor={"black"}
+                  outlineColor={"gray"}
+                  value={values.householdName}
+                  onChangeText={handleChange("householdName")}
+                />
+                {errors.householdName && <Text>{errors.householdName}</Text>}
+              </View>
+              <Button style={styles.createBtn} icon="home" mode="contained" onPress={handleSubmit}>
+                Skapa
+              </Button>
             </View>
-            <Button style={styles.createBtn} icon="home" mode="contained" onPress={handleSubmit}>
-              Skapa
-            </Button>
-          </View>
-        );
-      }}
-    </Formik>
-    // </View>
+          );
+        }}
+      </Formik>
+    </View>
   );
 };
 
