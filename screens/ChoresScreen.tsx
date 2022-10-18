@@ -47,7 +47,7 @@ const ChoresScreen = ({ navigation }: Props) => {
                   width: 25,
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: colors.background,
+                  backgroundColor: colors.notification,
                 }}
               >
                 <Text>{chore.interval}</Text>
@@ -60,7 +60,7 @@ const ChoresScreen = ({ navigation }: Props) => {
                   width: 25,
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: colors.notification,
+                  backgroundColor: colors.background,
                 }}
               >
                 <Text>{chore.interval}</Text>
