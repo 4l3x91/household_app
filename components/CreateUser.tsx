@@ -1,31 +1,29 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { Button, Text, TextInput } from "react-native-paper";
-import uuid from "react-native-uuid";
+import styled from "styled-components/native";
 import * as Yup from "yup";
 import { useAppDispatch } from "../store/store";
-import { setUser } from "../store/user/userSlice";
+import { createUser } from "../store/user/userSlice";
 
 const userSchema = Yup.object().shape({
-  email: Yup.string().email().required("Enter a valid E-mail"),
-  password: Yup.string().required("Password is required"),
-  passwordConfirmation: Yup.string().oneOf([Yup.ref("password"), null], "Passwords must match"),
+  email: Yup.string().email("Ange en giltlig Email").required("Email kan inte vara tomt"),
+  password: Yup.string().required("Lösenord kan inte vara tomt"),
+  passwordConfirmation: Yup.string().oneOf([Yup.ref("password"), null], "Lösenorden matchar inte"),
 });
 
 const CreateUser = () => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  //   const currentUser = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  console.log("create user");
+
   return (
-    <>
+    <Container>
       <Formik
         validationSchema={userSchema}
         initialValues={{ email: "", password: "", passwordConfirmation: "" }}
         onSubmit={(values) => {
           dispatch(
-            setUser({
-              id: uuid.v4() as string,
+            createUser({
               email: values.email,
               password: values.password,
             })
@@ -35,10 +33,11 @@ const CreateUser = () => {
         {({ handleChange, handleSubmit, values, errors }) => {
           return (
             <>
-              <TextInput label="email" value={values.email} error onChangeText={handleChange("email")} />
+              <TextInput label="Email" mode={"outlined"} value={values.email} onChangeText={handleChange("email")} />
               {errors.email && <Text>{errors.email}</Text>}
               <TextInput
-                label="password"
+                label="Lösenord"
+                mode={"outlined"}
                 secureTextEntry={secureTextEntry}
                 right={
                   <TextInput.Icon
@@ -52,25 +51,30 @@ const CreateUser = () => {
                   />
                 }
                 value={values.password}
-                error
                 onChangeText={handleChange("password")}
               />
               {errors.password && <Text>{errors.password}</Text>}
               <TextInput
-                label="confirm password"
+                label="Bekräfta lösenord"
+                mode={"outlined"}
                 secureTextEntry={secureTextEntry}
                 value={values.passwordConfirmation}
-                error
                 onChangeText={handleChange("passwordConfirmation")}
               />
               {errors.passwordConfirmation && <Text>{errors.passwordConfirmation}</Text>}
-              <Button onPress={handleSubmit}>Submit </Button>
+              <Button mode={"contained"} style={{ marginTop: 10 }} onPress={handleSubmit}>
+                Registrera
+              </Button>
             </>
           );
         }}
       </Formik>
-    </>
+    </Container>
   );
 };
 
 export default CreateUser;
+
+const Container = styled.View`
+  padding: 10px;
+`;
