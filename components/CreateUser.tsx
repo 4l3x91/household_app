@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Button, Text, TextInput, useTheme } from "react-native-paper";
+import { Button, Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -24,6 +24,7 @@ const CreateUser = ({ navigate }: Props) => {
 
   return (
     <Container>
+      <Text variant="titleLarge">Skapa användare</Text>
       <Formik
         validationSchema={userSchema}
         initialValues={{ email: "", password: "", passwordConfirmation: "" }}

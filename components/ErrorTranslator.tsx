@@ -1,9 +1,6 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { Text, Theme, useTheme } from "react-native-paper";
+import { Button, Surface, Text, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { RootStackParams } from "../navigation/RootStackNavigator";
 
 interface Props {
   error: string;
@@ -15,10 +12,12 @@ const ErrorTranslator = ({ error, navigate }: Props) => {
 
   if (error.includes("auth/email-already-in-use")) {
     return (
-      <>
+      <ErrorContainer>
         <ErrorText theme={theme}>Angiven email finns redan registrerad</ErrorText>
-        <Text onPress={navigate}>Logga in</Text>
-      </>
+        <Button mode="text" onPress={navigate}>
+          Logga in
+        </Button>
+      </ErrorContainer>
     );
   }
 
@@ -26,6 +25,13 @@ const ErrorTranslator = ({ error, navigate }: Props) => {
 };
 
 export default ErrorTranslator;
+
+const ErrorContainer = styled(Surface)`
+  margin-top: 20px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
 
 const ErrorText = styled(Text)<{ theme: Theme }>`
   color: ${({ theme }) => theme.colors.error};
