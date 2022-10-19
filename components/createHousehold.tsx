@@ -1,13 +1,14 @@
 import { Formik } from "formik";
 import React from "react";
 import { Text } from "react-native";
-import { TextInput, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
 import { HouseholdModel } from "../store/household/householdModel";
 import { createHouseholdThunk } from "../store/household/householdSlice";
 import { useAppDispatch } from "../store/store";
+import Input from "./Input";
 
 const householdNameSchema = Yup.object().shape({
   householdName: Yup.string()
@@ -45,13 +46,11 @@ const CreateHousehold = () => {
             <Container>
               <Text>Create your household</Text>
               <InputContainer>
-                <TextInput
+                <Input
                   label="householdName"
-                  mode={"outlined"}
-                  activeOutlineColor={colors.primary}
-                  outlineColor={colors.secondary}
                   value={values.householdName}
-                  onChangeText={handleChange("householdName")}
+                  handleChange={handleChange("householdName")}
+                  activeOutlineColor={colors.primary}
                 />
                 {errors.householdName && <Text>{errors.householdName}</Text>}
               </InputContainer>

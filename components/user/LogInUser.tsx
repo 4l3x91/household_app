@@ -1,10 +1,11 @@
 import { Formik } from "formik";
 import React from "react";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
-import { useAppDispatch } from "../store/store";
-import { signInUser } from "../store/user/userSlice";
+import { useAppDispatch } from "../../store/store";
+import { signInUser } from "../../store/user/userSlice";
+import Input from "../Input";
 
 const validation = Yup.object().shape({
   email: Yup.string().required("Email kan inte vara tomt"),
@@ -32,15 +33,10 @@ const LoginUser = () => {
           {({ handleChange, handleSubmit, values, errors }) => {
             return (
               <>
-                <TextInput label="Email" mode={"outlined"} value={values.email} onChangeText={handleChange("email")} />
+                <Input label="Email" value={values.email} handleChange={handleChange("email")} />
                 {errors.email && <Text>{errors.email}</Text>}
-                <TextInput
-                  label="Lösenord"
-                  mode={"outlined"}
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  secureTextEntry={true}
-                />
+                <Input label="Lösenord" value={values.password} handleChange={handleChange("password")} secureTextEntry={true} />
+
                 {errors.password && <Text>{errors.password}</Text>}
                 <Button mode={"contained"} style={{ marginTop: 10 }} onPress={handleSubmit}>
                   Logga in

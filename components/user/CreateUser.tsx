@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { Button, Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { createUser } from "../store/user/userSlice";
-import ErrorTranslator from "./ErrorTranslator";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { createUser } from "../../store/user/userSlice";
+import ErrorTranslator from "../ErrorTranslator";
+import Input from "../Input";
 
 interface Props {
   navigate?: () => void;
@@ -40,12 +41,13 @@ const CreateUser = ({ navigate }: Props) => {
         {({ handleChange, handleSubmit, values, errors }) => {
           return (
             <>
-              <TextInput label="Email" mode={"outlined"} value={values.email} onChangeText={handleChange("email")} />
+              <Input label="Email" value={values.email} handleChange={handleChange("email")} />
               {errors.email && <Text>{errors.email}</Text>}
-              <TextInput
+              <Input
                 label="Lösenord"
-                mode={"outlined"}
                 secureTextEntry={secureTextEntry}
+                value={values.password}
+                handleChange={handleChange("password")}
                 right={
                   <TextInput.Icon
                     icon="eye"
@@ -57,16 +59,13 @@ const CreateUser = ({ navigate }: Props) => {
                     }}
                   />
                 }
-                value={values.password}
-                onChangeText={handleChange("password")}
               />
               {errors.password && <Text>{errors.password}</Text>}
-              <TextInput
+              <Input
                 label="Bekräfta lösenord"
-                mode={"outlined"}
                 secureTextEntry={secureTextEntry}
                 value={values.passwordConfirmation}
-                onChangeText={handleChange("passwordConfirmation")}
+                handleChange={handleChange("passwordConfirmation")}
               />
               {errors.passwordConfirmation && <Text>{errors.passwordConfirmation}</Text>}
               <Button mode={"contained"} style={{ marginTop: 10 }} onPress={handleSubmit} loading={userState.pending}>
