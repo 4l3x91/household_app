@@ -3,8 +3,12 @@ export interface Profile {
   userId: string;
   householdId: string;
   profileName: string;
-  avatar: string;
-  profileColor: string;
+  avatar: Avatar;
   role: "user" | "owner";
-  paused: boolean;
+  isPaused: boolean;
+}
+
+export interface Avatar {
+  avatar: string;
+  color: string;
 }
