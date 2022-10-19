@@ -1,10 +1,15 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Text, TextInput, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
-import { useAppDispatch } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/store";
 import { createUser } from "../store/user/userSlice";
+import ErrorTranslator from "./ErrorTranslator";
+
+interface Props {
+  navigate?: () => void;
+}
 
 const userSchema = Yup.object().shape({
   email: Yup.string().email("Ange en giltlig Email").required("Email kan inte vara tomt"),
@@ -12,9 +17,10 @@ const userSchema = Yup.object().shape({
   passwordConfirmation: Yup.string().oneOf([Yup.ref("password"), null], "Lösenorden matchar inte"),
 });
 
-const CreateUser = () => {
+const CreateUser = ({ navigate }: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const dispatch = useAppDispatch();
+  const userState = useAppSelector((state) => state.userState);
 
   return (
     <Container>
@@ -62,9 +68,10 @@ const CreateUser = () => {
                 onChangeText={handleChange("passwordConfirmation")}
               />
               {errors.passwordConfirmation && <Text>{errors.passwordConfirmation}</Text>}
-              <Button mode={"contained"} style={{ marginTop: 10 }} onPress={handleSubmit}>
+              <Button mode={"contained"} style={{ marginTop: 10 }} onPress={handleSubmit} loading={userState.pending}>
                 Registrera
               </Button>
+              {userState.error && <ErrorTranslator error={userState.error} navigate={navigate} />}
             </>
           );
         }}
