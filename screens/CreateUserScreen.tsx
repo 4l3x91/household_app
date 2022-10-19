@@ -12,13 +12,14 @@ const CreateUserScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (user) {
-      navigation.replace("HouseholdOptions");
+      navigation.navigate("TabStack");
     }
   }, [user]);
 
   return (
     <View>
-      <CreateUser />
+      {/* TODO check how to properly use useNavigation() hook instead of passing navigation */}
+      <CreateUser navigate={() => navigation.navigate("Login")} />
     </View>
   );
 };
