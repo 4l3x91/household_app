@@ -12,7 +12,7 @@ const CreateUserScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (user) {
-      navigation.replace("TabStack");
+      navigation.replace("HouseholdOptions");
     }
   }, [user]);
 

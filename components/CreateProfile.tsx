@@ -73,7 +73,7 @@ const CreateProfile = () => {
                   ))}
                 </AvatarContent>
               </AvatarContainer>
-              <CreateButton onPress={() => handleSubmit} bgColor={colors.primary}>
+              <CreateButton onPress={() => handleSubmit()} bgColor={colors.primary}>
                 <CreateButtonText color={colors.secondary}>Skapa</CreateButtonText>
               </CreateButton>
             </View>

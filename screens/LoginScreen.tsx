@@ -11,7 +11,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (user) {
-      navigation.navigate("TabStack");
+      navigation.navigate("HouseholdOptions");
     }
   }, [user]);
   return (

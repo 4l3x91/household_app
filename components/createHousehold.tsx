@@ -55,7 +55,7 @@ const CreateHousehold = () => {
                 />
                 {errors.householdName && <Text>{errors.householdName}</Text>}
               </InputContainer>
-              <CreateButton onPress={() => handleSubmit} bgColor={colors.primary}>
+              <CreateButton onPress={() => handleSubmit()} bgColor={colors.primary}>
                 <ButtonText color={colors.secondary}>Skapa hushåll</ButtonText>
               </CreateButton>
             </Container>
