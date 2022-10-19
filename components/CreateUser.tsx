@@ -8,7 +8,7 @@ import { createUser } from "../store/user/userSlice";
 
 const userSchema = Yup.object().shape({
   email: Yup.string().email("Ange en giltlig Email").required("Email kan inte vara tomt"),
-  password: Yup.string().required("Lösenord kan inte vara tomt"),
+  password: Yup.string().min(6, "minst 6 tecken").required("Lösenord kan inte vara tomt"),
   passwordConfirmation: Yup.string().oneOf([Yup.ref("password"), null], "Lösenorden matchar inte"),
 });
 
