@@ -48,8 +48,8 @@ const CreateHousehold = () => {
                 <TextInput
                   label="householdName"
                   mode={"outlined"}
-                  activeOutlineColor={"black"}
-                  outlineColor={"gray"}
+                  activeOutlineColor={colors.primary}
+                  outlineColor={colors.secondary}
                   value={values.householdName}
                   onChangeText={handleChange("householdName")}
                 />
