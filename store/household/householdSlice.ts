@@ -7,8 +7,6 @@ import { initialState } from "./householdState";
 export const createHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdModel, { rejectValue: string }>(
   "household/setHousehold",
   async (household, thunkAPI) => {
-    // TODO: get household from firestore by loggedin profile
-
     try {
       await addDoc(collection(db, "households"), household);
       return household;
@@ -21,9 +19,7 @@ export const createHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdMo
 const householdSlice = createSlice({
   name: "household",
   initialState,
-  reducers: {
-    // setHousehold: (state, action: PayloadAction<HouseholdModel>) => (state.household = action.payload),
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(createHouseholdThunk.pending, (state) => {
       state.isLoading = true;
@@ -40,5 +36,3 @@ const householdSlice = createSlice({
 });
 
 export const householdReducer = householdSlice.reducer;
-
-// export const { setHousehold } = householdSlice.actions;
