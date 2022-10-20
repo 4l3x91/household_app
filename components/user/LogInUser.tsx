@@ -1,5 +1,6 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
+import { View } from "react-native";
 import { Button, Divider, Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
@@ -66,13 +67,17 @@ const LoginUser = ({ close, register }: Props) => {
                   {error && <ErrorTranslator error={error} register={register} />}
                 </InputContainer>
                 <ButtonContainer>
-                  <Button mode={"text"} style={{ flex: 1, borderRadius: 0 }} onPress={handleSubmit} loading={pending} icon="plus-circle-outline">
-                    Logga in
-                  </Button>
+                  <View style={{ flex: 1 }}>
+                    <Button mode={"text"} style={{ borderRadius: 0 }} onPress={handleSubmit} loading={pending} icon="plus-circle-outline">
+                      Logga in
+                    </Button>
+                  </View>
                   <Divider style={{ width: 1, height: "100%" }} />
-                  <Button mode={"text"} style={{ flex: 1, borderRadius: 0 }} onPress={close} icon="close-circle-outline">
-                    Stäng
-                  </Button>
+                  <View style={{ flex: 1 }}>
+                    <Button mode={"text"} style={{ borderRadius: 0 }} onPress={close} icon="close-circle-outline">
+                      Stäng
+                    </Button>
+                  </View>
                 </ButtonContainer>
               </>
             );
@@ -97,5 +102,6 @@ const InputContainer = styled.View`
 `;
 
 const ButtonContainer = styled.View`
+  margin-bottom: 30px;
   flex-direction: row;
 `;
