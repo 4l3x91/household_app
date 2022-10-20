@@ -15,7 +15,6 @@ type Props = NativeStackScreenProps<RootStackParams>;
 const HouseholdOptionsScreen = ({ navigation }: Props) => {
   const userProfiles = useAppSelector(selectUsersProfiles);
   const dispatch = useAppDispatch();
-  // const { user } = useAuthentication();
 
   function handleSignOut() {
     signOut(auth).then(() => {
