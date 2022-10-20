@@ -9,7 +9,7 @@ import ErrorTranslator from "../ErrorTranslator";
 import Input from "../Input";
 
 interface Props {
-  navigate?: () => void;
+  logIn?: () => void;
   close: () => void;
 }
 
@@ -19,7 +19,7 @@ const userSchema = Yup.object().shape({
   passwordConfirmation: Yup.string().oneOf([Yup.ref("password"), null], "Lösenorden matchar inte"),
 });
 
-const CreateUser = ({ navigate, close }: Props) => {
+const CreateUser = ({ logIn, close }: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.userState);
@@ -69,7 +69,7 @@ const CreateUser = ({ navigate, close }: Props) => {
                   handleChange={handleChange("passwordConfirmation")}
                 />
                 {errors.passwordConfirmation && <Text>{errors.passwordConfirmation}</Text>}
-                {userState.error && <ErrorTranslator error={userState.error} navigate={navigate} />}
+                {userState.error && <ErrorTranslator error={userState.error} logIn={logIn} />}
               </InputContainer>
               <ButtonContainer>
                 <Button

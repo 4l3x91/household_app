@@ -4,18 +4,38 @@ import styled from "styled-components/native";
 
 interface Props {
   error: string;
-  navigate?: () => void;
+  logIn?: () => void;
+  register?: () => void;
 }
 
-const ErrorTranslator = ({ error, navigate }: Props) => {
+const ErrorTranslator = ({ error, logIn, register }: Props) => {
   const theme = useTheme();
 
   if (error.includes("auth/email-already-in-use")) {
     return (
       <ErrorContainer>
         <ErrorText theme={theme}>Angiven email finns redan registrerad</ErrorText>
-        <Button mode="text" onPress={navigate}>
+        <Button mode="text" onPress={logIn}>
           Logga in
+        </Button>
+      </ErrorContainer>
+    );
+  }
+  if (error.includes("auth/wrong-password")) {
+    return (
+      <ErrorContainer>
+        <ErrorText theme={theme} style={{ marginVertical: 10 }}>
+          Email eller lösenord stämmer inte
+        </ErrorText>
+      </ErrorContainer>
+    );
+  }
+  if (error.includes("auth/user-not-found")) {
+    return (
+      <ErrorContainer>
+        <ErrorText theme={theme}>Angiven email finns inte registrerad </ErrorText>
+        <Button mode="text" onPress={register}>
+          Registrera
         </Button>
       </ErrorContainer>
     );
