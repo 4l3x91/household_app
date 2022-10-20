@@ -23,7 +23,6 @@ const LoginScreen = ({ navigation }: Props) => {
       } else if (userProfiles.length > 1) {
         navigation.navigate("HouseholdOptions");
       } else navigation.navigate("HouseholdOptions");
-      console.log(userProfiles.length);
     }
   }, [user]);
 
