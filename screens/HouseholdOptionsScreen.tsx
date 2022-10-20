@@ -5,30 +5,44 @@ import { Button } from "react-native-paper";
 import styled from "styled-components/native";
 import { auth } from "../config/firebase";
 import { RootStackParams } from "../navigation/RootStackNavigator";
+import { selectUsersProfiles } from "../store/profile/profileSelectors";
+import { resetProfileState } from "../store/profile/profileSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { logout } from "../store/user/userSlice";
 
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const HouseholdOptionsScreen = ({ navigation }: Props) => {
+  const userProfiles = useAppSelector(selectUsersProfiles);
+  const dispatch = useAppDispatch();
+  // const { user } = useAuthentication();
+
   function handleSignOut() {
     signOut(auth).then(() => {
       {
         navigation.popToTop();
+        dispatch(logout());
+
+        //denna resettar state men ska bytas ut mot en useEffect där alla state resettas
+        dispatch(resetProfileState());
       }
     });
   }
   return (
     <>
       <Container>
-        <Button
-          dark
-          mode={"outlined"}
-          style={{ marginTop: 10, width: 300 }}
-          onPress={() => {
-            console.log("Mina hushåll");
-          }}
-        >
-          Mina hushåll
-        </Button>
+        {userProfiles.length > 0 && (
+          <Button
+            dark
+            mode={"outlined"}
+            style={{ marginTop: 10, width: 300 }}
+            onPress={() => {
+              console.log("Mina hushåll");
+            }}
+          >
+            Mina hushåll
+          </Button>
+        )}
         <Button
           dark
           mode={"outlined"}
