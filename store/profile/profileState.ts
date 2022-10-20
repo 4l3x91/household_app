@@ -8,17 +8,7 @@ export interface ProfileState {
 
 export const initialState: ProfileState = {
   // mock data for now
-  profiles: [
-    {
-      id: "123",
-      userId: "321",
-      householdId: "456",
-      profileName: "Kattsnake",
-      avatar: { avatar: "🐷", color: "lightblue" },
-      role: "user",
-      isPaused: false,
-    },
-  ],
+  profiles: [],
   error: "",
   pending: false,
 };

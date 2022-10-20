@@ -1,17 +1,22 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserCredential } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
+import { User, UserCredential } from "firebase/auth";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth/react-native";
 import { auth } from "../../config/firebase";
 import { User as StateUser } from "./userModel";
 import { initialState } from "./userState";
 
-export const createUser = createAsyncThunk<UserCredential, { email: string; password: string }, { rejectValue: string }>(
+export const createUser = createAsyncThunk<User, { email: string; password: string }, { rejectValue: string }>(
   "user/createUser",
   async ({ email, password }, thunkAPI) => {
     try {
-      return await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      return userCredential.user;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Error setting user");
+      if (error instanceof FirebaseError) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("Någontin gick fel vid skapandet av användare. Kontakta vår support om felet kvartstår.");
     }
   }
 );
@@ -22,7 +27,9 @@ export const signInUser = createAsyncThunk<UserCredential, { email: string; pass
     try {
       return await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      console.log(error);
+      if (error instanceof FirebaseError) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
       return thunkAPI.rejectWithValue("Error logging in user");
     }
   }
@@ -38,15 +45,19 @@ const userSlice = createSlice({
     logout(state) {
       state.user = null;
     },
+    clearErrors(state) {
+      state.error = "";
+    },
   },
   extraReducers: (builder) => {
     //createUser cases
     builder.addCase(createUser.pending, (state) => {
       state.pending = true;
+      state.error = "";
     });
     builder.addCase(createUser.fulfilled, (state, action) => {
       state.pending = false;
-      state.user = { id: action.payload.user.uid, email: action.payload.user.email };
+      state.user = { id: action.payload.uid, email: action.payload.email };
     });
     builder.addCase(createUser.rejected, (state, action) => {
       state.pending = false;
@@ -60,7 +71,6 @@ const userSlice = createSlice({
     builder.addCase(signInUser.fulfilled, (state, action) => {
       state.pending = false;
       state.user = { id: action.payload.user.uid, email: action.payload.user.email };
-      console.log(auth);
     });
     builder.addCase(signInUser.rejected, (state, action) => {
       state.pending = false;
@@ -69,5 +79,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, clearErrors } = userSlice.actions;
 export const userReducer = userSlice.reducer;

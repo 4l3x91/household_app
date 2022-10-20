@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { Text, View } from "react-native";
-import { TextInput, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
@@ -9,8 +9,9 @@ import { useAuthentication } from "../hooks/useAuthentication";
 import { selectHouseholdId } from "../store/household/householdSelector";
 import { avatarData } from "../store/profile/profileData";
 import { Avatar, Profile } from "../store/profile/profileModel";
-import { setProfile } from "../store/profile/profileSlice";
+import { createProfile } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import Input from "./Input";
 
 const profileSchema = Yup.object().shape({
   profileName: Yup.string()
@@ -45,7 +46,7 @@ const CreateProfile = () => {
               isPaused: false,
             };
 
-            dispatch(setProfile(newProfile));
+            dispatch(createProfile(newProfile));
           }
         }}
       >
@@ -53,21 +54,14 @@ const CreateProfile = () => {
           return (
             <View>
               <View>
-                <TextInput
-                  label="Profilnamn"
-                  mode={"outlined"}
-                  activeOutlineColor={colors.primary}
-                  outlineColor={colors.secondary}
-                  value={values.profileName}
-                  onChangeText={handleChange("profileName")}
-                />
+                <Input label="Profilnamn" value={values.profileName} handleChange={handleChange("profileName")} />
                 {errors.profileName && <Text>{errors.profileName}</Text>}
               </View>
               <AvatarContainer>
                 <Text style={{ marginHorizontal: 10 }}>Välj din avatar</Text>
                 <AvatarContent>
                   {avatarData.map((avatar) => (
-                    <AvatarCard onPress={() => setAvatar(avatar)} color={avatar.color}>
+                    <AvatarCard key={avatar.avatar} onPress={() => setAvatar(avatar)} color={avatar.color}>
                       <AvatarText>{avatar.avatar}</AvatarText>
                     </AvatarCard>
                   ))}
