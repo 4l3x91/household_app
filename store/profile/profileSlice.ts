@@ -39,6 +39,30 @@ export const findUsersProfilesThunk = createAsyncThunk<Profile[], User, { reject
   }
 );
 
+export const setProfilesThunk = createAsyncThunk<Profile[], Profile, { rejectValue: string }>(
+  "profile/setProfiles",
+
+  async (profile, thunkAPI) => {
+    try {
+      const collectionRef = collection(db, "profiles");
+      const q = query(collectionRef, where("householdId", "==", profile.householdId));
+      const documentsFromQuery = await getDocs(q);
+
+      if (!documentsFromQuery.empty) {
+        const profiles: Profile[] = [];
+        documentsFromQuery.docs.forEach((doc) => profiles.push(doc.data() as Profile));
+        console.log(profiles);
+        return profiles;
+      } else {
+        return thunkAPI.rejectWithValue("cannot find any profiles with that household id");
+      }
+    } catch (error) {
+      console.log("error");
+      return thunkAPI.rejectWithValue("ASD");
+    }
+  }
+);
+
 const profileSlice = createSlice({
   name: "profile",
   initialState,
