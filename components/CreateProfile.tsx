@@ -61,7 +61,7 @@ const CreateProfile = () => {
                 <Text style={{ marginHorizontal: 10 }}>Välj din avatar</Text>
                 <AvatarContent>
                   {avatarData.map((avatar) => (
-                    <AvatarCard onPress={() => setAvatar(avatar)} color={avatar.color}>
+                    <AvatarCard key={avatar.avatar} onPress={() => setAvatar(avatar)} color={avatar.color}>
                       <AvatarText>{avatar.avatar}</AvatarText>
                     </AvatarCard>
                   ))}

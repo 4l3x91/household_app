@@ -51,14 +51,13 @@ export const setProfilesThunk = createAsyncThunk<Profile[], Profile, { rejectVal
       if (!documentsFromQuery.empty) {
         const profiles: Profile[] = [];
         documentsFromQuery.docs.forEach((doc) => profiles.push(doc.data() as Profile));
-        console.log(profiles);
         return profiles;
       } else {
         return thunkAPI.rejectWithValue("cannot find any profiles with that household id");
       }
     } catch (error) {
-      console.log("error");
-      return thunkAPI.rejectWithValue("ASD");
+      console.log(error);
+      return thunkAPI.rejectWithValue("oscar s'ger att den h'r 'r helt fuckad");
     }
   }
 );
@@ -66,39 +65,39 @@ export const setProfilesThunk = createAsyncThunk<Profile[], Profile, { rejectVal
 const profileSlice = createSlice({
   name: "profile",
   initialState,
-  reducers: {},
+  reducers: {
+    resetProfileState(state) {
+      state.profiles = [];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(createProfile.pending, (state) => {
       state.pending = true;
-      console.log("pending");
     });
     builder.addCase(createProfile.fulfilled, (state, action) => {
       state.pending = false;
-      console.log("fullfilled");
+
       state.profiles.push(action.payload);
     });
     builder.addCase(createProfile.rejected, (state, action) => {
       state.pending = false;
-      console.log("rejected");
       state.error = action.payload || "Unknown error";
     });
 
     //FIND PROFILES
     builder.addCase(findUsersProfilesThunk.pending, (state) => {
       state.pending = true;
-      console.log("pending");
     });
     builder.addCase(findUsersProfilesThunk.fulfilled, (state, action) => {
       state.pending = false;
-      console.log("fullfilled");
       state.profiles = action.payload;
     });
     builder.addCase(findUsersProfilesThunk.rejected, (state, action) => {
       state.pending = false;
-      console.log("rejected");
       state.error = action.payload || "Unknown error";
     });
   },
 });
 
 export const profileReducer = profileSlice.reducer;
+export const { resetProfileState } = profileSlice.actions;
