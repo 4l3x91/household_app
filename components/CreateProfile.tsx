@@ -5,12 +5,12 @@ import { useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
-import { useAuthentication } from "../hooks/useAuthentication";
 import { selectHouseholdId } from "../store/household/householdSelector";
 import { avatarData } from "../store/profile/profileData";
 import { Avatar, Profile } from "../store/profile/profileModel";
 import { createProfile } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import { selectUser } from "../store/user/userSelectors";
 import Input from "./Input";
 
 const profileSchema = Yup.object().shape({
@@ -22,7 +22,8 @@ const profileSchema = Yup.object().shape({
 
 const CreateProfile = () => {
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
-  const { user } = useAuthentication();
+  // const { user } = useAuthentication();
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
   const householdId = useAppSelector(selectHouseholdId);
