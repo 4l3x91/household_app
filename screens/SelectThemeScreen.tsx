@@ -1,28 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
+import { ColorSchemeName } from "react-native";
 import { RadioButton, Text } from "react-native-paper";
 import styled from "styled-components/native";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { selectTheme, set } from "../store/theme/themeSlice";
 
 const SelectThemeScreen = () => {
-  const [theme, setTheme] = useState("system");
-  console.log(theme);
+  const dispatch = useAppDispatch();
+  const theme = useAppSelector(selectTheme);
+
   return (
     <Container>
-      <RadioButton.Group onValueChange={(newValue) => setTheme(newValue)} value={theme}>
-        <RadioButtonContainer onPress={() => setTheme("dark")}>
+      <RadioButton.Group onValueChange={(theme) => dispatch(set(theme))} value={theme.theme as NonNullable<ColorSchemeName>}>
+        <RadioButtonContainer onPress={() => dispatch(set("dark"))}>
           <RadioButtonText variant="bodyMedium">På</RadioButtonText>
           <RadioButton.Android value="dark" />
         </RadioButtonContainer>
 
         <Divider />
 
-        <RadioButtonContainer onPress={() => setTheme("light")}>
+        <RadioButtonContainer onPress={() => dispatch(set("light"))}>
           <RadioButtonText variant="bodyMedium">Av</RadioButtonText>
           <RadioButton.Android value="light" />
         </RadioButtonContainer>
 
         <Divider />
 
-        <RadioButtonContainer onPress={() => setTheme("system")}>
+        <RadioButtonContainer onPress={() => dispatch(set("system"))}>
           <RadioButtonTextContainer>
             <Text variant="bodyMedium">System</Text>
             <Text variant="bodySmall">Vi anpassar applikationen baserat på din enhets systeminställningar.</Text>
@@ -44,8 +48,8 @@ const Container = styled.View`
 const Divider = styled.View`
   margin: 10px 0px;
   height: 1px;
-  background-color: white;
-  opacity: 0.3;
+  background-color: #808080;
+  opacity: 0.5;
 `;
 
 const RadioButtonContainer = styled.TouchableOpacity`
