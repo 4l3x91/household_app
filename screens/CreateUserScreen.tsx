@@ -4,11 +4,14 @@ import { View } from "react-native";
 import CreateUser from "../components/user/CreateUser";
 import { useAuthentication } from "../hooks/useAuthentication";
 import { RootStackParams } from "../navigation/RootStackNavigator";
+import { useAppDispatch } from "../store/store";
+import { clearErrors } from "../store/user/userSlice";
 
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const CreateUserScreen = ({ navigation }: Props) => {
   const { user } = useAuthentication();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (user) {
@@ -16,10 +19,14 @@ const CreateUserScreen = ({ navigation }: Props) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    dispatch(clearErrors());
+  }, []);
+
   return (
     <View>
       {/* TODO check how to properly use useNavigation() hook instead of passing navigation */}
-      <CreateUser navigate={() => navigation.navigate("Login")} />
+      <CreateUser close={() => navigation.goBack()} navigate={() => navigation.navigate("Login")} />
     </View>
   );
 };

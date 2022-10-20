@@ -27,6 +27,7 @@ const Input = ({
   marginHorizontal,
   marginVertical,
   outlineColor,
+  right,
 }: Props) => {
   return (
     <TextInput
@@ -39,6 +40,7 @@ const Input = ({
       onChangeText={handleChange}
       secureTextEntry={secureTextEntry}
       style={{ marginHorizontal: marginHorizontal, marginVertical: marginVertical, height: height }}
+      right={right}
     />
   );
 };
