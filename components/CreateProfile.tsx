@@ -9,7 +9,7 @@ import { useAuthentication } from "../hooks/useAuthentication";
 import { selectHouseholdId } from "../store/household/householdSelector";
 import { avatarData } from "../store/profile/profileData";
 import { Avatar, Profile } from "../store/profile/profileModel";
-import { setProfile } from "../store/profile/profileSlice";
+import { createProfile } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
 const profileSchema = Yup.object().shape({
@@ -45,7 +45,7 @@ const CreateProfile = () => {
               isPaused: false,
             };
 
-            dispatch(setProfile(newProfile));
+            dispatch(createProfile(newProfile));
           }
         }}
       >

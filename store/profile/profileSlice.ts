@@ -4,7 +4,7 @@ import { db } from "../../config/firebase";
 import { Profile } from "./profileModel";
 import { initialState } from "./profileState";
 
-export const setProfile = createAsyncThunk<Profile, Profile, { rejectValue: string }>("profile/setProfile", async (profile, thunkAPI) => {
+export const createProfile = createAsyncThunk<Profile, Profile, { rejectValue: string }>("profile/setProfile", async (profile, thunkAPI) => {
   try {
     await addDoc(collection(db, "profiles"), profile);
     return profile;
@@ -19,16 +19,16 @@ const profileSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(setProfile.pending, (state) => {
+    builder.addCase(createProfile.pending, (state) => {
       state.pending = true;
       console.log("pending");
     });
-    builder.addCase(setProfile.fulfilled, (state, action) => {
+    builder.addCase(createProfile.fulfilled, (state, action) => {
       state.pending = false;
       console.log("fullfilled");
       state.profiles.push(action.payload);
     });
-    builder.addCase(setProfile.rejected, (state, action) => {
+    builder.addCase(createProfile.rejected, (state, action) => {
       state.pending = false;
       console.log("rejected");
       state.error = action.payload || "Unknown error";
