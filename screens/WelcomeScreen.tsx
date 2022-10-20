@@ -41,7 +41,7 @@ const WelcomeScreen = ({ navigation }: Props) => {
           mode="outlined"
           onPress={() => navigation.navigate("CreateUser")}
         >
-          Skapa nytt konto
+          Registrera konto
         </Button>
       </Surface>
     </View>
