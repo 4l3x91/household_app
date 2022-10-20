@@ -20,7 +20,7 @@ const RootNavigator = () => {
   return (
     <RootStack.Navigator>
       <RootStack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
-      <RootStack.Screen name="Login" component={LoginScreen} />
+      <RootStack.Screen name="Login" component={LoginScreen} options={{ headerTitle: "Logga in", headerBackVisible: false }} />
       <RootStack.Screen name="TabStack" component={TabStackNavigator} options={{ headerShown: false }} />
       <RootStack.Screen name="CreateUser" component={CreateUserScreen} options={{ headerTitle: "Skapa konto", headerBackVisible: false }} />
       <RootStack.Screen name="HouseholdOptions" component={HouseholdOptionsScreen} options={{ headerShown: false, gestureEnabled: false }} />

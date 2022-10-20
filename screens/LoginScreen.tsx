@@ -6,6 +6,7 @@ import { selectUsersProfiles } from "../store/profile/profileSelectors";
 import { findUsersProfilesThunk } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { selectUser } from "../store/user/userSelectors";
+import { clearErrors } from "../store/user/userSlice";
 
 type Props = NativeStackScreenProps<RootStackParams>;
 
@@ -31,9 +32,13 @@ const LoginScreen = ({ navigation }: Props) => {
   //     dispatch(findUsersProfilesThunk(user));
   //   }
   // }, []);
+  useEffect(() => {
+    dispatch(clearErrors());
+  }, []);
+
   return (
     <>
-      <LoginUser />
+      <LoginUser close={() => navigation.goBack()} register={() => navigation.navigate("CreateUser")} />
     </>
   );
 };
