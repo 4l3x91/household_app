@@ -42,6 +42,9 @@ const userSlice = createSlice({
     logout(state) {
       state.user = null;
     },
+    clearErrors(state){
+      state.error = ""
+    }
   },
   extraReducers: (builder) => {
     //createUser cases
@@ -73,5 +76,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, clearErrors } = userSlice.actions;
 export const userReducer = userSlice.reducer;
