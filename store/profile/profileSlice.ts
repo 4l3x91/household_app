@@ -1,6 +1,7 @@
-import { addDoc, collection } from "@firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "@firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
+import { User } from "../user/userModel";
 import { Profile } from "./profileModel";
 import { initialState } from "./profileState";
 
@@ -13,6 +14,30 @@ export const createProfile = createAsyncThunk<Profile, Profile, { rejectValue: s
     return thunkAPI.rejectWithValue("Error setting profile");
   }
 });
+
+export const findUsersProfilesThunk = createAsyncThunk<Profile[], User, { rejectValue: string }>(
+  "profile/findUsersProfile",
+  async (user, thunkAPI) => {
+    try {
+      const collectionRef = collection(db, "profiles");
+      const q = query(collectionRef, where("userId", "==", user.id));
+      const documentsFromQuery = await getDocs(q);
+
+      if (!documentsFromQuery.empty) {
+        const userProfiles: Profile[] = [];
+        documentsFromQuery.docs.forEach((doc) => userProfiles.push(doc.data() as Profile));
+
+        console.log(userProfiles);
+        return userProfiles;
+      } else {
+        return thunkAPI.rejectWithValue("cannot find any profiles for this user");
+      }
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue("cant find any profiles");
+    }
+  }
+);
 
 const profileSlice = createSlice({
   name: "profile",
@@ -29,6 +54,22 @@ const profileSlice = createSlice({
       state.profiles.push(action.payload);
     });
     builder.addCase(createProfile.rejected, (state, action) => {
+      state.pending = false;
+      console.log("rejected");
+      state.error = action.payload || "Unknown error";
+    });
+
+    //FIND PROFILES
+    builder.addCase(findUsersProfilesThunk.pending, (state) => {
+      state.pending = true;
+      console.log("pending");
+    });
+    builder.addCase(findUsersProfilesThunk.fulfilled, (state, action) => {
+      state.pending = false;
+      console.log("fullfilled");
+      state.profiles = action.payload;
+    });
+    builder.addCase(findUsersProfilesThunk.rejected, (state, action) => {
       state.pending = false;
       console.log("rejected");
       state.error = action.payload || "Unknown error";
