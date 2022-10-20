@@ -8,7 +8,6 @@ import { initialState } from "./profileState";
 export const createProfile = createAsyncThunk<Profile, Profile, { rejectValue: string }>("profile/setProfile", async (profile, thunkAPI) => {
   try {
     await addDoc(collection(db, "profiles"), profile);
-    console.log("teststest");
     return profile;
   } catch (error) {
     console.log(error);
@@ -52,14 +51,13 @@ export const setProfilesThunk = createAsyncThunk<Profile[], Profile, { rejectVal
       if (!documentsFromQuery.empty) {
         const profiles: Profile[] = [];
         documentsFromQuery.docs.forEach((doc) => profiles.push(doc.data() as Profile));
-        console.log(profiles);
         return profiles;
       } else {
         return thunkAPI.rejectWithValue("cannot find any profiles with that household id");
       }
     } catch (error) {
-      console.log("error");
-      return thunkAPI.rejectWithValue("ASD");
+      console.log(error);
+      return thunkAPI.rejectWithValue("oscar s'ger att den h'r 'r helt fuckad");
     }
   }
 );
@@ -70,38 +68,32 @@ const profileSlice = createSlice({
   reducers: {
     resetProfileState(state) {
       state.profiles = [];
-      console.log("state e tomt");
     },
   },
   extraReducers: (builder) => {
     builder.addCase(createProfile.pending, (state) => {
       state.pending = true;
-      console.log("pendinggg");
     });
     builder.addCase(createProfile.fulfilled, (state, action) => {
       state.pending = false;
-      console.log("fullfilledddd");
+
       state.profiles.push(action.payload);
     });
     builder.addCase(createProfile.rejected, (state, action) => {
       state.pending = false;
-      console.log("rejectedasdasd");
       state.error = action.payload || "Unknown error";
     });
 
     //FIND PROFILES
     builder.addCase(findUsersProfilesThunk.pending, (state) => {
       state.pending = true;
-      console.log("pendingtest");
     });
     builder.addCase(findUsersProfilesThunk.fulfilled, (state, action) => {
       state.pending = false;
-      console.log("fullfilled");
       state.profiles = action.payload;
     });
     builder.addCase(findUsersProfilesThunk.rejected, (state, action) => {
       state.pending = false;
-      console.log("rejected");
       state.error = action.payload || "Unknown error";
     });
   },

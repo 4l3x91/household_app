@@ -20,17 +20,10 @@ const LoginScreen = ({ navigation }: Props) => {
       dispatch(findUsersProfilesThunk(user));
       if (userProfiles.length === 1) {
         navigation.navigate("TabStack");
-      } else if (userProfiles.length > 1) {
-        navigation.navigate("HouseholdOptions");
       } else navigation.navigate("HouseholdOptions");
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     dispatch(findUsersProfilesThunk(user));
-  //   }
-  // }, []);
   useEffect(() => {
     dispatch(clearErrors());
   }, []);
