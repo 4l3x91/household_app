@@ -8,6 +8,7 @@ import { initialState } from "./profileState";
 export const createProfile = createAsyncThunk<Profile, Profile, { rejectValue: string }>("profile/setProfile", async (profile, thunkAPI) => {
   try {
     await addDoc(collection(db, "profiles"), profile);
+    console.log("teststest");
     return profile;
   } catch (error) {
     console.log(error);
@@ -66,27 +67,32 @@ export const setProfilesThunk = createAsyncThunk<Profile[], Profile, { rejectVal
 const profileSlice = createSlice({
   name: "profile",
   initialState,
-  reducers: {},
+  reducers: {
+    resetProfileState(state) {
+      state.profiles = [];
+      console.log("state e tomt");
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(createProfile.pending, (state) => {
       state.pending = true;
-      console.log("pending");
+      console.log("pendinggg");
     });
     builder.addCase(createProfile.fulfilled, (state, action) => {
       state.pending = false;
-      console.log("fullfilled");
+      console.log("fullfilledddd");
       state.profiles.push(action.payload);
     });
     builder.addCase(createProfile.rejected, (state, action) => {
       state.pending = false;
-      console.log("rejected");
+      console.log("rejectedasdasd");
       state.error = action.payload || "Unknown error";
     });
 
     //FIND PROFILES
     builder.addCase(findUsersProfilesThunk.pending, (state) => {
       state.pending = true;
-      console.log("pending");
+      console.log("pendingtest");
     });
     builder.addCase(findUsersProfilesThunk.fulfilled, (state, action) => {
       state.pending = false;
@@ -102,3 +108,4 @@ const profileSlice = createSlice({
 });
 
 export const profileReducer = profileSlice.reducer;
+export const { resetProfileState } = profileSlice.actions;
