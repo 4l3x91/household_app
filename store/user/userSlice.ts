@@ -27,6 +27,9 @@ export const signInUser = createAsyncThunk<UserCredential, { email: string; pass
     try {
       return await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
+      if (error instanceof FirebaseError) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
       return thunkAPI.rejectWithValue("Error logging in user");
     }
   }
@@ -42,9 +45,9 @@ const userSlice = createSlice({
     logout(state) {
       state.user = null;
     },
-    clearErrors(state){
-      state.error = ""
-    }
+    clearErrors(state) {
+      state.error = "";
+    },
   },
   extraReducers: (builder) => {
     //createUser cases
