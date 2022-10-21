@@ -14,7 +14,8 @@ const ChoresScreen = ({ navigation }: Props) => {
 
   return (
 <View style={{ flex: 1 }}>
-      <Text>ChoresScreen</Text>
+    <View style={{ flex: 1 }}>
+        <Text>ChoresScreen</Text>
       {chores.chores.map((chore) => (
         <Pressable key={chore.id} onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id })}>
           <ChoreItem chore={chore} />
