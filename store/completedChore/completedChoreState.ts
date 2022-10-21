@@ -2,12 +2,12 @@ import { completedChoreModel } from "./completedChoreModel";
 
 export interface CompletedChoresState {
   completedChores: completedChoreModel[];
-  isLoading: boolean;
+  pending: boolean;
   error: string;
 }
 
 export const initialState: CompletedChoresState = {
   completedChores: [],
-  isLoading: false,
+  pending: false,
   error: "",
 };

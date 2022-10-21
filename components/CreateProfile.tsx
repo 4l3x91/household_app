@@ -4,21 +4,14 @@ import { Text, View } from "react-native";
 import { useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
-import * as Yup from "yup";
 import { selectHouseholdId } from "../store/household/householdSelector";
 import { avatarData } from "../store/profile/profileData";
 import { Avatar, Profile } from "../store/profile/profileModel";
 import { createProfile } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { selectUser } from "../store/user/userSelectors";
+import { profileSchema } from "../utils/yupSchemas";
 import Input from "./Input";
-
-const profileSchema = Yup.object().shape({
-  profileName: Yup.string()
-    .required("profile name cant be empty")
-    .min(2, "must contain atleast 2 characters")
-    .matches(/^\S*$/, "profile name cannot contain spaces"),
-});
 
 const CreateProfile = () => {
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
