@@ -90,15 +90,15 @@ const householdSlice = createSlice({
       state.error = "Error: no household data found";
     });
     builder.addCase(deleteHouseholdThunk.pending, (state) => {
-      state.isLoading = true;
+      state.pending = true;
       state.error = "";
     });
     builder.addCase(deleteHouseholdThunk.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.pending = false;
       state.household = action.payload;
     });
     builder.addCase(deleteHouseholdThunk.rejected, (state) => {
-      state.isLoading = false;
+      state.pending = false;
       state.error = "Error: no household data found";
     });
   },

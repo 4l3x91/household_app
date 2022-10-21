@@ -23,11 +23,11 @@ const ChoresScreen = ({ navigation }: Props) => {
     <View style={{ flex: 1 }}>
       <Text>ChoresScreen</Text>
       <ScrollView>
-        {chores.chores.map((chore) => (
-          <Pressable key={chore.id} onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id })}>
-            <ChoreItem chore={chore} />
-          </Pressable>
-        ))}
+      {chores.chores.map((chore) => (
+        <Pressable key={chore.id} onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
+          <ChoreItem chore={chore} />
+        </Pressable>
+      ))}
       </ScrollView>
       <Portal>
         <Modalize ref={modalizeRef} modalStyle={{ backgroundColor: theme.colors.surface }} adjustToContentHeight={true}>
