@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, where } from "@firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from "@firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { HouseholdModel } from "./householdModel";
@@ -8,10 +8,36 @@ export const createHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdMo
   "household/setHousehold",
   async (household, thunkAPI) => {
     try {
-      await addDoc(collection(db, "households"), household);
+      const collectionRef = collection(db, "households");
+
+      await addDoc(collectionRef, household);
+
       return household;
     } catch (error) {
       return thunkAPI.rejectWithValue("something went wrong");
+    }
+  }
+);
+
+export const deleteHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdModel, { rejectValue: string }>(
+  "household/deleteHousehold",
+  async (household, thunkAPI) => {
+    //TODO: think about logic to delete all profiles corresponding to this household. USE this with caution :]
+    try {
+      const collectionRef = collection(db, "households");
+
+      const q = query(collectionRef, where("id", "==", household.id));
+
+      const result = await getDocs(q);
+
+      if (!result.empty) {
+        const householdToDelete = result.docs[0].id;
+        await deleteDoc(doc(db, "households", householdToDelete));
+      }
+      return {} as HouseholdModel;
+    } catch (error) {
+      console.log(error);
+      return thunkAPI.rejectWithValue("error");
     }
   }
 );
@@ -61,6 +87,18 @@ const householdSlice = createSlice({
     });
     builder.addCase(getHouseholdByCodeThunk.rejected, (state) => {
       state.pending = false;
+      state.error = "Error: no household data found";
+    });
+    builder.addCase(deleteHouseholdThunk.pending, (state) => {
+      state.isLoading = true;
+      state.error = "";
+    });
+    builder.addCase(deleteHouseholdThunk.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.household = action.payload;
+    });
+    builder.addCase(deleteHouseholdThunk.rejected, (state) => {
+      state.isLoading = false;
       state.error = "Error: no household data found";
     });
   },

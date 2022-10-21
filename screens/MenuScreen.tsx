@@ -40,14 +40,12 @@ const MenuScreen = ({ navigation }: Props) => {
           </Surface>
         </TouchableOpacity>
       </View>
-    <View>
-      <Text>MenuScreen</Text>
-      {/* <CreateProfile /> */}
-      {/* <CreateHousehold /> */}
-      <Button mode="contained" onPress={handleSignOut}>
-        Logout
-      </Button>
-    </View>
+      <View>
+        <Text>MenuScreen</Text>
+        <Button mode="contained" onPress={handleSignOut}>
+          Logout
+        </Button>
+      </View>
     </View>
   );
 };

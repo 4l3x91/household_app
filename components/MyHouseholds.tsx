@@ -6,7 +6,6 @@ import styled from "styled-components/native";
 import { db } from "../config/firebase";
 import { HouseholdModel } from "../store/household/householdModel";
 import { selectUsersProfiles } from "../store/profile/profileSelectors";
-import { setProfilesThunk } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { selectUser } from "../store/user/userSelectors";
 
@@ -45,7 +44,7 @@ const MyHouseholds = () => {
           <Pressable
             key={profile.id}
             onPress={() => {
-              dispatch(setProfilesThunk(profile));
+              console.log("set household state to households[index].id");
             }}
           >
             <ProfilesContainer>
