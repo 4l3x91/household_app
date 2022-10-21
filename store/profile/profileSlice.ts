@@ -69,6 +69,9 @@ const profileSlice = createSlice({
     resetProfileState(state) {
       state.profiles = [];
     },
+    addProfile(state, action) {
+      state.profiles.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createProfile.pending, (state) => {
@@ -100,4 +103,4 @@ const profileSlice = createSlice({
 });
 
 export const profileReducer = profileSlice.reducer;
-export const { resetProfileState } = profileSlice.actions;
+export const { resetProfileState, addProfile } = profileSlice.actions;
