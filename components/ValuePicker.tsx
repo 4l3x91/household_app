@@ -14,6 +14,7 @@ type Props = {
   unit?: string;
   showBadge?: boolean;
   badgeSize?: number;
+  prefix?: string;
 };
 
 const ValuePicker = (props: Props) => {
@@ -24,7 +25,7 @@ const ValuePicker = (props: Props) => {
   const values = () => {
     const condition = (i: number, max: number) => (!isDarkTheme ? i < max / 2 : i > max / 2);
     const styles = {
-      opacity: (i: number) => (isDarkTheme ? i * -(0.8 / props.max) + 1 : i * (0.7 / props.max) + 0.3),
+      opacity: (i: number) => (isDarkTheme ? i * -(0.7 / props.max) + 0.8 : i * (0.7 / props.max) + 0.3),
       color: (i: number) => (condition(i, props.max) ? theme.colors.primary : theme.colors.background),
     };
     const results: JSX.Element[] = [];
@@ -34,7 +35,7 @@ const ValuePicker = (props: Props) => {
       }
       results.push(
         <Pressable
-          style={{ marginHorizontal: 2 }}
+          style={{ marginHorizontal: props.showBadge ? 5 : 2, justifyContent: "center" }}
           key={i}
           onPress={() => {
             props.onChange && props.onChange(i);
@@ -42,7 +43,7 @@ const ValuePicker = (props: Props) => {
           }}
         >
           {props.showBadge ? (
-            <>
+            <View>
               <Badge
                 style={{
                   backgroundColor: theme.colors.primary,
@@ -50,24 +51,17 @@ const ValuePicker = (props: Props) => {
                 }}
                 size={props.badgeSize || 35}
               ></Badge>
-              <View
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ color: styles.color(i) }}>{i}</Text>
-              </View>
-            </>
-          ) : (
-            <View style={{ alignItems: "center", minWidth: 50, maxWidth: 50, paddingHorizontal: 10, backgroundColor: "#00000014", borderRadius: 5 }}>
-              <Text variant="headlineMedium">{i}</Text>
+
+              <BadgeValueContainer>
+                <Text variant="headlineSmall" style={{ color: styles.color(i) }}>
+                  {i}
+                </Text>
+              </BadgeValueContainer>
             </View>
+          ) : (
+            <TextValueContainer>
+              <Text variant="headlineSmall">{i}</Text>
+            </TextValueContainer>
           )}
         </Pressable>
       );
@@ -77,20 +71,20 @@ const ValuePicker = (props: Props) => {
 
   return (
     <Pressable onPress={() => setShowModal(true)}>
-      <ValuePickerContainer>
+      <ValuePickerContainer badgeSize={props.badgeSize || 35}>
         {!showModal ? (
           <ClosedModalContainer>
-            <View>
-              <Text variant="titleMedium">{props.label}:</Text>
+            <LabelContainer>
+              <Text variant="titleLarge">{props.label}:</Text>
               {props.subLabel && <Text variant="labelSmall">{props.subLabel}</Text>}
-            </View>
+            </LabelContainer>
 
             <ValueUnitContainer>
-              <Badge style={{ backgroundColor: theme.colors.primary, margin: 5, alignSelf: "center" }} size={25}>
+              {props.prefix && <Text variant="titleLarge"> {props.prefix}</Text>}
+              <Badge style={{ backgroundColor: theme.colors.primary, margin: 5, alignSelf: "center" }} size={30}>
                 {props.value}
               </Badge>
-
-              {props.unit && <Text>{props.unit}</Text>}
+              {props.unit && <Text variant="titleLarge">{props.unit}</Text>}
             </ValueUnitContainer>
           </ClosedModalContainer>
         ) : (
@@ -107,27 +101,50 @@ const ValuePicker = (props: Props) => {
 
 export default ValuePicker;
 
-const ChoiseContainer = styled.ScrollView`
-  /* background-color: aqua; */
-  flex-direction: row;
-  min-width: 100%;
-`;
-
-const ValuePickerContainer = styled(Surface)`
-  background-color: red;
+const ValuePickerContainer = styled(Surface)<{ badgeSize: number }>`
+  justify-content: center;
   flex-direction: row;
   border-radius: 10px;
-  padding: 10px;
+  min-height: ${({ badgeSize }) => badgeSize + 30}px;
 `;
 
 const ClosedModalContainer = styled.View`
   flex: 1;
   flex-direction: row;
+  padding: 10px;
   justify-content: space-between;
 `;
+
+const LabelContainer = styled.View`
+  justify-content: center;
+`;
+
 const OpenModalContainer = styled.View`
-  background-color: green;
-  flex: 1;
+  padding: 10px 0;
+  flex-direction: row;
+`;
+
+const BadgeValueContainer = styled.View`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+`;
+
+const TextValueContainer = styled.View`
+  align-items: center;
+  align-content: center;
+  min-width: 55px;
+  max-width: 70px;
+  padding: 0 10px;
+  background-color: #00000032;
+  border-radius: 5px;
+`;
+
+const ChoiseContainer = styled.ScrollView`
   flex-direction: row;
 `;
 
@@ -135,12 +152,3 @@ const ValueUnitContainer = styled.View`
   align-items: center;
   flex-direction: row;
 `;
-
-// const Label = styled(Text)`
-//   font-size: 18px;
-//   font-weight: 600;
-// `;
-
-// const SubLabel = styled.(Text)`
-//   font-size: 10px;
-// `;
