@@ -1,7 +1,7 @@
 import { collection, getDocs, query, where } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { Surface, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { db } from "../config/firebase";
 import { HouseholdModel } from "../store/household/householdModel";
@@ -48,12 +48,12 @@ const MyHouseholds = () => {
               dispatch(setProfilesThunk(profile));
             }}
           >
-            <ProfilesContainer bgColor={colors.primary}>
+            <ProfilesContainer>
               <AvatarCard color={profile.avatar.color}>
                 <Avatar>{profile.avatar.avatar}</Avatar>
               </AvatarCard>
-              <ProfileName color={colors.text}>{profile.profileName}</ProfileName>
-              <ProfileName color={colors.text}>{households[index].name}</ProfileName>
+              <ProfileName color={colors.onSurface}>{profile.profileName}</ProfileName>
+              <ProfileName color={colors.onSurface}>{households[index].name}</ProfileName>
             </ProfilesContainer>
           </Pressable>
         ))}
@@ -69,9 +69,8 @@ const UserContainer = styled.View`
   background-color: gray;
 `;
 
-const ProfilesContainer = styled.View<{ bgColor: string }>`
+const ProfilesContainer = styled(Surface)`
   border-radius: 10px;
-  background-color: ${(props) => props.bgColor};
   flex-direction: row;
   margin: 10px 10px;
   align-items: center;
