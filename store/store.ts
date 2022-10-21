@@ -4,6 +4,7 @@ import { choreReducer } from "./chore/choreSlice";
 import { completedChoresReducer } from "./completedChore/completedChoreSlice";
 import { householdReducer } from "./household/householdSlice";
 import { profileReducer } from "./profile/profileSlice";
+import { themeReducer } from "./theme/themeSlice";
 import { userReducer } from "./user/userSlice";
 
 const store = configureStore({
@@ -13,6 +14,7 @@ const store = configureStore({
     chores: choreReducer,
     household: householdReducer,
     completedChores: completedChoresReducer,
+    themeState: themeReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });

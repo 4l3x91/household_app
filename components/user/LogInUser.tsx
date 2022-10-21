@@ -1,11 +1,11 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { View } from "react-native";
-import { Button, Divider, Text, TextInput } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { signInUser } from "../../store/user/userSlice";
+import BottomButtons from "../BottomButtons";
 import ErrorTranslator from "../ErrorTranslator";
 import Input from "../Input";
 
@@ -66,19 +66,15 @@ const LoginUser = ({ close, register }: Props) => {
                   {errors.password && <Text>{errors.password}</Text>}
                   {error && <ErrorTranslator error={error} register={register} />}
                 </InputContainer>
-                <ButtonContainer>
-                  <View style={{ flex: 1 }}>
-                    <Button mode={"text"} style={{ borderRadius: 0 }} onPress={handleSubmit} loading={pending} icon="plus-circle-outline">
-                      Logga in
-                    </Button>
-                  </View>
-                  <Divider style={{ width: 1, height: "100%" }} />
-                  <View style={{ flex: 1 }}>
-                    <Button mode={"text"} style={{ borderRadius: 0 }} onPress={close} icon="close-circle-outline">
-                      Stäng
-                    </Button>
-                  </View>
-                </ButtonContainer>
+                <BottomButtons
+                  pending={pending}
+                  handleSubmit={handleSubmit}
+                  close={close}
+                  leftTitle="Logga in"
+                  rightTitle="Stäng"
+                  leftIcon="login"
+                  rightIcon="close-circle-outline"
+                />
               </>
             );
           }}
@@ -99,9 +95,4 @@ const InputContainer = styled.View`
   flex: 1;
   justify-content: center;
   padding: 20px;
-`;
-
-const ButtonContainer = styled.View`
-  margin-bottom: 30px;
-  flex-direction: row;
 `;

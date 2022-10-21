@@ -1,11 +1,11 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { View } from "react-native";
-import { Button, Divider, Text, TextInput } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { createUser } from "../../store/user/userSlice";
+import BottomButtons from "../BottomButtons";
 import ErrorTranslator from "../ErrorTranslator";
 import Input from "../Input";
 
@@ -72,19 +72,15 @@ const CreateUser = ({ logIn, close }: Props) => {
                 {errors.passwordConfirmation && <Text>{errors.passwordConfirmation}</Text>}
                 {userState.error && <ErrorTranslator error={userState.error} logIn={logIn} />}
               </InputContainer>
-              <ButtonContainer>
-                <View style={{ flex: 1 }}>
-                  <Button mode={"text"} style={{ borderRadius: 0 }} onPress={handleSubmit} loading={userState.pending} icon="plus-circle-outline">
-                    Registrera
-                  </Button>
-                </View>
-                <Divider style={{ width: 1, height: "100%" }} />
-                <View style={{ flex: 1 }}>
-                  <Button mode={"text"} style={{ borderRadius: 0 }} onPress={close} icon="close-circle-outline">
-                    Stäng
-                  </Button>
-                </View>
-              </ButtonContainer>
+              <BottomButtons
+                pending={userState.pending}
+                handleSubmit={handleSubmit}
+                close={close}
+                leftTitle="Registrera"
+                rightTitle="Stäng"
+                leftIcon="account-plus"
+                rightIcon="close-circle-outline"
+              />
             </>
           );
         }}
