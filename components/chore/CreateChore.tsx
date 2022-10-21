@@ -1,17 +1,27 @@
+import { uuidv4 } from "@firebase/util";
 import { Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import { Button, Divider, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
+import { Chore } from "../../store/chore/choreModel";
+import { createChoreThunk } from "../../store/chore/choreSlice";
+import { selectHousehold } from "../../store/household/householdSelector";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import ErrorTranslator from "../ErrorTranslator";
 import Input from "../Input";
 import ValuePicker from "../ValuePicker";
 
 const validation = Yup.object().shape({
-  title: Yup.string().required("Titel kan inte vara tom"),
-  description: Yup.string().required("Beskrivning kan inte vara tom"),
+  name: Yup.string()
+    .min(2, "Titel måste vara minst två tecken")
+    .max(20, "Titel kan inte vara längre än 20 tecken")
+    .required("Titel kan inte vara tom"),
+  description: Yup.string()
+    .min(10, "Beskrivning måste vara minst 10 tecken")
+    .max(100, "Beskrivning kan inte vara längre än 100 tecken")
+    .required("Beskrivning kan inte vara tom"),
 });
 
 interface Props {
@@ -19,12 +29,28 @@ interface Props {
 }
 
 const CreateChore = ({ closeModal }: Props) => {
+  const [interval, setInterval] = useState(1);
+  const [energy, setEnergy] = useState(2);
+  const { household } = useAppSelector(selectHousehold);
   const dispatch = useAppDispatch();
-  const { pending, error } = useAppSelector((state) => state.userState);
+  const choreState = useAppSelector((state) => state.chores);
+
+  const handleSubmit = (values: { name: string; description: string }) => {
+    const newChore: Chore = {
+      id: uuidv4(),
+      name: values.name,
+      description: values.description,
+      householdId: household.id,
+      interval: interval,
+      energy: energy,
+    };
+    dispatch(createChoreThunk(newChore));
+    closeModal();
+  };
 
   return (
     <View>
-      <Formik initialValues={{ title: "", description: "" }} validationSchema={validation} onSubmit={(values) => console.log("Add chore")}>
+      <Formik initialValues={{ name: "", description: "" }} validationSchema={validation} onSubmit={(values) => handleSubmit(values)}>
         {({ handleChange, handleSubmit, values, errors }) => {
           return (
             <View>
@@ -34,27 +60,36 @@ const CreateChore = ({ closeModal }: Props) => {
               <Divider style={{ height: 1, width: "100%" }} />
               <ContentContainer elevation={0}>
                 <Container>
-                  <Input label="Titel" value={values.title} handleChange={handleChange("title")} />
-                  {errors.title && <Text>{errors.title}</Text>}
+                  <Input label="Titel" value={values.name} handleChange={handleChange("name")} />
+                  {errors.name && <Text>{errors.name}</Text>}
                 </Container>
 
                 <Container>
-                  <Input label="Beskrivning" multiline={true} value={values.description} handleChange={handleChange("description")} />
+                  <Input label="Beskrivning" multiline value={values.description} numberOfLines={4} handleChange={handleChange("description")} />
                   {errors.description && <Text>{errors.description}</Text>}
-                  {error && <ErrorTranslator error={error} />}
+                  {choreState.error && <ErrorTranslator error={choreState.error} />}
                 </Container>
 
                 <Container>
-                  <ValuePicker showBadge={true} label="Återkommer" max={10} value={10} prefix="var" unit="dag" />
+                  <ValuePicker label="Återkommer" min={1} max={31} onChange={setInterval} value={interval} prefix="var" unit="dag" />
                 </Container>
                 <Container>
-                  <ValuePicker subLabel="Hur energikrävande är sysslan?" showBadge={false} label="Värde" max={10} value={10} />
+                  <ValuePicker
+                    subLabel="Hur energikrävande är sysslan?"
+                    showBadge={true}
+                    label="Värde"
+                    min={1}
+                    max={10}
+                    steps={1}
+                    onChange={setEnergy}
+                    value={energy}
+                  />
                 </Container>
               </ContentContainer>
               <Divider style={{ height: 1, width: "100%" }} />
               <ButtonContainer>
                 <ButtonWrapper>
-                  <Button style={{ padding: 15 }} mode={"text"} onPress={handleSubmit} loading={pending} icon="plus-circle-outline">
+                  <Button style={{ padding: 15 }} mode={"text"} onPress={handleSubmit} loading={choreState.pending} icon="plus-circle-outline">
                     Spara
                   </Button>
                 </ButtonWrapper>
