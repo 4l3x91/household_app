@@ -21,14 +21,14 @@ const completedChoresSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(setCompletedChoresThunk.pending, (state) => {
-      state.isLoading = true;
+      state.pending = true;
     });
     builder.addCase(setCompletedChoresThunk.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.pending = false;
       state.completedChores = action.payload;
     });
     builder.addCase(setCompletedChoresThunk.rejected, (state) => {
-      state.isLoading = false;
+      state.pending = false;
       state.error = "Error: no completed chore data found";
     });
   },
