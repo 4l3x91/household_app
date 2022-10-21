@@ -21,13 +21,6 @@ const ChoresScreen = ({ navigation }: Props) => {
           <ChoreItem chore={chore} />
         </Pressable>
       ))}
-      {/* //Städa */}
-      <ItemContainer>
-        <ValuePicker label={"Poäng"} value={value} min={1} steps={1} max={10} showBadge={true} unit={"Poäng"} onChange={setValue} />
-      </ItemContainer>
-      <ItemContainer>
-        <ValuePicker label={"Intervall"} subLabel={"Testing Testing"} value={value} min={1} steps={1} max={31} unit={"Dagar"} onChange={setValue} />
-      </ItemContainer>
     </View>
   );
 };
