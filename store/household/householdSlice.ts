@@ -14,28 +14,26 @@ export const createHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdMo
       return thunkAPI.rejectWithValue("something went wrong");
     }
   }
-  );
+);
 
-  export const getHouseholdByCodeThunk = createAsyncThunk<HouseholdModel, string, { rejectValue: string }>(
-    "household/getHouseholdByCode",
-    async (code, thunkAPI) => {
-      try {
-        const householdRef = collection(db, "households");
-        const q = query(householdRef, where("code", "==", code));
-        const queryResult = await getDocs(q);
-        if (!queryResult.empty) {
-          const household = queryResult.docs[0].data() as HouseholdModel
-          return household;
-        }
-        else {
-          return thunkAPI.rejectWithValue("Household does not exist");
-        }
-
-      } catch (error) {
-        return thunkAPI.rejectWithValue("something went wrong");
+export const getHouseholdByCodeThunk = createAsyncThunk<HouseholdModel, string, { rejectValue: string }>(
+  "household/getHouseholdByCode",
+  async (code, thunkAPI) => {
+    try {
+      const householdRef = collection(db, "households");
+      const q = query(householdRef, where("code", "==", code));
+      const queryResult = await getDocs(q);
+      if (!queryResult.empty) {
+        const household = queryResult.docs[0].data() as HouseholdModel;
+        return household;
+      } else {
+        return thunkAPI.rejectWithValue("Household does not exist");
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue("something went wrong");
     }
   }
-)
+);
 
 const householdSlice = createSlice({
   name: "household",
@@ -43,26 +41,26 @@ const householdSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(createHouseholdThunk.pending, (state) => {
-      state.isLoading = true;
+      state.pending = true;
     });
     builder.addCase(createHouseholdThunk.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.pending = false;
       state.household = action.payload;
     });
     builder.addCase(createHouseholdThunk.rejected, (state) => {
-      state.isLoading = false;
+      state.pending = false;
       state.error = "Error: no household data found";
     });
     builder.addCase(getHouseholdByCodeThunk.pending, (state) => {
-      state.isLoading = true;
+      state.pending = true;
       state.error = "";
     });
     builder.addCase(getHouseholdByCodeThunk.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.pending = false;
       state.household = action.payload;
     });
     builder.addCase(getHouseholdByCodeThunk.rejected, (state) => {
-      state.isLoading = false;
+      state.pending = false;
       state.error = "Error: no household data found";
     });
   },
