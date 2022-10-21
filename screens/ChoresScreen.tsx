@@ -13,7 +13,6 @@ type Props = NativeStackScreenProps<ChoreStackParams>;
 
 const ChoresScreen = ({ navigation }: Props) => {
   const chores = useAppSelector(selectChores);
-  const [value, setValue] = React.useState(1);
 
   return (
       <Text>ChoresScreen</Text>
