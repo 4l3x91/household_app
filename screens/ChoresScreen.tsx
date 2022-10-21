@@ -25,8 +25,4 @@ const ChoresScreen = ({ navigation }: Props) => {
   );
 };
 
-const ItemContainer = styled.View`
-  margin: 5px;
-`;
-
 export default ChoresScreen;
