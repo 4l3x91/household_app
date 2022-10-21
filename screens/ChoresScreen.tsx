@@ -16,7 +16,7 @@ const ChoresScreen = ({ navigation }: Props) => {
 <View style={{ flex: 1 }}>
       <Text>ChoresScreen</Text>
       {chores.chores.map((chore) => (
-        <Pressable key={chore.id} onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id })}>
+        <Pressable key={chore.id} onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
           <ChoreItem chore={chore} />
         </Pressable>
       ))}

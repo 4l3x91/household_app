@@ -3,34 +3,34 @@ import { Avatar } from "./profileModel";
 export const avatarData: Avatar[] = [
   {
     avatar: "🦊",
-    color: "#264653",
+    color: "#cc4e0f",
   },
   {
     avatar: "🐷",
-    color: "#287271",
+    color: "#d4b195",
   },
   {
     avatar: "🐸",
-    color: "#b18bda",
+    color: "#9fb418",
   },
   {
     avatar: "🐥",
-    color: "#8ab17d",
+    color: "#c99100",
   },
   {
     avatar: "🐙",
-    color: "#e9c46a",
+    color: "#ce4a47",
   },
   {
     avatar: "🐬",
-    color: "#f4a261",
+    color: "#2885a6",
   },
   {
     avatar: "🦉",
-    color: "#ffc600",
+    color: "#602f1d",
   },
   {
     avatar: "🦄",
-    color: "#941c2f",
+    color: "#ba3c70",
   },
 ];
