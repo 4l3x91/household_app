@@ -91,7 +91,7 @@ const profileSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    //CREATE HOUSEHOLD
+    //CREATE PROFILE
     builder.addCase(createProfile.pending, (state) => {
       state.pending = true;
     });

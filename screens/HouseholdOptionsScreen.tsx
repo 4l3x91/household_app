@@ -8,6 +8,7 @@ import styled from "styled-components/native";
 import CreateHousehold2 from "../components/CreateHousehold2";
 import { auth } from "../config/firebase";
 import { RootStackParams } from "../navigation/RootStackNavigator";
+import { resetHousehold } from "../store/household/householdSlice";
 import { selectUsersProfiles } from "../store/profile/profileSelectors";
 import { resetProfileState } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -33,13 +34,14 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
 
         //denna resettar state men ska bytas ut mot en useEffect där alla state resettas
         dispatch(resetProfileState());
+        dispatch(resetHousehold);
       }
     });
   }
   return (
     <>
       <Container>
-        {userProfiles.length > 0 && (
+        {userProfiles.length > 1 && (
           <Button
             dark
             mode={"outlined"}
@@ -80,12 +82,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
         Logga ut
       </Button>
       <Modalize ref={modalizeRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
-        {/* <Surface elevation={4}> */}
         <CreateHousehold2 closeModal={() => modalizeRef.current?.close()} />
-        {/* </Surface> */}
-        {/* <Surface>
-          <CreateProfile />
-        </Surface> */}
       </Modalize>
     </>
   );

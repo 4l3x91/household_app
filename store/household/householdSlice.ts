@@ -61,11 +61,36 @@ export const getHouseholdByCodeThunk = createAsyncThunk<HouseholdModel, string, 
   }
 );
 
+export const getHouseholdByIdThunk = createAsyncThunk<HouseholdModel, string, { rejectValue: string }>(
+  "household/getHouseholdById",
+  async (id, thunkAPI) => {
+    try {
+      const householdRef = collection(db, "households");
+      const q = query(householdRef, where("id", "==", id));
+      const queryResult = await getDocs(q);
+      if (!queryResult.empty) {
+        const household = queryResult.docs[0].data() as HouseholdModel;
+
+        return household;
+      } else {
+        return thunkAPI.rejectWithValue("Household does not exist");
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue("something went wrong");
+    }
+  }
+);
+
 const householdSlice = createSlice({
   name: "household",
   initialState,
-  reducers: {},
+  reducers: {
+    resetHousehold(state) {
+      state.household = initialState.household;
+    },
+  },
   extraReducers: (builder) => {
+    //CREATE HOUSEHOLD
     builder.addCase(createHouseholdThunk.pending, (state) => {
       state.pending = true;
     });
@@ -77,6 +102,8 @@ const householdSlice = createSlice({
       state.pending = false;
       state.error = "Error: no household data found";
     });
+
+    //GET HOUSEHOLD BY CODE
     builder.addCase(getHouseholdByCodeThunk.pending, (state) => {
       state.pending = true;
       state.error = "";
@@ -89,6 +116,22 @@ const householdSlice = createSlice({
       state.pending = false;
       state.error = "Error: no household data found";
     });
+
+    //GET HOUSEHOLD BY ID
+    builder.addCase(getHouseholdByIdThunk.pending, (state) => {
+      state.pending = true;
+      state.error = "";
+    });
+    builder.addCase(getHouseholdByIdThunk.fulfilled, (state, action) => {
+      state.pending = false;
+      state.household = action.payload;
+    });
+    builder.addCase(getHouseholdByIdThunk.rejected, (state) => {
+      state.pending = false;
+      state.error = "Error: no household data found";
+    });
+
+    //DELETE HOUSEHOLD
     builder.addCase(deleteHouseholdThunk.pending, (state) => {
       state.pending = true;
       state.error = "";
@@ -105,3 +148,4 @@ const householdSlice = createSlice({
 });
 
 export const householdReducer = householdSlice.reducer;
+export const { resetHousehold } = householdSlice.actions;
