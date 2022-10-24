@@ -1,11 +1,13 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { signOut } from "firebase/auth";
 import React, { useRef } from "react";
+import { View } from "react-native";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { Button, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import CreateHousehold2 from "../components/CreateHousehold2";
+import MyHouseholds from "../components/MyHouseholds";
 import { auth } from "../config/firebase";
 import { RootStackParams } from "../navigation/RootStackNavigator";
 import { resetHousehold } from "../store/household/householdSlice";
@@ -19,11 +21,17 @@ type Props = NativeStackScreenProps<RootStackParams>;
 const HouseholdOptionsScreen = ({ navigation }: Props) => {
   const userProfiles = useAppSelector(selectUsersProfiles);
   const modalizeRef = useRef<Modalize>(null);
+  const householdModalRef = useRef<Modalize>(null);
+
   const dispatch = useAppDispatch();
   const theme = useTheme();
 
   const openModalize = () => {
     modalizeRef.current?.open();
+  };
+
+  const openMyHouseholds = () => {
+    householdModalRef.current?.open();
   };
 
   function handleSignOut() {
@@ -48,6 +56,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
             style={{ marginTop: 10, width: 300 }}
             onPress={() => {
               console.log("Mina hushåll");
+              openMyHouseholds();
             }}
           >
             Mina hushåll
@@ -83,6 +92,11 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
       </Button>
       <Modalize ref={modalizeRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
         <CreateHousehold2 closeModal={() => modalizeRef.current?.close()} />
+      </Modalize>
+      <Modalize ref={householdModalRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
+        <View style={{ padding: 10, justifyContent: "center" }}>
+          <MyHouseholds goToChores={() => navigation.navigate("TabStack")} />
+        </View>
       </Modalize>
     </>
   );
