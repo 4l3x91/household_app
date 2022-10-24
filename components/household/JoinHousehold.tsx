@@ -85,7 +85,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
                 {InputBoxes()}
               </InputContainer>
               {error && <ErrorTranslator error={error as string} />}
-              {household.household.code === values.householdCode && <CreateProfile closeModal={closeModal} />}
+              {household.household.code !== "" && household.household.code === values.householdCode && <CreateProfile closeModal={closeModal} />}
             </Container>
           </>
         );
