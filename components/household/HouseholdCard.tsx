@@ -7,6 +7,7 @@ import styled from "styled-components/native";
 import { HouseholdModel } from "../../store/household/householdModel";
 import { setHousehold } from "../../store/household/householdSlice";
 import { Profile } from "../../store/profile/profileModel";
+import { setHouseoldProfilesThunk } from "../../store/profile/profileSlice";
 import { useAppDispatch } from "../../store/store";
 
 interface Props {
@@ -23,6 +24,7 @@ const HouseholdCard = ({ profile, household, goToChores }: Props) => {
     <Pressable
       onPress={() => {
         dispatch(setHousehold(household));
+        // dispatch(setHouseoldProfilesThunk(profile));
         goToChores && goToChores();
       }}
     >

@@ -58,7 +58,35 @@ export const deleteProfileThunk = createAsyncThunk<Profile, Profile, { rejectVal
   }
 });
 
-export const setProfilesThunk = createAsyncThunk<Profile[], Profile, { rejectValue: string }>(
+export const setRelatedProfilesThunk = createAsyncThunk<Profile[], Profile[], { rejectValue: string }>(
+  "profile/setRelatedProfiles",
+  async (profiles, thunkAPI) => {
+    try {
+      const householdIds = profiles.map((profile) => {
+        return profile.householdId;
+      });
+
+      const newArr: Profile[] = [];
+
+      const q = query(collection(db, "profiles"), where("householdId", "in", householdIds));
+
+      const result = await getDocs(q);
+
+      result.docs.forEach((doc) => {
+        console.log(doc.data());
+        newArr.push(doc.data() as Profile);
+      });
+
+      console.log(newArr);
+
+      return newArr;
+    } catch (error) {
+      return thunkAPI.rejectWithValue("cant find related profiles");
+    }
+  }
+);
+
+export const setHouseoldProfilesThunk = createAsyncThunk<Profile[], Profile, { rejectValue: string }>(
   "profile/setProfiles",
 
   async (profile, thunkAPI) => {
@@ -94,6 +122,35 @@ const profileSlice = createSlice({
   },
 
   extraReducers: (builder) => {
+    //PUSH ALL PROFILES FOR ALL HOUSEHOLDS
+    builder.addCase(setRelatedProfilesThunk.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(setRelatedProfilesThunk.fulfilled, (state, action) => {
+      state.pending = false;
+      console.log("setting related profiles:");
+      console.log(action.payload);
+      state.profiles = action.payload;
+    });
+    builder.addCase(setRelatedProfilesThunk.rejected, (state, action) => {
+      state.pending = false;
+      state.error = action.payload || "Unknown error";
+    });
+
+    //PUSH HOUSEHOLD MEMEBER TO PROFILES
+    builder.addCase(setHouseoldProfilesThunk.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(setHouseoldProfilesThunk.fulfilled, (state, action) => {
+      state.pending = false;
+      // action.payload.forEach((profile) => !state.profiles.includes(profile) && state.profiles.push(profile));
+      state.profiles = action.payload;
+    });
+    builder.addCase(setHouseoldProfilesThunk.rejected, (state, action) => {
+      state.pending = false;
+      state.error = action.payload || "Unknown error";
+    });
+
     //CREATE PROFILE
     builder.addCase(createProfile.pending, (state) => {
       state.pending = true;
