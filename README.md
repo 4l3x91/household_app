@@ -13,7 +13,7 @@ Kravlista (4)
 Hushåll (7)
 
 - [x] Ett hushåll ska ha ett namn och en genererad (enkel) kod så andra kan gå med i hushållet \*
-- [] namnet ska gå att ändra. \*
+- [x] namnet ska gå att ändra. \*
 - [x] Alla användare i ett hushåll ska kunna se vilka som tillhör ett hushåll.
 - [] En ägare av ett hushåll ska kunna se förfrågningar om att gå med i hushållet.
 - [] En ägare ska kunna acceptera eller neka förfrågningar.
@@ -50,7 +50,7 @@ Sysslor (6)
 
 ####
 
-- [] En ägare ska kunna lägga till sysslor att göra i hemmet. \*
+- [x] En ägare ska kunna lägga till sysslor att göra i hemmet. \*
 - [x] En syssla ska ha ett namn, en beskrivning (text), hur ofta den ska göras (dagar), och en
       vikt som beskriver hur energikrävande den är. \*
 - [] En användare ska kunna lägga till en ljudinspelning och en bild för att beskriva sysslan
