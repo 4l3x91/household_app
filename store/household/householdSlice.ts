@@ -1,5 +1,5 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from "@firebase/firestore";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { HouseholdModel } from "./householdModel";
 import { initialState } from "./householdState";
@@ -88,6 +88,9 @@ const householdSlice = createSlice({
     resetHousehold(state) {
       state.household = initialState.household;
     },
+    setHousehold(state, action: PayloadAction<HouseholdModel>) {
+      state.household = action.payload;
+    },
   },
   extraReducers: (builder) => {
     //CREATE HOUSEHOLD
@@ -148,4 +151,4 @@ const householdSlice = createSlice({
 });
 
 export const householdReducer = householdSlice.reducer;
-export const { resetHousehold } = householdSlice.actions;
+export const { resetHousehold, setHousehold } = householdSlice.actions;

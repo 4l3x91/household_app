@@ -58,6 +58,7 @@ const choreSlice = createSlice({
     builder.addCase(setChoresThunk.rejected, (state, action) => {
       state.pending = false;
       state.error = action.payload || "Unknown error";
+      state.chores = [];
     });
   },
 });
