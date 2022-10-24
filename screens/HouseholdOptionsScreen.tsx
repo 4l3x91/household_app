@@ -6,6 +6,7 @@ import { Modalize } from "react-native-modalize";
 import { Button, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import CreateHousehold2 from "../components/CreateHousehold2";
+import JoinHousehold from "../components/household/JoinHousehold";
 import { auth } from "../config/firebase";
 import { RootStackParams } from "../navigation/RootStackNavigator";
 import { resetHousehold } from "../store/household/householdSlice";
@@ -19,8 +20,13 @@ type Props = NativeStackScreenProps<RootStackParams>;
 const HouseholdOptionsScreen = ({ navigation }: Props) => {
   const userProfiles = useAppSelector(selectUsersProfiles);
   const modalizeRef = useRef<Modalize>(null);
+  const joinHouseholdRef = useRef<Modalize>(null);
   const dispatch = useAppDispatch();
   const theme = useTheme();
+
+  const openJoinHouseholdModalize = () => {
+    joinHouseholdRef.current?.open();
+  };
 
   const openModalize = () => {
     modalizeRef.current?.open();
@@ -53,14 +59,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
             Mina hushåll
           </Button>
         )}
-        <Button
-          dark
-          mode={"outlined"}
-          style={{ marginTop: 10, width: 300 }}
-          onPress={() => {
-            console.log("Gå med i hushåll");
-          }}
-        >
+        <Button dark mode={"outlined"} style={{ marginTop: 10, width: 300 }} onPress={openJoinHouseholdModalize}>
           Gå med i hushåll
         </Button>
         <Button dark mode={"outlined"} style={{ marginTop: 10, width: 300 }} onPress={openModalize}>
@@ -83,6 +82,14 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
       </Button>
       <Modalize ref={modalizeRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
         <CreateHousehold2 closeModal={() => modalizeRef.current?.close()} />
+      </Modalize>
+      <Modalize
+        ref={joinHouseholdRef}
+        rootStyle={{}}
+        modalStyle={{ backgroundColor: theme.colors.surface, paddingVertical: 100 }}
+        modalTopOffset={50}
+      >
+        <JoinHousehold closeModal={() => joinHouseholdRef.current?.close()} />
       </Modalize>
     </>
   );

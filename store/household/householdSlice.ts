@@ -1,6 +1,7 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from "@firebase/firestore";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
+import { User } from "../user/userModel";
 import { HouseholdModel } from "./householdModel";
 import { initialState } from "./householdState";
 
@@ -42,21 +43,36 @@ export const deleteHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdMo
   }
 );
 
-export const getHouseholdByCodeThunk = createAsyncThunk<HouseholdModel, string, { rejectValue: string }>(
+export const getHouseholdByCodeThunk = createAsyncThunk<HouseholdModel, { code: string; user: User }, { rejectValue: string }>(
   "household/getHouseholdByCode",
-  async (code, thunkAPI) => {
+  async ({ code, user }, thunkAPI) => {
     try {
+      const profilesRef = collection(db, "profiles");
       const householdRef = collection(db, "households");
       const q = query(householdRef, where("code", "==", code));
+      const q2 = query(profilesRef, where("userId", "==", user.id));
       const queryResult = await getDocs(q);
+
       if (!queryResult.empty) {
         const household = queryResult.docs[0].data() as HouseholdModel;
+
+        console.log(household.name);
+
+        const queryResult2 = await getDocs(q2);
+        queryResult2.forEach((doc) => {
+          if (doc.get("householdId") === household.id) {
+            throw new Error("Du har redan en profil i detta hushåll");
+          }
+        });
         return household;
       } else {
-        return thunkAPI.rejectWithValue("Household does not exist");
+        return thunkAPI.rejectWithValue("Det här hushållet existerar inte");
       }
     } catch (error) {
-      return thunkAPI.rejectWithValue("something went wrong");
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("error");
     }
   }
 );
@@ -85,6 +101,10 @@ const householdSlice = createSlice({
   name: "household",
   initialState,
   reducers: {
+    setError(state, action: PayloadAction<string>) {
+      state.error = action.payload;
+    },
+
     resetHousehold(state) {
       state.household = initialState.household;
     },
@@ -115,9 +135,9 @@ const householdSlice = createSlice({
       state.pending = false;
       state.household = action.payload;
     });
-    builder.addCase(getHouseholdByCodeThunk.rejected, (state) => {
+    builder.addCase(getHouseholdByCodeThunk.rejected, (state, action) => {
       state.pending = false;
-      state.error = "Error: no household data found";
+      state.error = action.payload || "unknown error";
     });
 
     //GET HOUSEHOLD BY ID
@@ -151,4 +171,4 @@ const householdSlice = createSlice({
 });
 
 export const householdReducer = householdSlice.reducer;
-export const { resetHousehold, setHousehold } = householdSlice.actions;
+export const { resetHousehold, setHousehold, setError } = householdSlice.actions;
