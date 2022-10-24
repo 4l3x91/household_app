@@ -9,6 +9,7 @@ import ChoreItem from "../components/ChoreItem";
 import { ChoreStackParams } from "../navigation/ChoreStackNavigator";
 import { selectChores } from "../store/chore/choreSelectors";
 import { setChoresThunk } from "../store/chore/choreSlice";
+import { selectCurrentProfile } from "../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
 type Props = NativeStackScreenProps<ChoreStackParams>;
@@ -19,7 +20,7 @@ const ChoresScreen = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
   const household = useAppSelector((state) => state.household.household);
   const chores = useAppSelector(selectChores);
-
+  const profile = useAppSelector(selectCurrentProfile);
   const modalizeRef = useRef<Modalize>(null);
 
   const openModalize = () => {
@@ -65,20 +66,24 @@ const ChoresScreen = ({ navigation }: Props) => {
           <CreateChore closeModal={() => modalizeRef.current?.close()} />
         </Modalize>
       </Portal>
-      <Divider style={{ height: 1 }} />
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        <View style={{ flex: 1 }}>
-          <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={openModalize}>
-            Lägg till
-          </Button>
-        </View>
-        <Divider style={{ width: 1, height: "auto" }} />
-        <View style={{ flex: 1 }}>
-          <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={() => console.log("Ändra logik goes here")}>
-            Ändra
-          </Button>
-        </View>
-      </View>
+      {profile && profile.role === "owner" && (
+        <>
+          <Divider style={{ height: 1 }} />
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <View style={{ flex: 1 }}>
+              <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={openModalize}>
+                Lägg till
+              </Button>
+            </View>
+            <Divider style={{ width: 1, height: "auto" }} />
+            <View style={{ flex: 1 }}>
+              <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={() => console.log("Ändra logik goes here")}>
+                Ändra
+              </Button>
+            </View>
+          </View>
+        </>
+      )}
     </View>
   );
 };
