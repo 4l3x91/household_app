@@ -1,9 +1,13 @@
+import { AntDesign } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { Button, Divider, Portal, Theme, useTheme } from "react-native-paper";
+import Tooltip from "rn-tooltip";
+import styled from "styled-components/native";
+import ChangeHouseholdName from "../components/ChangeHouseholdName";
 import CreateChore from "../components/chore/CreateChore";
 import ChoreItem from "../components/ChoreItem";
 import { ChoreStackParams } from "../navigation/ChoreStackNavigator";
@@ -15,13 +19,15 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 type Props = NativeStackScreenProps<ChoreStackParams>;
 
 const ChoresScreen = ({ navigation }: Props) => {
-  const [refresh, setRefresh] = React.useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [showTooltip, setShowToolTip] = useState(true);
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
   const household = useAppSelector((state) => state.household.household);
   const chores = useAppSelector(selectChores);
   const profile = useAppSelector(selectCurrentProfile);
   const modalizeRef = useRef<Modalize>(null);
+  const { colors } = useTheme();
 
   const openModalize = () => {
     modalizeRef.current?.open();
@@ -48,6 +54,28 @@ const ChoresScreen = ({ navigation }: Props) => {
           />
         }
       >
+        {profile?.role === "owner" ? (
+          <TitleContainer>
+            {showTooltip && (
+              <Tooltip
+                backgroundColor={colors.surfaceVariant}
+                width={200}
+                height={80}
+                popover={<Text>Tryck på namnet för att byta namn.</Text>}
+                actionType="press"
+              >
+                <CodeInnerContainer>
+                  <AntDesign name="questioncircleo" size={15} color={colors.onSurface} />
+                </CodeInnerContainer>
+              </Tooltip>
+            )}
+            <ChangeHouseholdName setShowTooltip={setShowToolTip} showTooltip={showTooltip} />
+          </TitleContainer>
+        ) : (
+          <TitleContainer>
+            <DayViewTitle style={{ color: colors.primary }}>{household.name}</DayViewTitle>
+          </TitleContainer>
+        )}
         {chores.chores.length !== 0 ? (
           chores.chores.map((chore) => (
             <Pressable key={chore.id} onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
@@ -89,3 +117,21 @@ const ChoresScreen = ({ navigation }: Props) => {
 };
 
 export default gestureHandlerRootHOC(ChoresScreen);
+
+const TitleContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+  margin-bottom: 20px;
+  flex-direction: row;
+`;
+const CodeInnerContainer = styled.View`
+  align-items: center;
+`;
+
+const DayViewTitle = styled.Text`
+  align-items: center;
+  font-size: 25px;
+  padding: 0 30px;
+`;
