@@ -38,7 +38,10 @@ const ChoresScreen = ({ navigation }: Props) => {
     <View style={{ flex: 1 }}>
       {/* Test to show members */}
       {householdMembers.map((member) => (
-        <Text>{member.profileName}</Text>
+        <>
+          <Text>{member.profileName}</Text>
+          <Text>{member.avatar.avatar}</Text>
+        </>
       ))}
       <ScrollView
         refreshControl={

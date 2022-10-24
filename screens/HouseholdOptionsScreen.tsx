@@ -12,15 +12,15 @@ import MyHouseholds from "../components/MyHouseholds";
 import { auth } from "../config/firebase";
 import { RootStackParams } from "../navigation/RootStackNavigator";
 import { resetHousehold } from "../store/household/householdSlice";
-import { selectUsersProfiles } from "../store/profile/profileSelectors";
-import { resetProfileState, setRelatedProfilesThunk } from "../store/profile/profileSlice";
+import { selectUserProfiles } from "../store/profile/profileSelectors";
+import { resetProfileState } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logout } from "../store/user/userSlice";
 
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const HouseholdOptionsScreen = ({ navigation }: Props) => {
-  const userProfiles = useAppSelector(selectUsersProfiles);
+  const userProfiles = useAppSelector(selectUserProfiles);
   const modalizeRef = useRef<Modalize>(null);
   const householdModalRef = useRef<Modalize>(null);
 
@@ -84,18 +84,6 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
           }}
         >
           tillfällig choreScreen
-        </Button>
-
-{/* Testa ny thunk */}
-        <Button
-          dark
-          mode={"outlined"}
-          style={{ marginTop: 10, width: 300 }}
-          onPress={() => {
-            dispatch(setRelatedProfilesThunk(userProfiles));
-          }}
-        >
-          tillfällig set related
         </Button>
       </Container>
       <Button mode={"contained"} style={{ width: 200, alignSelf: "center", marginBottom: 50 }} onPress={handleSignOut}>
