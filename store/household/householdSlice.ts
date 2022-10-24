@@ -1,6 +1,7 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from "@firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from "@firebase/firestore";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
+import { Profile } from "../profile/profileModel";
 import { User } from "../user/userModel";
 import { HouseholdModel } from "./householdModel";
 import { initialState } from "./householdState";
@@ -38,6 +39,31 @@ export const deleteHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdMo
       return {} as HouseholdModel;
     } catch (error) {
       console.log(error);
+      return thunkAPI.rejectWithValue("error");
+    }
+  }
+);
+
+export const changeHouseholdNameThunk = createAsyncThunk<string, { newName: string; profile: Profile }, { rejectValue: string }>(
+  "household/changeHouseholdName",
+  async ({ newName, profile }, thunkAPI) => {
+    try {
+      const collectionRef = collection(db, "households");
+      const q = query(collectionRef, where("id", "==", profile.householdId));
+      const result = await getDocs(q);
+
+      if (!result.empty) {
+        const householdToUpdateId = result.docs[0].id;
+        const householdRef: DocumentReference<DocumentData> = doc(db, "households", householdToUpdateId);
+        await updateDoc(householdRef, {
+          name: newName,
+        });
+      }
+      return newName;
+    } catch (error) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
       return thunkAPI.rejectWithValue("error");
     }
   }
@@ -104,7 +130,6 @@ const householdSlice = createSlice({
     setError(state, action: PayloadAction<string>) {
       state.error = action.payload;
     },
-
     resetHousehold(state) {
       state.household = initialState.household;
     },
@@ -124,6 +149,19 @@ const householdSlice = createSlice({
     builder.addCase(createHouseholdThunk.rejected, (state) => {
       state.pending = false;
       state.error = "Error: no household data found";
+    });
+
+    //UPDATE HOUSEHOLD NAME
+    builder.addCase(changeHouseholdNameThunk.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(changeHouseholdNameThunk.fulfilled, (state, action) => {
+      state.pending = false;
+      state.household.name = action.payload;
+    });
+    builder.addCase(changeHouseholdNameThunk.rejected, (state) => {
+      state.pending = false;
+      state.error = "didnt change mayne";
     });
 
     //GET HOUSEHOLD BY CODE
