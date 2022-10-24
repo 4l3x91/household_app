@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { Surface, useTheme } from "react-native-paper";
+import { Badge, Surface, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { Chore } from "../store/chore/choreModel";
 import { selectCompletedChores } from "../store/completedChore/completedChoreSelector";
@@ -12,12 +12,12 @@ type Props = {
 
 const ChoreItem = ({ chore }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
-  const { colors } = useTheme();
+  const theme: Theme = useTheme();
 
   return (
     <ChoreItemContainer>
       <View>
-        <Text>{chore.name}</Text>
+        <Text style={{ color: theme.colors.primary }}>{chore.name}</Text>
       </View>
       {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
         <AvatarContainer>
@@ -28,13 +28,9 @@ const ChoreItem = ({ chore }: Props) => {
       ) : completedChores.completedChores.find(
           (cc) => cc.choreId === chore.id && cc.date.setDate(cc.date.getDate() + chore.interval) > Date.now()
         ) ? (
-        <ChoreCircle colors={colors.notification}>
-          <ChoreCircleText colors={colors.text}>{chore.interval}</ChoreCircleText>
-        </ChoreCircle>
+        <Badge style={{ backgroundColor: theme.colors.error }}>{chore.interval}</Badge>
       ) : (
-        <ChoreCircle colors={colors.background}>
-          <ChoreCircleText colors={colors.text}>{chore.interval}</ChoreCircleText>
-        </ChoreCircle>
+        <Badge style={{ backgroundColor: theme.colors.background, color: theme.colors.primary }}>{chore.interval}</Badge>
       )}
     </ChoreItemContainer>
   );
@@ -50,19 +46,6 @@ const ChoreItemContainer = styled(Surface)`
 
 const AvatarContainer = styled.View`
   flex-direction: row;
-`;
-
-const ChoreCircle = styled(Surface)<{ colors: string }>`
-  border-radius: 50px;
-  height: 25px;
-  width: 25px;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ colors }) => colors};
-`;
-
-const ChoreCircleText = styled.Text<{ colors: string }>`
-  color: ${({ colors }) => colors};
 `;
 
 export default ChoreItem;

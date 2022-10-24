@@ -7,16 +7,7 @@ export interface ChoreState {
 }
 
 export const initialState: ChoreState = {
-  chores: [
-    {
-      id: "",
-      householdId: "",
-      name: "",
-      description: "",
-      interval: 1,
-      energy: 1,
-    },
-  ],
+  chores: [],
   error: "",
   pending: false,
 };
