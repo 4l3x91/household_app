@@ -1,6 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
+import { ScrollView } from "react-native-gesture-handler";
 import { Button, IconButton, Surface, Text, useTheme } from "react-native-paper";
 import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
@@ -17,7 +18,7 @@ import { createHouseholdSchema } from "../utils/yupSchemas";
 import Input from "./Input";
 
 interface Props {
-  closeModal: () => void;
+  closeModal?: () => void;
 }
 
 const CreateHousehold2 = ({ closeModal }: Props) => {
@@ -52,7 +53,8 @@ const CreateHousehold2 = ({ closeModal }: Props) => {
       };
       dispatch(createProfile(newProfile));
     }
-    closeModal();
+
+    closeModal && closeModal();
   };
 
   return (

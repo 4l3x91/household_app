@@ -1,19 +1,28 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { collection, getDocs, query, where } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
-import { Surface, useTheme } from "react-native-paper";
+import { Pressable } from "react-native";
+import {} from "react-native-gesture-handler";
+import { Surface, Text, useTheme } from "react-native-paper";
+import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
 import { db } from "../config/firebase";
 import { HouseholdModel } from "../store/household/householdModel";
+import { setHousehold } from "../store/household/householdSlice";
 import { selectUsersProfiles } from "../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { selectUser } from "../store/user/userSelectors";
 
-const MyHouseholds = () => {
+interface Props {
+  goToChores?: () => void;
+}
+
+const MyHouseholds = ({ goToChores }: Props) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const profiles = useAppSelector(selectUsersProfiles);
   const { colors } = useTheme();
+  const { theme } = useTheme();
   const [households, setHouseholds] = useState<HouseholdModel[]>([]);
 
   useEffect(() => {
@@ -35,59 +44,78 @@ const MyHouseholds = () => {
   };
 
   return (
-    <View>
-      <UserContainer>
-        <Text>{user?.email}</Text>
-      </UserContainer>
+    <>
       {households.length === profiles.length &&
         profiles.map((profile, index) => (
           <Pressable
             key={profile.id}
             onPress={() => {
-              console.log("set household state to households[index].id");
+              dispatch(setHousehold(households[index]));
+              goToChores && goToChores();
             }}
           >
             <ProfilesContainer>
-              <AvatarCard color={profile.avatar.color}>
-                <Avatar>{profile.avatar.avatar}</Avatar>
-              </AvatarCard>
-              <ProfileName color={colors.onSurface}>{profile.profileName}</ProfileName>
-              <ProfileName color={colors.onSurface}>{households[index].name}</ProfileName>
+              <Text variant="titleMedium"> {households[index].name}</Text>
+              <ProfileContainer>
+                <Text variant="titleSmall"> {profile.profileName}</Text>
+                <AvatarCard color={profile.avatar.color}>
+                  <Avatar>{profile.avatar.avatar}</Avatar>
+
+                  {profile.role === "owner" && (
+                    <Owner background={profile.avatar.color} borderColor={colors.surface}>
+                      <Tooltip
+                        backgroundColor={colors.surfaceVariant}
+                        width={200}
+                        height={60}
+                        popover={<Text>Du är ägare i det här hushållet</Text>}
+                        actionType="press"
+                      >
+                        <FontAwesome5 name="crown" size={8} color="yellow" />
+                      </Tooltip>
+                    </Owner>
+                  )}
+                </AvatarCard>
+              </ProfileContainer>
             </ProfilesContainer>
           </Pressable>
         ))}
-    </View>
+    </>
   );
 };
 
 export default MyHouseholds;
 
-const UserContainer = styled.View`
-  padding: 10px;
+const ProfileContainer = styled.View`
+  flex-direction: row;
   align-items: center;
-  background-color: gray;
+`;
+
+const Owner = styled.View<{ background: string; borderColor: string }>`
+  background-color: ${(props) => props.background};
+  padding: 3px;
+  border-radius: 20px;
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  border: 1px solid ${(props) => props.borderColor};
 `;
 
 const ProfilesContainer = styled(Surface)`
   border-radius: 10px;
   flex-direction: row;
-  margin: 10px 10px;
+  margin: 5px 5px 0px 0px;
   align-items: center;
   padding: 10px;
+  justify-content: space-between;
 `;
 
 const AvatarCard = styled.View<{ color: string }>`
+  margin-left: 5px;
   background-color: ${(props) => props.color};
-  border-radius: 10px;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 3px;
 `;
 
 const Avatar = styled.Text`
-  font-size: 20px;
-`;
-
-const ProfileName = styled.Text<{ color: string }>`
-  color: ${(props) => props.color};
-  font-size: 20px;
-  padding: 10px;
+  font-size: 15px;
 `;
