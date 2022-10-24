@@ -9,7 +9,6 @@ import { Chore } from "../../store/chore/choreModel";
 import { createChoreThunk } from "../../store/chore/choreSlice";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import ErrorTranslator from "../ErrorTranslator";
 import Input from "../Input";
 import ValuePicker from "../ValuePicker";
 
@@ -67,7 +66,6 @@ const CreateChore = ({ closeModal }: Props) => {
                 <Container>
                   <Input label="Beskrivning" multiline value={values.description} numberOfLines={4} handleChange={handleChange("description")} />
                   {errors.description && <Text>{errors.description}</Text>}
-                  {choreState.error && <ErrorTranslator error={choreState.error} />}
                 </Container>
 
                 <Container>
