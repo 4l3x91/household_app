@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, where } from "@firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from "@firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { User } from "../user/userModel";
@@ -26,8 +26,6 @@ export const findUsersProfilesThunk = createAsyncThunk<Profile[], User, { reject
       if (!documentsFromQuery.empty) {
         const userProfiles: Profile[] = [];
         documentsFromQuery.docs.forEach((doc) => userProfiles.push(doc.data() as Profile));
-
-        console.log(userProfiles);
         return userProfiles;
       } else {
         return thunkAPI.rejectWithValue("cannot find any profiles for this user");
@@ -38,6 +36,27 @@ export const findUsersProfilesThunk = createAsyncThunk<Profile[], User, { reject
     }
   }
 );
+
+export const deleteProfileThunk = createAsyncThunk<Profile, Profile, { rejectValue: string }>("profile/deleteProfile", async (profile, thunkAPI) => {
+  try {
+    const collectionRef = collection(db, "profiles");
+
+    const q = query(collectionRef, where("id", "==", profile.id));
+
+    const result = await getDocs(q);
+
+    if (!result.empty) {
+      const profileToDeleteId = result.docs[0].id;
+      await deleteDoc(doc(db, "profiles", profileToDeleteId));
+      return profile;
+    } else {
+      return thunkAPI.rejectWithValue("cant find profile to delete");
+    }
+  } catch (error) {
+    console.log(error);
+    return thunkAPI.rejectWithValue("cant find profile to delete");
+  }
+});
 
 export const setProfilesThunk = createAsyncThunk<Profile[], Profile, { rejectValue: string }>(
   "profile/setProfiles",
@@ -73,7 +92,9 @@ const profileSlice = createSlice({
       state.profiles.push(action.payload);
     },
   },
+
   extraReducers: (builder) => {
+    //CREATE PROFILE
     builder.addCase(createProfile.pending, (state) => {
       state.pending = true;
     });
@@ -97,6 +118,22 @@ const profileSlice = createSlice({
     });
     builder.addCase(findUsersProfilesThunk.rejected, (state, action) => {
       state.pending = false;
+      state.error = action.payload || "Unknown error";
+    });
+
+    //DELETE PROFILE
+    builder.addCase(deleteProfileThunk.pending, (state) => {
+      state.pending = true;
+      console.log("pending");
+    });
+    builder.addCase(deleteProfileThunk.fulfilled, (state, action) => {
+      state.pending = false;
+      console.log("fullfilled");
+      state.profiles = state.profiles.filter((profile) => profile.id !== action.payload.id);
+    });
+    builder.addCase(deleteProfileThunk.rejected, (state, action) => {
+      state.pending = false;
+      console.log("rejected");
       state.error = action.payload || "Unknown error";
     });
   },

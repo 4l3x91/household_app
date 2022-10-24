@@ -14,6 +14,7 @@ interface Props {
   left?: React.ReactNode;
   activeOutlineColor?: string | undefined;
   outlineColor?: string | undefined;
+  numberOfLines?: number;
 }
 
 const Input = ({
@@ -23,6 +24,7 @@ const Input = ({
   secureTextEntry,
   height,
   multiline,
+  numberOfLines,
   activeOutlineColor,
   marginHorizontal,
   marginVertical,
@@ -34,6 +36,7 @@ const Input = ({
       outlineColor={outlineColor}
       activeOutlineColor={activeOutlineColor}
       multiline={multiline}
+      numberOfLines={numberOfLines}
       label={label}
       mode={"outlined"}
       value={value}

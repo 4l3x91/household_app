@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import LoginUser from "../components/user/LogInUser";
 import { RootStackParams } from "../navigation/RootStackNavigator";
+import { getHouseholdByIdThunk } from "../store/household/householdSlice";
 import { selectUsersProfiles } from "../store/profile/profileSelectors";
 import { findUsersProfilesThunk } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -14,15 +15,25 @@ const LoginScreen = ({ navigation }: Props) => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const userProfiles = useAppSelector(selectUsersProfiles);
+  const { error } = useAppSelector((state) => state.profile);
 
   useEffect(() => {
     if (user) {
       dispatch(findUsersProfilesThunk(user));
+      if (error !== "") {
+        navigation.navigate("HouseholdOptions");
+      }
+    }
+  }, [user, error]);
+
+  useEffect(() => {
+    if (userProfiles.length !== 0) {
       if (userProfiles.length === 1) {
+        dispatch(getHouseholdByIdThunk(userProfiles[0].householdId));
         navigation.navigate("TabStack");
       } else navigation.navigate("HouseholdOptions");
     }
-  }, [user]);
+  }, [userProfiles]);
 
   useEffect(() => {
     dispatch(clearErrors());
