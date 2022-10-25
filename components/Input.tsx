@@ -7,6 +7,7 @@ interface Props {
   handleChange: (string: string) => void;
   secureTextEntry?: boolean;
   height?: number;
+  width?: number;
   marginHorizontal?: number;
   marginVertical?: number;
   multiline?: boolean;
@@ -30,6 +31,7 @@ const Input = ({
   marginVertical,
   outlineColor,
   right,
+  width,
 }: Props) => {
   return (
     <TextInput
@@ -42,7 +44,7 @@ const Input = ({
       value={value}
       onChangeText={handleChange}
       secureTextEntry={secureTextEntry}
-      style={{ marginHorizontal: marginHorizontal, marginVertical: marginVertical, height: height }}
+      style={{ marginHorizontal: marginHorizontal, marginVertical: marginVertical, height: height, width: width }}
       right={right}
     />
   );
