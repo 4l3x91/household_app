@@ -1,11 +1,14 @@
+import { collection, getDocs, query, where } from "@firebase/firestore";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
 import { Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
+import { db } from "../../config/firebase";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { getHouseholdByCodeThunk, setError } from "../../store/household/householdSlice";
+import { Profile } from "../../store/profile/profileModel";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
 import CreateProfile from "../CreateProfile";
@@ -19,7 +22,7 @@ const householdCodeSchema = Yup.object().shape({
 });
 
 interface Props {
-  closeModal: () => void;
+  closeModal?: () => void;
 }
 
 const JoinHousehold = ({ closeModal }: Props) => {
@@ -28,6 +31,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
   const household = useAppSelector(selectHousehold);
   const user = useAppSelector(selectUser);
   const error = useAppSelector(selectHousehold).error;
+  const [profilesInHousehold, setProfilesInHousehold] = useState<Profile[]>([]);
   const pinCodeLength = 6;
 
   //resetting errormessage
@@ -36,6 +40,26 @@ const JoinHousehold = ({ closeModal }: Props) => {
       dispatch(setError(""));
     }
   }, [text]);
+
+  useEffect(() => {
+    if (text === household.household.code) {
+      setProfilesInHousehold([]);
+      async function getUnavalibleAvatars() {
+        const profilesRef = collection(db, "profiles");
+
+        const q = query(profilesRef, where("householdId", "==", household.household.id));
+
+        const result = await getDocs(q);
+
+        console.log(result);
+
+        if (!result.empty) {
+          result.forEach((doc) => setProfilesInHousehold((prev) => [...prev, doc.data() as Profile]));
+        }
+      }
+      getUnavalibleAvatars();
+    }
+  }, [household]);
 
   function InputBoxes() {
     const inputBoxes = [];
@@ -85,7 +109,9 @@ const JoinHousehold = ({ closeModal }: Props) => {
                 {InputBoxes()}
               </InputContainer>
               {error && <ErrorTranslator error={error as string} />}
-              {household.household.code !== "" && household.household.code === values.householdCode && <CreateProfile closeModal={closeModal} />}
+              {household.household.code !== "" && household.household.code === values.householdCode && (
+                <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={() => closeModal} />
+              )}
             </Container>
           </>
         );
