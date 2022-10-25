@@ -9,7 +9,7 @@ import ChoreItem from "../components/ChoreItem";
 import { ChoreStackParams } from "../navigation/ChoreStackNavigator";
 import { selectChores } from "../store/chore/choreSelectors";
 import { setChoresThunk } from "../store/chore/choreSlice";
-import { selectCurrentProfile, selectHouseholdMemers } from "../store/profile/profileSelectors";
+import { selectCurrentProfile } from "../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../store/store";
 
 type Props = NativeStackScreenProps<ChoreStackParams>;
@@ -21,7 +21,6 @@ const ChoresScreen = ({ navigation }: Props) => {
   const household = useAppSelector((state) => state.household.household);
   const chores = useAppSelector(selectChores);
   const profile = useAppSelector(selectCurrentProfile);
-  const householdMembers = useAppSelector(selectHouseholdMemers);
   const modalizeRef = useRef<Modalize>(null);
 
   const openModalize = () => {
@@ -36,13 +35,6 @@ const ChoresScreen = ({ navigation }: Props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Test to show members */}
-      {householdMembers.map((member) => (
-        <>
-          <Text>{member.profileName}</Text>
-          <Text>{member.avatar.avatar}</Text>
-        </>
-      ))}
       <ScrollView
         refreshControl={
           <RefreshControl
