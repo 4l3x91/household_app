@@ -2,9 +2,9 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Badge, Surface, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { Chore } from "../store/chore/choreModel";
-import { selectCompletedChores } from "../store/completedChore/completedChoreSelector";
-import { useAppSelector } from "../store/store";
+import { Chore } from "../../store/chore/choreModel";
+import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
+import { useAppSelector } from "../../store/store";
 
 type Props = {
   chore: Chore;
