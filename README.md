@@ -30,8 +30,8 @@ Konto (5)
 - [x] En användare ska kunna registrera och logga in sig. \*
 - [x] En användare ska kunna skapa ett nytt hushåll. \*
 - [x] En användare ska kunna gå med i ett hushåll genom att ange hushållets kod. \*
-- [] När en användare har valt att gå med i ett hushåll behöver en ägare av hushållet först
-  godkänna användaren.
+- [x] När en användare har valt att gå med i ett hushåll behöver en ägare av hushållet först
+      godkänna användaren.
 - [x] En användare ska kunna lämna ett hushåll.
 
 ####
@@ -40,7 +40,7 @@ Profil (6)
 
 - [x] En användare ska kunna ange sitt namn. \*
 - [x] En användare ska kunna välja en avatar (emoji-djur + färg) från en fördefinierad lista. \*
-- [] Valda avatarer ska inte kunna väljas av andra användare i hushållet. \*
+- [x] Valda avatarer ska inte kunna väljas av andra användare i hushållet. \*
 - [] Avataren ska användas i appen för att visa vad användaren har gjort. \*
 - [x] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
 - [x] Om en användare tillhör två eller fler hushåll ska denne kunna välja att byta mellan de
