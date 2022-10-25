@@ -29,7 +29,9 @@ const EditUser = ({ closeModal }: Props) => {
   const dispatch = useAppDispatch();
   const handleSubmit = (values: { name: string; avatar: string; avatarColor: string }) => {
     if (profile) dispatch(editProfileThunk({ ...profile, profileName: values.name, avatar: { avatar: values.avatar, color: values.avatarColor } }));
+    closeModal();
   };
+
   return (
     <Container>
       <Content>
@@ -87,9 +89,7 @@ const EditUser = ({ closeModal }: Props) => {
       <Pressable
         onPress={() => {
           setOverlay(false);
-          setTimeout(() => {
-            closeModal();
-          }, 25);
+          closeModal();
         }}
       >
         <SimpleLineIcons name="close" size={42} color={colors.primary} />
