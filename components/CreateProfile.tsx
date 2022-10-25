@@ -48,6 +48,7 @@ const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
               avatar: avatar,
               role: "user",
               isPaused: false,
+              isApproved: false,
             };
 
             dispatch(createProfile(newProfile));
