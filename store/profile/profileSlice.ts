@@ -94,31 +94,6 @@ export const editProfileThunk = createAsyncThunk<Profile, Profile, { rejectValue
   }
 );
 
-export const editProfileThunk = createAsyncThunk<Profile, Profile, { rejectValue: string }>(
-  "profile/editProfile",
-  async (profile, thunkAPI) => {
-    try {
-      const collectionRef = collection(db, "profiles");
-      const q = query(collectionRef, where("id", "==", profile.id));
-      const result = await getDocs(q);
-
-      if (!result.empty) {
-        const profiletoUpdateId = result.docs[0].id;
-        const userRef: DocumentReference<DocumentData> = doc(db, "profiles", profiletoUpdateId);
-        await updateDoc(userRef, 
-          {...profile}
-        );
-      }
-      return profile;
-    } catch (error) {
-      if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
-      return thunkAPI.rejectWithValue("error");
-    }
-  }
-);
-
 const profileSlice = createSlice({
   name: "profile",
   initialState,
@@ -182,8 +157,7 @@ const profileSlice = createSlice({
     builder.addCase(editProfileThunk.fulfilled, (state, action) => {
       state.pending = false;
       console.log("fullfilled");
-      state.profiles = state.profiles.filter((profile) => profile = action.payload);
-
+      state.profiles.splice(state.profiles.findIndex(profile => profile.id === action.payload.id), 1, action.payload)
     });
     builder.addCase(editProfileThunk.rejected, (state, action) => {
       state.pending = false;
