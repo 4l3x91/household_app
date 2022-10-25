@@ -1,12 +1,15 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
+import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
 import { selectHouseholdId } from "../store/household/householdSelector";
 import { avatarData } from "../store/profile/profileData";
 import { Avatar, Profile } from "../store/profile/profileModel";
+import { selectHouseholdMembers } from "../store/profile/profileSelectors";
 import { createProfile } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { selectUser } from "../store/user/userSelectors";
@@ -15,14 +18,16 @@ import Input from "./Input";
 
 interface Props {
   closeModal: () => void;
+  profilesInHousehold?: Profile[];
 }
 
-const CreateProfile = ({ closeModal }: Props) => {
+const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
   const [selectedAvatar, setSelectedAvatar] = useState(-1);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
+  const members = useAppSelector(selectHouseholdMembers);
   const householdId = useAppSelector(selectHouseholdId);
   const pending = useAppSelector((state) => state.profile).pending;
 
@@ -55,6 +60,7 @@ const CreateProfile = ({ closeModal }: Props) => {
           return (
             <View>
               <View>
+                {members && members.map((member) => <Text key={member.id}>{member.profileName}</Text>)}
                 <Input
                   marginHorizontal={30}
                   label="Profilnamn"
@@ -70,17 +76,43 @@ const CreateProfile = ({ closeModal }: Props) => {
                 </Text>
                 <AvatarContent elevation={3}>
                   {avatarData.map((avatar, index) => (
-                    <AvatarCard
-                      key={avatar.avatar}
-                      onPress={() => {
-                        setAvatar(avatar);
-                        setSelectedAvatar(index);
-                      }}
-                      color={avatar.color}
-                      selected={index === selectedAvatar}
-                    >
-                      <AvatarText>{avatar.avatar}</AvatarText>
-                    </AvatarCard>
+                    <View key={avatar.avatar} style={{ alignItems: "center", justifyContent: "center" }}>
+                      <AvatarCard
+                        onPress={() => {
+                          if (profilesInHousehold) {
+                            if (!profilesInHousehold.find((a) => a.avatar.avatar === avatar.avatar)) {
+                              setAvatar(avatar);
+                              setSelectedAvatar(index);
+                            }
+                          } else {
+                            setAvatar(avatar);
+                            setSelectedAvatar(index);
+                          }
+                        }}
+                        color={avatar.color}
+                        selected={index === selectedAvatar}
+                      >
+                        <AvatarText>{avatar.avatar}</AvatarText>
+                      </AvatarCard>
+                      {profilesInHousehold && profilesInHousehold.find((profile) => profile.avatar.avatar === avatar.avatar) && (
+                        <View style={{ position: "absolute" }}>
+                          <Tooltip
+                            backgroundColor={colors.surface}
+                            width={200}
+                            height={80}
+                            popover={
+                              <Text>
+                                Den här avataren används av
+                                {profilesInHousehold.find((profile) => profile.avatar.avatar === avatar.avatar)?.profileName}
+                              </Text>
+                            }
+                            actionType="press"
+                          >
+                            <MaterialCommunityIcons name="close" size={65} color={colors.error} />
+                          </Tooltip>
+                        </View>
+                      )}
+                    </View>
                   ))}
                 </AvatarContent>
               </AvatarContainer>
