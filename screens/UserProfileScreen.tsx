@@ -3,6 +3,7 @@ import React from "react";
 import { ScrollView, View } from "react-native";
 import { List, Surface, useTheme } from "react-native-paper";
 import CreateHousehold2 from "../components/CreateHousehold2";
+import JoinHousehold from "../components/household/JoinHousehold";
 import MyHouseholds from "../components/MyHouseholds";
 import { UserStackParams } from "../navigation/UserStackNavigator";
 
@@ -32,6 +33,14 @@ const UserProfileScreen = ({ navigation, route }: Props) => {
             style={{ backgroundColor: colors.surface, borderRadius: 10 }}
           >
             <CreateHousehold2 />
+          </List.Accordion>
+          <List.Accordion
+            title="Gå med i hushåll"
+            left={(props) => <List.Icon {...props} icon="home" />}
+            theme={{ colors: { background: "transparent" } }}
+            style={{ backgroundColor: colors.surface, borderRadius: 10 }}
+          >
+            <JoinHousehold />
           </List.Accordion>
         </ScrollView>
       </Surface>
