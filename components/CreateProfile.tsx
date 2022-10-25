@@ -43,6 +43,7 @@ const CreateProfile = ({ closeModal }: Props) => {
               avatar: avatar,
               role: "user",
               isPaused: false,
+              isApproved: false,
             };
 
             dispatch(createProfile(newProfile));
