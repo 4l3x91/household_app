@@ -17,12 +17,17 @@ type Props = NativeStackScreenProps<ChoreStackParams>;
 
 const ChoresScreen = ({ navigation }: Props) => {
   const [refresh, setRefresh] = useState(false);
+  const [editPressed, setEditPressed] = useState(false);
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
   const household = useAppSelector((state) => state.household.household);
   const chores = useAppSelector(selectChores);
   const profile = useAppSelector(selectCurrentProfile);
   const modalizeRef = useRef<Modalize>(null);
+
+  const toggleEdit = () => {
+    setEditPressed((prev) => !prev);
+  };
 
   const openModalize = () => {
     modalizeRef.current?.open();
@@ -53,7 +58,7 @@ const ChoresScreen = ({ navigation }: Props) => {
         {chores.chores.length !== 0 ? (
           chores.chores.map((chore) => (
             <Pressable key={chore.id} onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
-              <ChoreItem chore={chore} />
+              <ChoreItem chore={chore} editPressed={editPressed} />
             </Pressable>
           ))
         ) : (
@@ -80,7 +85,7 @@ const ChoresScreen = ({ navigation }: Props) => {
             </View>
             <Divider style={{ width: 1, height: "auto" }} />
             <View style={{ flex: 1 }}>
-              <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={() => console.log("Ändra logik goes here")}>
+              <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={toggleEdit}>
                 Ändra
               </Button>
             </View>
