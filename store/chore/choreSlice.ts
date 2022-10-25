@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, where } from "@firebase/firestore";
+import { addDoc, collection, doc, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from "@firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { Chore } from "./choreModel";
@@ -32,11 +32,32 @@ export const setChoresThunk = createAsyncThunk<Chore[], string, { rejectValue: s
   }
 });
 
+export const updateChoreThunk = createAsyncThunk<Chore, Chore, { rejectValue: string }>("chore/updateChore", async (chore, thunkApi) => {
+  try {
+    const collectionRef = collection(db, "chores");
+    const q = query(collectionRef, where("id", "==", chore.id));
+    const result = await getDocs(q);
+
+    if (!result.empty) {
+      const choreToUpdateId = result.docs[0].id;
+      const choreRef: DocumentReference<DocumentData> = doc(db, "chores", choreToUpdateId);
+      await updateDoc(choreRef, { ...chore });
+    }
+    return chore;
+  } catch (error) {
+    if (error instanceof Error) {
+      return thunkApi.rejectWithValue(error.message);
+    }
+    return thunkApi.rejectWithValue("errror");
+  }
+});
+
 const choreSlice = createSlice({
   name: "chores",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    //create chore cases
     builder.addCase(createChoreThunk.pending, (state) => {
       state.pending = true;
     });
@@ -48,6 +69,8 @@ const choreSlice = createSlice({
       state.pending = false;
       state.error = "Error: could not add chore";
     });
+
+    //set chore cases
     builder.addCase(setChoresThunk.pending, (state) => {
       state.pending = true;
     });
@@ -59,6 +82,23 @@ const choreSlice = createSlice({
       state.pending = false;
       state.error = action.payload || "Unknown error";
       state.chores = [];
+    });
+
+    //update chore cases
+    builder.addCase(updateChoreThunk.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(updateChoreThunk.fulfilled, (state, action) => {
+      state.pending = false;
+      state.chores.splice(
+        state.chores.findIndex((chore) => chore.id === action.payload.id),
+        1,
+        action.payload
+      );
+    });
+    builder.addCase(updateChoreThunk.rejected, (state, action) => {
+      state.pending = false;
+      state.error = action.payload || "Unknown error";
     });
   },
 });
