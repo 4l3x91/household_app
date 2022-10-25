@@ -2,8 +2,8 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Modal, Pressable, ScrollView, View } from "react-native";
-import { Button, List, Surface, Text, useTheme } from "react-native-paper";
-import JoinHousehold from "../components/household/JoinHousehold";
+import { Button, Surface, Text, useTheme } from "react-native-paper";
+import * as Yup from "yup";
 import { UserStackParams } from "../navigation/UserStackNavigator";
 import { selectHouseholdName } from "../store/household/householdSelector";
 import { avatarData } from "../store/profile/profileData";
@@ -14,6 +14,13 @@ import { selectUser } from "../store/user/userSelectors";
 
 type Props = NativeStackScreenProps<UserStackParams, "UserProfileScreen">;
 
+const validation = Yup.object().shape({
+  name: Yup.string()
+    .min(2, "Titel måste vara minst två tecken")
+    .max(20, "Titel kan inte vara längre än 20 tecken")
+    .required("Titel kan inte vara tom"),
+});
+
 const UserProfileScreen = ({ navigation, route }: Props) => {
   const { colors } = useTheme();
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
@@ -23,6 +30,12 @@ const UserProfileScreen = ({ navigation, route }: Props) => {
   const profile = useAppSelector(selectCurrentProfile);
   const householdName = useAppSelector(selectHouseholdName);
   const [modalVisible, setModalVisible] = useState(false);
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+  const handleSubmit = (values: { name: string; description: string }) => {
+    console.log("New name");
+  };
   // TODO fix navigation typings
   return (
     <View>
@@ -53,31 +66,6 @@ const UserProfileScreen = ({ navigation, route }: Props) => {
               Redigera profil
             </Button>
           </View>
-          {/* <List.Accordion
-              title="Mina hushåll"
-              left={(props) => <List.Icon {...props} icon="home" />}
-              style={{ backgroundColor: colors.surface, borderRadius: 10 }}
-              theme={{ colors: { background: "transparent" } }}
-            >
-              <MyHouseholds goToChores={() => navigation.navigate("Chores")} />
-            </List.Accordion>
-          </View>
-          <List.Accordion
-            title="Skapa hushåll"
-            left={(props) => <List.Icon {...props} icon="home" />}
-            theme={{ colors: { background: "transparent" } }}
-            style={{ backgroundColor: colors.surface, borderRadius: 10 }}
-          >
-        </List.Accordion> */}
-
-          <List.Accordion
-            title="Gå med i hushåll"
-            left={(props) => <List.Icon {...props} icon="home" />}
-            theme={{ colors: { background: "transparent" } }}
-            style={{ backgroundColor: colors.surface, borderRadius: 10 }}
-          >
-            <JoinHousehold />
-          </List.Accordion>
         </ScrollView>
       </Surface>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
