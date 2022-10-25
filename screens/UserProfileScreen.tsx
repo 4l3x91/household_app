@@ -1,12 +1,11 @@
-import { SimpleLineIcons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
-import { Modal, Pressable, ScrollView, View } from "react-native";
+import { Modal, ScrollView, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import * as Yup from "yup";
+import EditUser from "../components/profile/EditUser";
 import { UserStackParams } from "../navigation/UserStackNavigator";
 import { selectHouseholdName } from "../store/household/householdSelector";
-import { avatarData } from "../store/profile/profileData";
 import { Avatar } from "../store/profile/profileModel";
 import { selectCurrentProfile } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
@@ -68,52 +67,11 @@ const UserProfileScreen = ({ navigation, route }: Props) => {
           </View>
         </ScrollView>
       </Surface>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={{ flex: 1, justifyContent: "center", backgroundColor: overlay ? "rgba(0,0,0,0.5)" : undefined, alignItems: "center" }}>
-            <Surface style={{ margin: 20, paddingVertical: 20, borderRadius: 20, alignItems: "center", shadowColor: "#000" }}>
-              <Text>Namn: {profile?.profileName}</Text>
-              <Text>Välj en ledig avatar:</Text>
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  paddingHorizontal: 40,
-                  paddingVertical: 10,
-                }}
-              >
-                {avatarData.map((x) => (
-                  <Text
-                    key={x.avatar}
-                    variant="headlineLarge"
-                    style={{
-                      backgroundColor: x.color,
-                      padding: 10,
-                      margin: 5,
-                      borderRadius: 10,
-                      overflow: "hidden",
-                      opacity: x.avatar === profile?.avatar.avatar ? 1 : 0.5,
-                    }}
-                  >
-                    {x.avatar}
-                  </Text>
-                ))}
-              </View>
-            </Surface>
-            <Pressable
-              onPress={() => {
-                setOverlay(false);
-                setTimeout(() => {
-                  setModalVisible(false);
-                }, 25);
-              }}
-            >
-              <SimpleLineIcons name="close" size={42} color={colors.primary} />
-            </Pressable>
-          </View>
+      <View style={{ flex: 1 }}>
+        <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
+          <EditUser closeModal={closeModal} />
         </Modal>
+        <View></View>
       </View>
     </View>
   );
