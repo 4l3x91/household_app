@@ -1,11 +1,9 @@
 import { collection, getDocs, query, where } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {} from "react-native-gesture-handler";
-import { Surface } from "react-native-paper";
-import styled from "styled-components/native";
 import { db } from "../config/firebase";
 import { HouseholdModel } from "../store/household/householdModel";
-import { selectUsersProfiles } from "../store/profile/profileSelectors";
+import { selectUserProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import HouseholdCard from "./household/HouseholdCard";
 
@@ -14,7 +12,7 @@ interface Props {
 }
 
 const MyHouseholds = ({ goToChores }: Props) => {
-  const profiles = useAppSelector(selectUsersProfiles);
+  const profiles = useAppSelector(selectUserProfiles);
   const [households, setHouseholds] = useState<HouseholdModel[]>([]);
 
   useEffect(() => {

@@ -70,6 +70,14 @@ const UserProfileScreen = ({ navigation, route }: Props) => {
           >
         </List.Accordion> */}
           
+          <List.Accordion
+            title="Gå med i hushåll"
+            left={(props) => <List.Icon {...props} icon="home" />}
+            theme={{ colors: { background: "transparent" } }}
+            style={{ backgroundColor: colors.surface, borderRadius: 10 }}
+          >
+            <JoinHousehold />
+          </List.Accordion>
         </ScrollView>
       </Surface>
       <View style={{    flex: 1,

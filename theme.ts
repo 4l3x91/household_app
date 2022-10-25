@@ -11,9 +11,9 @@ export const LightTheme: Theme = {
   colors: {
     ...PaperLightTheme.colors,
     ...NavigationLightTheme.colors,
-    primary: "black",
-    text: "black",
-    error: "#e83151",
+    // primary: "black",
+    // text: "black",
+    // error: "#e83151",
   },
 };
 
@@ -23,9 +23,9 @@ export const DarkTheme: Theme = {
   colors: {
     ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
-    primary: "#eee",
-    text: "white",
-    error: "#e83151",
+    // primary: "#eee",
+    // text: "white",
+    // error: "#e83151",
   },
 };
 
