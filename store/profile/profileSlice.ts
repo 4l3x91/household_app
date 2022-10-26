@@ -1,4 +1,16 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  DocumentData,
+  DocumentReference,
+  getDocs,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "@firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { AppState } from "../store";
@@ -109,6 +121,26 @@ export const setProfileToOwner = createAsyncThunk<Profile[], Profile, { rejectVa
   }
 );
 
+export const editProfileThunk = createAsyncThunk<Profile, Profile, { rejectValue: string }>("profile/editProfile", async (profile, thunkAPI) => {
+  try {
+    const collectionRef = collection(db, "profiles");
+    const q = query(collectionRef, where("id", "==", profile.id));
+    const result = await getDocs(q);
+
+    if (!result.empty) {
+      const profiletoUpdateId = result.docs[0].id;
+      const userRef: DocumentReference<DocumentData> = doc(db, "profiles", profiletoUpdateId);
+      await updateDoc(userRef, { ...profile });
+    }
+    return profile;
+  } catch (error) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+    return thunkAPI.rejectWithValue("error");
+  }
+});
+
 const profileSlice = createSlice({
   name: "profile",
   initialState,
@@ -173,6 +205,26 @@ const profileSlice = createSlice({
       state.profiles = action.payload;
     });
     builder.addCase(setProfileToOwner.rejected, (state, action) => {
+      state.pending = false;
+      console.log("rejected");
+      state.error = action.payload || "Unknown error";
+    });
+
+    // UPDATE PROFILE
+    builder.addCase(editProfileThunk.pending, (state) => {
+      state.pending = true;
+      console.log("pending");
+    });
+    builder.addCase(editProfileThunk.fulfilled, (state, action) => {
+      state.pending = false;
+      console.log("fullfilled");
+      state.profiles.splice(
+        state.profiles.findIndex((profile) => profile.id === action.payload.id),
+        1,
+        action.payload
+      );
+    });
+    builder.addCase(editProfileThunk.rejected, (state, action) => {
       state.pending = false;
       console.log("rejected");
       state.error = action.payload || "Unknown error";
