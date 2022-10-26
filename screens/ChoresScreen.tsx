@@ -64,8 +64,8 @@ const ChoresScreen = ({ navigation }: Props) => {
       >
         <HouseholdName householdName={household.name} role={profile?.role} />
 
-        {chores.length !== 0 ? (
-          chores.map((chore) => (
+        {chores.chores.length !== 0 ? (
+          chores.chores.map((chore) => (
             <View key={chore.id}>
               <Pressable onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
                 <ChoreItem chore={chore} editPressed={editPressed} toggleModal={toggleModal} />
