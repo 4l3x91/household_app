@@ -10,6 +10,7 @@ import { selectHouseholdId } from "../../store/household/householdSelector";
 import { Profile } from "../../store/profile/profileModel";
 import { deleteProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import AvatarCard from "../household/AvatarCard";
 
 const PendingProfiles = () => {
   const [pendingProfiles, setPendingProfiles] = useState<Profile[]>([]);
@@ -56,19 +57,13 @@ const PendingProfiles = () => {
   }, [hasChanged]);
 
   return (
-    <>
+    <Container>
+      <Text>Ansökande profiler</Text>
       {pendingProfiles.length > 0 ? (
         <Profiles color={colors.onPrimary}>
           {pendingProfiles.map((profile) => (
             <ProfileCard background={colors.primaryContainer} key={profile.id}>
-              <ProfileContent>
-                <Text key={profile.id} variant={"titleMedium"} style={{ marginRight: 8 }}>
-                  {profile.profileName}
-                </Text>
-                <AvatarContainer avatarColor={profile.avatar.color}>
-                  <Text style={{ fontSize: 20 }}>{profile.avatar.avatar}</Text>
-                </AvatarContainer>
-              </ProfileContent>
+              <AvatarCard profile={profile} />
               <ButtonContainer>
                 <AcceptButton color={colors.onPrimaryContainer} onPress={async () => await approveProfile(profile)}>
                   <MaterialIcons name="check-circle-outline" size={20} color={colors.onSecondary} />
@@ -85,11 +80,16 @@ const PendingProfiles = () => {
           <Text>no pending profiles</Text>
         </View>
       )}
-    </>
+    </Container>
   );
 };
 
 export default PendingProfiles;
+
+const Container = styled.View`
+  justify-content: center;
+  align-items: center;
+`;
 
 const Profiles = styled.View<{ color: string }>`
   background-color: ${(props) => props.color};
