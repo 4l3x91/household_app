@@ -46,7 +46,6 @@ const ChoreItemContainer = styled(Surface)`
 
 const ChoreName = styled.Text<{ theme: Theme }>`
   color: ${(props) => props.theme.colors.primary};
-  /* color: red; */
 `;
 
 const AvatarContainer = styled.View`
