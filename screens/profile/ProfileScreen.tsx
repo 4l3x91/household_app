@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Modal, ScrollView, View } from "react-native";
 import { Button, Surface, Text } from "react-native-paper";
+import HouseholdMembers from "../../components/household/HouseholdMembers";
 import EditProfile from "../../components/profile/EditProfile";
 import { UserStackParams } from "../../navigation/UserStackNavigator";
 import { selectHouseholdName } from "../../store/household/householdSelector";
@@ -54,6 +55,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
           </View>
         </ScrollView>
       </Surface>
+      <HouseholdMembers />
       <View style={{ flex: 1 }}>
         <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
           <EditProfile overlay={overlay} toggleOverlay={toggleOverlay} closeModal={closeModal} />
