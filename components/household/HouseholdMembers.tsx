@@ -2,12 +2,12 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { selectCurrentProfile, selectHouseholdMembers } from "../../store/profile/profileSelectors";
+import { selectCurrentProfile, selectMemoizedHouseholdMember } from "../../store/profile/profileSelectors";
 import { deleteProfile, updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
 const HouseholdMembers = () => {
-  const members = useAppSelector(selectHouseholdMembers);
+  const members = useAppSelector(selectMemoizedHouseholdMember);
   const currentProfile = useAppSelector(selectCurrentProfile);
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
