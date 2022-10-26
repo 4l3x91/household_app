@@ -5,10 +5,10 @@ import { Pressable, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
-import { changeHouseholdNameThunk } from "../store/household/householdSlice";
-import { selectCurrentProfile } from "../store/profile/profileSelectors";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import Input from "./Input";
+import { updateHouseholdName } from "../../store/household/householdThunks";
+import { selectCurrentProfile } from "../../store/profile/profileSelectors";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import Input from "../common/Input";
 
 const validation = Yup.object().shape({
   householdName: Yup.string()
@@ -45,7 +45,7 @@ const ChangeHouseholdName = ({ setShowTooltip, showTooltip }: Props) => {
           validationSchema={validation}
           onSubmit={(values) => {
             if (values.householdName && profile) {
-              dispatch(changeHouseholdNameThunk({ newName: values.householdName, profile: profile }));
+              dispatch(updateHouseholdName({ newName: values.householdName, profile: profile }));
             }
           }}
         >

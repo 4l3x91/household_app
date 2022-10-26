@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 
-const UserRewardScreen = () => {
+const ProfileRewardScreen = () => {
   return (
     <View>
       <Text>UserRewardScreen</Text>
@@ -10,4 +10,4 @@ const UserRewardScreen = () => {
   );
 };
 
-export default UserRewardScreen;
+export default ProfileRewardScreen;

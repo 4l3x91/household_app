@@ -6,15 +6,15 @@ import { Button, Text, useTheme } from "react-native-paper";
 import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
-import { selectHouseholdId } from "../store/household/householdSelector";
-import { avatarData } from "../store/profile/profileData";
-import { Avatar, Profile } from "../store/profile/profileModel";
-import { selectHouseholdMembers } from "../store/profile/profileSelectors";
-import { createProfile } from "../store/profile/profileSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { selectUser } from "../store/user/userSelectors";
-import { profileSchema } from "../utils/yupSchemas";
-import Input from "./Input";
+import { selectHouseholdId } from "../../store/household/householdSelector";
+import { avatarData } from "../../store/profile/profileData";
+import { Avatar, Profile } from "../../store/profile/profileModel";
+import { selectHouseholdMembers } from "../../store/profile/profileSelectors";
+import { postProfile } from "../../store/profile/profileThunks";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { selectUser } from "../../store/user/userSelectors";
+import { profileSchema } from "../../utils/yupSchemas";
+import Input from "../common/Input";
 
 interface Props {
   closeModal: () => void;
@@ -51,7 +51,7 @@ const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
               isApproved: false,
             };
 
-            dispatch(createProfile(newProfile));
+            dispatch(postProfile(newProfile));
           }
         }}
       >

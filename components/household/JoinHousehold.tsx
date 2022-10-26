@@ -7,12 +7,13 @@ import styled from "styled-components/native";
 import * as Yup from "yup";
 import { db } from "../../config/firebase";
 import { selectHousehold } from "../../store/household/householdSelector";
-import { getHouseholdByCodeThunk, setError } from "../../store/household/householdSlice";
+import { setError } from "../../store/household/householdSlice";
+import { getHouseholdByCode } from "../../store/household/householdThunks";
 import { Profile } from "../../store/profile/profileModel";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
-import CreateProfile from "../CreateProfile";
-import ErrorTranslator from "../ErrorTranslator";
+import ErrorTranslator from "../common/ErrorTranslator";
+import CreateProfile from "../profile/CreateProfile";
 
 const householdCodeSchema = Yup.object().shape({
   householdCode: Yup.string()
@@ -82,7 +83,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
       }}
       onSubmit={(values) => {
         if (values.householdCode && user) {
-          dispatch(getHouseholdByCodeThunk({ code: values.householdCode, user: user }));
+          dispatch(getHouseholdByCode({ code: values.householdCode, user: user }));
         }
       }}
     >

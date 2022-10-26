@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import ChoreDetailsScreen from "../screens/ChoreDetailsScreen";
-import ChoresScreen from "../screens/ChoresScreen";
+import ChoreDetailsScreen from "../screens/chore/ChoreDetailsScreen";
+import ChoresScreen from "../screens/chore/ChoresScreen";
 import { selectHousehold } from "../store/household/householdSelector";
 import { useAppSelector } from "../store/store";
 

@@ -23,7 +23,7 @@ interface Props {
   chore: Chore;
 }
 
-const editChore = ({ closeModal, chore }: Props) => {
+const EditChore = ({ closeModal, chore }: Props) => {
   const [overlay, setOverlay] = useState(false);
   const [interval, setInterval] = useState(1);
   const [energy, setEnergy] = useState(2);
@@ -37,7 +37,7 @@ const editChore = ({ closeModal, chore }: Props) => {
         validationSchema={validation}
         onSubmit={(values) => {
           dispatch(
-            updateChoreThunk({ ...chore, name: values.name, description: values.description, energy: values.energy, interval: values.interval })
+            updateChore({ ...chore, name: values.name, description: values.description, energy: values.energy, interval: values.interval })
           );
         }}
       >
@@ -85,7 +85,7 @@ const editChore = ({ closeModal, chore }: Props) => {
   );
 };
 
-export default editChore;
+export default EditChore;
 
 const Container = styled.View`
   justify-content: center;

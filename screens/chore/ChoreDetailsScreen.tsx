@@ -1,9 +1,9 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { StyleSheet, View } from "react-native";
 import { Surface, Text } from "react-native-paper";
-import { ChoreStackParams } from "../navigation/ChoreStackNavigator";
-import { selectChore } from "../store/chore/choreSelectors";
-import { useAppSelector } from "../store/store";
+import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
+import { selectChore } from "../../store/chore/choreSelectors";
+import { useAppSelector } from "../../store/store";
 
 type ChoreDetailsScreenRouteProp = RouteProp<ChoreStackParams, "ChoreDetailsScreen">;
 

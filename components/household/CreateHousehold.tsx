@@ -1,27 +1,26 @@
 import { AntDesign } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { Button, IconButton, Surface, Text, useTheme } from "react-native-paper";
 import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
-import { HouseholdModel } from "../store/household/householdModel";
-import { createHouseholdThunk } from "../store/household/householdSlice";
-import { avatarData } from "../store/profile/profileData";
-import { Avatar, Profile } from "../store/profile/profileModel";
-import { createProfile } from "../store/profile/profileSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { selectUser } from "../store/user/userSelectors";
-import { generateHouseholdCode } from "../utils/utils";
-import { createHouseholdSchema } from "../utils/yupSchemas";
-import Input from "./Input";
+import { HouseholdModel } from "../../store/household/householdModel";
+import { postHousehold } from "../../store/household/householdThunks";
+import { avatarData } from "../../store/profile/profileData";
+import { Avatar, Profile } from "../../store/profile/profileModel";
+import { postProfile } from "../../store/profile/profileThunks";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { selectUser } from "../../store/user/userSelectors";
+import { generateHouseholdCode } from "../../utils/utils";
+import { createHouseholdSchema } from "../../utils/yupSchemas";
+import Input from "../common/Input";
 
 interface Props {
   closeModal?: () => void;
 }
 
-const CreateHousehold2 = ({ closeModal }: Props) => {
+const CreateHousehold = ({ closeModal }: Props) => {
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
   const [householdCode, setHouseholdCode] = useState(generateHouseholdCode());
   const [selectedAvatar, setSelectedAvatar] = useState(-1);
@@ -39,7 +38,7 @@ const CreateHousehold2 = ({ closeModal }: Props) => {
       id: uuidv4(),
       code: householdCode,
     };
-    dispatch(createHouseholdThunk(newHousehold));
+    dispatch(postHousehold(newHousehold));
 
     if (user) {
       const newProfile: Profile = {
@@ -51,7 +50,7 @@ const CreateHousehold2 = ({ closeModal }: Props) => {
         role: "owner",
         isPaused: false,
       };
-      dispatch(createProfile(newProfile));
+      dispatch(postProfile(newProfile));
     }
 
     closeModal && closeModal();
@@ -139,7 +138,7 @@ const CreateHousehold2 = ({ closeModal }: Props) => {
   );
 };
 
-export default CreateHousehold2;
+export default CreateHousehold;
 
 const Container = styled.View`
   justify-content: center;

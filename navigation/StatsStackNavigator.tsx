@@ -1,5 +1,5 @@
 import React from "react";
-import StatsScreen from "../screens/StatsScreen";
+import StatsScreen from "../screens/stats/StatsScreen";
 
 export type StatsStackParams = {
   StatsScreen: undefined;

@@ -2,21 +2,21 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Modal, ScrollView, View } from "react-native";
 import { Button, Surface, Text } from "react-native-paper";
-import EditUser from "../components/profile/EditUser";
-import { UserStackParams } from "../navigation/UserStackNavigator";
-import { selectHouseholdName } from "../store/household/householdSelector";
-import { selectCurrentProfile } from "../store/profile/profileSelectors";
-import { useAppSelector } from "../store/store";
+import EditProfile from "../../components/profile/EditProfile";
+import { UserStackParams } from "../../navigation/UserStackNavigator";
+import { selectHouseholdName } from "../../store/household/householdSelector";
+import { selectCurrentProfile } from "../../store/profile/profileSelectors";
+import { useAppSelector } from "../../store/store";
 
 type Props = NativeStackScreenProps<UserStackParams, "UserProfileScreen">;
 
-const UserProfileScreen = ({ navigation, route }: Props) => {
+const ProfileScreen = ({ navigation, route }: Props) => {
   const [overlay, setOverlay] = useState(false);
   const profile = useAppSelector(selectCurrentProfile);
   const householdName = useAppSelector(selectHouseholdName);
   const [modalVisible, setModalVisible] = useState(false);
   const closeModal = () => {
-      setModalVisible(false);
+    setModalVisible(false);
   };
   const toggleOverlay = () => {
     setOverlay(false);
@@ -56,12 +56,11 @@ const UserProfileScreen = ({ navigation, route }: Props) => {
       </Surface>
       <View style={{ flex: 1 }}>
         <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
-          <EditUser overlay={overlay} toggleOverlay={toggleOverlay} closeModal={closeModal} />
+          <EditProfile overlay={overlay} toggleOverlay={toggleOverlay} closeModal={closeModal} />
         </Modal>
-        <View></View>
       </View>
     </View>
   );
 };
 
-export default UserProfileScreen;
+export default ProfileScreen;

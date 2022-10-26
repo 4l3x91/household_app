@@ -4,15 +4,15 @@ import { Modal, Pressable, RefreshControl, ScrollView, Text, View } from "react-
 import { Modalize } from "react-native-modalize";
 import { Button, Divider, Portal, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import ChoreItem from "../components/chore/ChoreItem";
-import CreateChore from "../components/chore/CreateChore";
-import EditChore from "../components/chore/editChore";
-import HouseholdName from "../components/HouseholdName";
-import { ChoreStackParams } from "../navigation/ChoreStackNavigator";
-import { selectChores } from "../store/chore/choreSelectors";
-import { setChoresThunk } from "../store/chore/choreSlice";
-import { selectCurrentProfile } from "../store/profile/profileSelectors";
-import { useAppDispatch, useAppSelector } from "../store/store";
+import ChoreItem from "../../components/chore/ChoreItem";
+import CreateChore from "../../components/chore/CreateChore";
+import EditChore from "../../components/chore/EditChore";
+import HouseholdName from "../../components/household/HouseholdName";
+import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
+import { selectChores } from "../../store/chore/choreSelectors";
+import { getChores } from "../../store/chore/choreThunks";
+import { selectCurrentProfile } from "../../store/profile/profileSelectors";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 type Props = NativeStackScreenProps<ChoreStackParams>;
 
@@ -44,7 +44,7 @@ const ChoresScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (household) {
-      if (household.id) dispatch(setChoresThunk(household.id));
+      if (household.id) dispatch(getChores(household.id));
     }
   }, [household]);
 
@@ -56,7 +56,7 @@ const ChoresScreen = ({ navigation }: Props) => {
             refreshing={refresh}
             onRefresh={() => {
               setRefresh(true);
-              if (household) dispatch(setChoresThunk(household.id));
+              if (household) dispatch(getChores(household.id));
               setRefresh(false);
             }}
           />
