@@ -9,11 +9,13 @@ import { useAppSelector } from "../../store/store";
 
 type Props = {
   choosenChore?: string;
+  size?: number;
+  showAvatars: boolean;
 };
 
-const ChorePieChart = ({ choosenChore }: Props) => {
+const ChorePieChart = ({ choosenChore, size, showAvatars }: Props) => {
   const householdMembers = useAppSelector(selectAllHouseholdMembers);
-  const completedChores = useAppSelector(selectCompletedChores);
+  const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const householdChores = useAppSelector(selectChores).chores;
 
   const data: Data[] = householdMembers
@@ -39,7 +41,7 @@ const ChorePieChart = ({ choosenChore }: Props) => {
 
   return (
     <View>
-      <PieChartComp data={data} />
+      <PieChartComp data={data} size={size} showAvatars={showAvatars} />
     </View>
   );
 };
