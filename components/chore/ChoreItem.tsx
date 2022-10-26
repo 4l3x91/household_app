@@ -10,9 +10,10 @@ import { useAppSelector } from "../../store/store";
 type Props = {
   chore: Chore;
   editPressed: boolean;
+  toggleModal: () => void;
 };
 
-const ChoreItem = ({ chore, editPressed }: Props) => {
+const ChoreItem = ({ chore, editPressed, toggleModal }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
 
@@ -36,7 +37,7 @@ const ChoreItem = ({ chore, editPressed }: Props) => {
           <Badge style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>{chore.interval}</Badge>
         )}
         {editPressed && (
-          <CogButton>
+          <CogButton onPress={toggleModal}>
             <FontAwesome style={{ marginLeft: 10 }} name="cog" size={25} color={theme.colors.primary} />
           </CogButton>
         )}
