@@ -18,8 +18,8 @@ interface Props {
 }
 
 const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
-  const [interval, setInterval] = useState(1);
-  const [energy, setEnergy] = useState(2);
+  const [interval, setInterval] = useState(chore.interval);
+  const [energy, setEnergy] = useState(chore.energy);
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
 
@@ -32,9 +32,7 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
             initialValues={{ name: chore.name, description: chore.description, energy: chore.energy, interval: chore.interval }}
             validationSchema={createOrEditChoreSchema}
             onSubmit={(values) => {
-              dispatch(
-                updateChore({ ...chore, name: values.name, description: values.description, energy: values.energy, interval: values.interval })
-              );
+              dispatch(updateChore({ ...chore, name: values.name, description: values.description, energy: energy, interval: interval }));
             }}
           >
             {({ handleSubmit, values, handleChange, errors }) => {
