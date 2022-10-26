@@ -1,13 +1,12 @@
-import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { Pressable } from "react-native";
-import { Surface, Text, useTheme } from "react-native-paper";
-import Tooltip from "rn-tooltip";
+import { Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { HouseholdModel } from "../../store/household/householdModel";
 import { setHousehold } from "../../store/household/householdSlice";
 import { Profile } from "../../store/profile/profileModel";
 import { useAppDispatch } from "../../store/store";
+import AvatarCard from "./AvatarCard";
 
 interface Props {
   profile: Profile;
@@ -26,27 +25,11 @@ const HouseholdCard = ({ profile, household, goToChores }: Props) => {
         goToChores && goToChores();
       }}
     >
-      <ProfilesContainer>
+      <ProfilesContainer background={colors.primaryContainer}>
         <Text variant="titleMedium"> {household.name}</Text>
         <ProfileContainer>
           <Text variant="titleSmall"> {profile.profileName}</Text>
-          <AvatarCard color={profile.avatar.color}>
-            <Avatar>{profile.avatar.avatar}</Avatar>
-
-            {profile.role === "owner" && (
-              <Owner background={profile.avatar.color} borderColor={colors.surface}>
-                <Tooltip
-                  backgroundColor={colors.surfaceVariant}
-                  width={200}
-                  height={60}
-                  popover={<Text>Du är ägare i det här hushållet</Text>}
-                  actionType="press"
-                >
-                  <FontAwesome5 name="crown" size={8} color="yellow" />
-                </Tooltip>
-              </Owner>
-            )}
-          </AvatarCard>
+          <AvatarCard profile={profile} />
         </ProfileContainer>
       </ProfilesContainer>
     </Pressable>
@@ -60,17 +43,8 @@ const ProfileContainer = styled.View`
   align-items: center;
 `;
 
-const Owner = styled.View<{ background: string; borderColor: string }>`
-  background-color: ${(props) => props.background};
-  padding: 3px;
-  border-radius: 20px;
-  position: absolute;
-  right: -8px;
-  top: -8px;
-  border: 1px solid ${(props) => props.borderColor};
-`;
-
-const ProfilesContainer = styled(Surface)`
+const ProfilesContainer = styled.View<{ background: string }>`
+  background-color: ${({ background }) => background};
   border-radius: 10px;
   flex-direction: row;
   margin: 5px 5px 0px 0px;
@@ -78,16 +52,3 @@ const ProfilesContainer = styled(Surface)`
   padding: 10px;
   justify-content: space-between;
 `;
-
-const AvatarCard = styled.View<{ color: string }>`
-  margin-left: 5px;
-  background-color: ${(props) => props.color};
-  border-radius: 5px;
-  padding: 3px;
-`;
-
-const Avatar = styled.Text`
-  font-size: 15px;
-`;
-
-const Details = styled.View``;
