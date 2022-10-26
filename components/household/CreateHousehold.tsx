@@ -108,7 +108,7 @@ const Container = styled.View`
 
 const HeaderText = styled(Text)`
   align-self: center;
-  margin-bottom: 10;
+  margin-bottom: 10px;
 `;
 
 const InputContainer = styled.View`
