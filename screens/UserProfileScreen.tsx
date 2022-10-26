@@ -1,41 +1,27 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Modal, ScrollView, View } from "react-native";
-import { Button, Surface, Text, useTheme } from "react-native-paper";
-import * as Yup from "yup";
+import { Button, Surface, Text } from "react-native-paper";
 import EditUser from "../components/profile/EditUser";
 import { UserStackParams } from "../navigation/UserStackNavigator";
 import { selectHouseholdName } from "../store/household/householdSelector";
-import { Avatar } from "../store/profile/profileModel";
 import { selectCurrentProfile } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
-import { selectUser } from "../store/user/userSelectors";
 
 type Props = NativeStackScreenProps<UserStackParams, "UserProfileScreen">;
 
-const validation = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Titel måste vara minst två tecken")
-    .max(20, "Titel kan inte vara längre än 20 tecken")
-    .required("Titel kan inte vara tom"),
-});
-
 const UserProfileScreen = ({ navigation, route }: Props) => {
-  const { colors } = useTheme();
-  const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
-  const [selectedAvatar, setSelectedAvatar] = useState(-1);
   const [overlay, setOverlay] = useState(false);
-  const user = useAppSelector(selectUser);
   const profile = useAppSelector(selectCurrentProfile);
   const householdName = useAppSelector(selectHouseholdName);
   const [modalVisible, setModalVisible] = useState(false);
   const closeModal = () => {
-    setModalVisible(false);
+      setModalVisible(false);
   };
-  const handleSubmit = (values: { name: string; description: string }) => {
-    console.log("New name");
+  const toggleOverlay = () => {
+    setOverlay(false);
   };
-  // TODO fix navigation typings
+
   return (
     <View>
       <Surface elevation={3} style={{ margin: 10, padding: 10, borderRadius: 10 }}>
@@ -57,6 +43,7 @@ const UserProfileScreen = ({ navigation, route }: Props) => {
             <Button
               onPress={() => {
                 setModalVisible(true);
+
                 setTimeout(() => {
                   setOverlay(true);
                 }, 500);
@@ -69,7 +56,7 @@ const UserProfileScreen = ({ navigation, route }: Props) => {
       </Surface>
       <View style={{ flex: 1 }}>
         <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
-          <EditUser closeModal={closeModal} />
+          <EditUser overlay={overlay} toggleOverlay={toggleOverlay} closeModal={closeModal} />
         </Modal>
         <View></View>
       </View>
