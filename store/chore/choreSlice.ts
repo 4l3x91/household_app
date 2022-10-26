@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./choreState";
-import { getChores, postChore, updateChore } from "./choreThunks";
+import { deleteChore, getChores, postChore, updateChore } from "./choreThunks";
 
 const choreSlice = createSlice({
   name: "chores",
@@ -47,6 +47,19 @@ const choreSlice = createSlice({
       );
     });
     builder.addCase(updateChore.rejected, (state, action) => {
+      state.pending = false;
+      state.error = action.payload || "Unknown error";
+    });
+
+    //delete chore
+    builder.addCase(deleteChore.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(deleteChore.fulfilled, (state, action) => {
+      state.pending = false;
+      state.chores = state.chores.filter((chore) => chore.id !== action.payload.id);
+    });
+    builder.addCase(deleteChore.rejected, (state, action) => {
       state.pending = false;
       state.error = action.payload || "Unknown error";
     });
