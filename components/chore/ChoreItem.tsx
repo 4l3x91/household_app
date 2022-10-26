@@ -11,11 +11,17 @@ type Props = {
   chore: Chore;
   editPressed: boolean;
   toggleModal: () => void;
+  setSelectedChore: React.Dispatch<React.SetStateAction<Chore | undefined>>;
 };
 
-const ChoreItem = ({ chore, editPressed, toggleModal }: Props) => {
+const ChoreItem = ({ chore, editPressed, toggleModal, setSelectedChore }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
+
+  function handlePress() {
+    toggleModal();
+    setSelectedChore(chore);
+  }
 
   return (
     <ChoreItemContainer>
@@ -37,7 +43,7 @@ const ChoreItem = ({ chore, editPressed, toggleModal }: Props) => {
           <Badge style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>{chore.interval}</Badge>
         )}
         {editPressed && (
-          <CogButton onPress={toggleModal}>
+          <CogButton onPress={handlePress}>
             <FontAwesome style={{ marginLeft: 10 }} name="cog" size={25} color={theme.colors.primary} />
           </CogButton>
         )}
