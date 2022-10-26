@@ -14,7 +14,7 @@ const HouseholdCode = ({ householdCode, setHouseholdCode }: Props) => {
   const { colors } = useTheme();
 
   return (
-    <CodeContainer background={colors.primaryContainer}>
+    <CodeContainer background={colors.secondaryContainer}>
       <Tooltip
         backgroundColor={colors.surfaceVariant}
         width={200}
@@ -29,7 +29,14 @@ const HouseholdCode = ({ householdCode, setHouseholdCode }: Props) => {
       </Tooltip>
       <CodeInnerContainer>
         <Text variant="bodyLarge">{householdCode}</Text>
-        <IconButton icon="cached" size={15} onPress={() => setHouseholdCode(generateHouseholdCode())} mode="contained-tonal" />
+        <IconButton
+          icon="cached"
+          size={15}
+          onPress={() => setHouseholdCode(generateHouseholdCode())}
+          mode="contained-tonal"
+          iconColor={colors.onPrimary}
+          style={{ backgroundColor: colors.primary }}
+        />
       </CodeInnerContainer>
     </CodeContainer>
   );
