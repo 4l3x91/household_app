@@ -17,7 +17,7 @@ const ChoreItem = ({ chore }: Props) => {
   return (
     <ChoreItemContainer>
       <View>
-        <ChoreName>{chore.name}</ChoreName>
+        <ChoreName theme={theme}>{chore.name}</ChoreName>
       </View>
       {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
         <AvatarContainer>

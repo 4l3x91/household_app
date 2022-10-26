@@ -7,7 +7,7 @@ import styled from "styled-components/native";
 import * as Yup from "yup";
 import { avatarData } from "../../store/profile/profileData";
 import { Avatar } from "../../store/profile/profileModel";
-import { selectCurrentProfile } from "../../store/profile/profileSelectors";
+import { selectMemoizedCurrentProfile } from "../../store/profile/profileSelectors";
 import { editProfileThunk } from "../../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import Input from "../Input";
@@ -26,15 +26,17 @@ interface Props {
 }
 
 const EditUser = ({ closeModal, toggleOverlay, overlay }: Props) => {
+  const profile = useAppSelector(selectMemoizedCurrentProfile);
+  const [avatar, setAvatar] = useState<Avatar>(profile?.avatar as Avatar);
+  const [selectedAvatar, setSelectedAvatar] = useState(3);
   const { colors } = useTheme();
-  const profile = useAppSelector(selectCurrentProfile);
+
   const dispatch = useAppDispatch();
+
   const handleSubmit = (values: { name: string; avatar: string; avatarColor: string }) => {
     if (profile) dispatch(editProfileThunk({ ...profile, profileName: values.name, avatar: { avatar: values.avatar, color: values.avatarColor } }));
     closeModal();
   };
-  const [avatar, setAvatar] = useState<Avatar>(profile?.avatar as Avatar);
-  const [selectedAvatar, setSelectedAvatar] = useState(3);
 
   return (
     <Container overlay={overlay}>

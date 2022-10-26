@@ -48,7 +48,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
 
         //denna resettar state men ska bytas ut mot en useEffect där alla state resettas
         dispatch(resetProfileState());
-        dispatch(resetHousehold);
+        dispatch(resetHousehold());
       }
     });
   }

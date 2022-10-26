@@ -17,6 +17,16 @@ export const selectCurrentProfile = (state: AppState) => {
   return selectUserProfiles(state).find((x) => x.householdId === state.household.household.id);
 };
 
+export const selectMemoizedCurrentProfile = createSelector(
+  (state: AppState) => state.profile.profiles,
+  (profiles) => {
+    const memoizedProfile = profiles.find(
+      (x) => x.userId === store.getState().userState.user?.id && x.householdId === store.getState().household.household.id
+    );
+    return memoizedProfile;
+  }
+);
+
 export const selectMemoizedUserProfiles = createSelector(
   (state: AppState) => state.profile.profiles,
   (profiles) => {

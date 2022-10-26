@@ -1,6 +1,19 @@
-import { addDoc, collection, deleteDoc, doc, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  DocumentData,
+  DocumentReference,
+  getDocs,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "@firebase/firestore";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
+import { AppState } from "../store";
 import { User } from "../user/userModel";
 import { Profile } from "./profileModel";
 import { initialState } from "./profileState";
@@ -69,30 +82,64 @@ export const deleteProfileThunk = createAsyncThunk<Profile, Profile, { rejectVal
   }
 });
 
-export const editProfileThunk = createAsyncThunk<Profile, Profile, { rejectValue: string }>(
-  "profile/editProfile",
+export const setProfileToOwner = createAsyncThunk<Profile[], Profile, { rejectValue: string }>(
+  "profile/setProfileToOwner",
+  //void for now to test snapshot
   async (profile, thunkAPI) => {
     try {
-      const collectionRef = collection(db, "profiles");
-      const q = query(collectionRef, where("id", "==", profile.id));
-      const result = await getDocs(q);
+      const state = thunkAPI.getState() as AppState;
+      const profileState = state.profile;
 
-      if (!result.empty) {
-        const profiletoUpdateId = result.docs[0].id;
-        const userRef: DocumentReference<DocumentData> = doc(db, "profiles", profiletoUpdateId);
-        await updateDoc(userRef, 
-          {...profile}
-        );
+      const profilesRef = collection(db, "profiles");
+
+      const q = query(profilesRef, where("id", "==", profile.id));
+
+      const profileIds = profileState.profiles.map((x) => x.id);
+
+      const q2 = query(profilesRef, where("id", "in", profileIds));
+
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const profileDocId = querySnapshot.docs[0].id;
+        await updateDoc(doc(profilesRef, profileDocId), { role: "owner" });
       }
-      return profile;
+      const profiles: Profile[] = [];
+      onSnapshot(q2, (snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          console.log(doc.data() as Profile);
+          profiles.push(doc.data() as Profile);
+        });
+
+        console.log("profiles in snapshot: " + profiles.join(", "));
+      });
+      return profiles;
     } catch (error) {
-      if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
-      return thunkAPI.rejectWithValue("error");
+      console.log(error);
+      return thunkAPI.rejectWithValue("something went wrong!");
     }
   }
 );
+
+export const editProfileThunk = createAsyncThunk<Profile, Profile, { rejectValue: string }>("profile/editProfile", async (profile, thunkAPI) => {
+  try {
+    const collectionRef = collection(db, "profiles");
+    const q = query(collectionRef, where("id", "==", profile.id));
+    const result = await getDocs(q);
+
+    if (!result.empty) {
+      const profiletoUpdateId = result.docs[0].id;
+      const userRef: DocumentReference<DocumentData> = doc(db, "profiles", profiletoUpdateId);
+      await updateDoc(userRef, { ...profile });
+    }
+    return profile;
+  } catch (error) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+    return thunkAPI.rejectWithValue("error");
+  }
+});
 
 const profileSlice = createSlice({
   name: "profile",
@@ -104,7 +151,6 @@ const profileSlice = createSlice({
     addProfile(state, action) {
       state.profiles.push(action.payload);
     },
-    
   },
 
   extraReducers: (builder) => {
@@ -148,6 +194,21 @@ const profileSlice = createSlice({
       console.log("rejected");
       state.error = action.payload || "Unknown error";
     });
+    //SET PROFILE TO OWNER
+    builder.addCase(setProfileToOwner.pending, (state) => {
+      state.pending = true;
+      console.log("pending");
+    });
+    builder.addCase(setProfileToOwner.fulfilled, (state, action) => {
+      state.pending = false;
+      console.log("fullfilled");
+      state.profiles = action.payload;
+    });
+    builder.addCase(setProfileToOwner.rejected, (state, action) => {
+      state.pending = false;
+      console.log("rejected");
+      state.error = action.payload || "Unknown error";
+    });
 
     // UPDATE PROFILE
     builder.addCase(editProfileThunk.pending, (state) => {
@@ -157,7 +218,11 @@ const profileSlice = createSlice({
     builder.addCase(editProfileThunk.fulfilled, (state, action) => {
       state.pending = false;
       console.log("fullfilled");
-      state.profiles.splice(state.profiles.findIndex(profile => profile.id === action.payload.id), 1, action.payload)
+      state.profiles.splice(
+        state.profiles.findIndex((profile) => profile.id === action.payload.id),
+        1,
+        action.payload
+      );
     });
     builder.addCase(editProfileThunk.rejected, (state, action) => {
       state.pending = false;
