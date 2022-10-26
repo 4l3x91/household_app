@@ -1,39 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FirebaseError } from "firebase/app";
-import { User, UserCredential } from "firebase/auth";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth/react-native";
-import { auth } from "../../config/firebase";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User as StateUser } from "./userModel";
 import { initialState } from "./userState";
-
-export const createUser = createAsyncThunk<User, { email: string; password: string }, { rejectValue: string }>(
-  "user/createUser",
-  async ({ email, password }, thunkAPI) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      return userCredential.user;
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
-      return thunkAPI.rejectWithValue("Någontin gick fel vid skapandet av användare. Kontakta vår support om felet kvartstår.");
-    }
-  }
-);
-
-export const signInUser = createAsyncThunk<UserCredential, { email: string; password: string }, { rejectValue: string }>(
-  "user/signInUser",
-  async ({ email, password }, thunkAPI) => {
-    try {
-      return await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
-      return thunkAPI.rejectWithValue("Error logging in user");
-    }
-  }
-);
+import { postUser, signInUser } from "./userThunks";
 
 const userSlice = createSlice({
   name: "user",
@@ -51,15 +19,15 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     //createUser cases
-    builder.addCase(createUser.pending, (state) => {
+    builder.addCase(postUser.pending, (state) => {
       state.pending = true;
       state.error = "";
     });
-    builder.addCase(createUser.fulfilled, (state, action) => {
+    builder.addCase(postUser.fulfilled, (state, action) => {
       state.pending = false;
       state.user = { id: action.payload.uid, email: action.payload.email };
     });
-    builder.addCase(createUser.rejected, (state, action) => {
+    builder.addCase(postUser.rejected, (state, action) => {
       state.pending = false;
       state.error = action.payload || "Unknown error setting user";
     });

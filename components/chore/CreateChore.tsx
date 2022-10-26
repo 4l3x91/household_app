@@ -6,12 +6,11 @@ import { Button, Divider, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { Chore } from "../../store/chore/choreModel";
-import { createChoreThunk } from "../../store/chore/choreSlice";
+import { postChore } from "../../store/chore/choreThunks";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import Input from "../Input";
-import ValuePicker from "../ValuePicker";
-
+import Input from "../common/Input";
+import ValuePicker from "./ValuePicker";
 const validation = Yup.object().shape({
   name: Yup.string()
     .min(2, "Titel måste vara minst två tecken")
@@ -43,7 +42,7 @@ const CreateChore = ({ closeModal }: Props) => {
       interval: interval,
       energy: energy,
     };
-    dispatch(createChoreThunk(newChore));
+    dispatch(postChore(newChore));
     closeModal();
   };
 

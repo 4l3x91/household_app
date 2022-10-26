@@ -5,10 +5,10 @@ import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { signInUser } from "../../store/user/userSlice";
-import BottomButtons from "../BottomButtons";
-import ErrorTranslator from "../ErrorTranslator";
-import Input from "../Input";
+import { signInUser } from "../../store/user/userThunks";
+import BottomButtons from "../common/BottomButtons";
+import ErrorTranslator from "../common/ErrorTranslator";
+import Input from "../common/Input";
 
 interface Props {
   close: () => void;

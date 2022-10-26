@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { Badge, Button, Text } from "react-native-paper";
-import UserProfileScreen from "../screens/UserProfileScreen";
-import UserRewardScreen from "../screens/UserRewardScreen";
+import ProfileRewardScreen from "../screens/profile/ProfileRewardScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
 import { selectCurrentProfile } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import { selectUserEmail } from "../store/user/userSelectors";
@@ -28,7 +28,7 @@ const UserStackNavigator = () => {
     <UserStack.Navigator initialRouteName="UserProfileScreen">
       <UserStack.Screen
         name="UserProfileScreen"
-        component={UserProfileScreen}
+        component={ProfileScreen}
         options={{
           headerTitle: () => (
             <>
@@ -47,7 +47,7 @@ const UserStackNavigator = () => {
           },
         }}
       />
-      <UserStack.Screen name="UserRewardScreen" component={UserRewardScreen} />
+      <UserStack.Screen name="UserRewardScreen" component={ProfileRewardScreen} />
     </UserStack.Navigator>
   );
 };

@@ -5,11 +5,11 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { db } from "../config/firebase";
-import { selectHouseholdId } from "../store/household/householdSelector";
-import { Profile } from "../store/profile/profileModel";
-import { deleteProfileThunk } from "../store/profile/profileSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
+import { db } from "../../config/firebase";
+import { selectHouseholdId } from "../../store/household/householdSelector";
+import { Profile } from "../../store/profile/profileModel";
+import { deleteProfile } from "../../store/profile/profileThunks";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 
 const PendingProfiles = () => {
   const [pendingProfiles, setPendingProfiles] = useState<Profile[]>([]);
@@ -73,7 +73,7 @@ const PendingProfiles = () => {
                 <AcceptButton color={colors.onPrimaryContainer} onPress={async () => await approveProfile(profile)}>
                   <MaterialIcons name="check-circle-outline" size={20} color={colors.onSecondary} />
                 </AcceptButton>
-                <RefuseButton color={colors.errorContainer} onPress={async () => dispatch(deleteProfileThunk(profile))}>
+                <RefuseButton color={colors.errorContainer} onPress={async () => dispatch(deleteProfile(profile))}>
                   <MaterialIcons name="cancel" size={20} color={colors.onErrorContainer} />
                 </RefuseButton>
               </ButtonContainer>

@@ -2,13 +2,12 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { signOut } from "firebase/auth";
 import React, { useRef } from "react";
 import { View } from "react-native";
-import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { Button, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import CreateHousehold2 from "../components/CreateHousehold2";
+import CreateHousehold from "../components/household/CreateHousehold";
 import JoinHousehold from "../components/household/JoinHousehold";
-import MyHouseholds from "../components/MyHouseholds";
+import MyHouseholds from "../components/household/MyHouseholds";
 import { auth } from "../config/firebase";
 import { RootStackParams } from "../navigation/RootStackNavigator";
 import { resetHousehold } from "../store/household/householdSlice";
@@ -90,7 +89,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
         Logga ut
       </Button>
       <Modalize ref={modalizeRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
-        <CreateHousehold2 closeModal={() => modalizeRef.current?.close()} />
+        <CreateHousehold closeModal={() => modalizeRef.current?.close()} />
       </Modalize>
       <Modalize ref={householdModalRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
         <View style={{ padding: 10, justifyContent: "center" }}>
@@ -109,7 +108,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
   );
 };
 
-export default gestureHandlerRootHOC(HouseholdOptionsScreen);
+export default HouseholdOptionsScreen;
 
 const Container = styled.View`
   flex: 1;
