@@ -6,6 +6,7 @@ import { TouchableOpacity, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import { auth } from "../config/firebase";
 import { MenuStackParams } from "../navigation/MenuStackNavigator";
+import { resetHousehold } from "../store/household/householdSlice";
 import { resetProfileState } from "../store/profile/profileSlice";
 import { useAppDispatch } from "../store/store";
 import { logout } from "../store/user/userSlice";
@@ -23,6 +24,7 @@ const MenuScreen = ({ navigation }: Props) => {
 
         //denna resettar state men ska bytas ut mot en useEffect där alla state resettas
         dispatch(resetProfileState());
+        dispatch(resetHousehold());
       }
     });
   }
