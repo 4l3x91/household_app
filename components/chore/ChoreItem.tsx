@@ -17,7 +17,7 @@ const ChoreItem = ({ chore }: Props) => {
   return (
     <ChoreItemContainer>
       <View>
-        <ChoreName>{chore.name}</ChoreName>
+        <ChoreName theme={theme}>{chore.name}</ChoreName>
       </View>
       {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
         <AvatarContainer>
@@ -46,6 +46,7 @@ const ChoreItemContainer = styled(Surface)`
 
 const ChoreName = styled.Text<{ theme: Theme }>`
   color: ${(props) => props.theme.colors.primary};
+  /* color: red; */
 `;
 
 const AvatarContainer = styled.View`
