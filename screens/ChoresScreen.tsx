@@ -1,11 +1,12 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useRef, useState } from "react";
-import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
+import { Modal, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { Button, Divider, Portal, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import ChoreItem from "../components/chore/ChoreItem";
 import CreateChore from "../components/chore/CreateChore";
+import EditChore from "../components/chore/editChore";
 import HouseholdName from "../components/HouseholdName";
 import { ChoreStackParams } from "../navigation/ChoreStackNavigator";
 import { selectChores } from "../store/chore/choreSelectors";
@@ -17,15 +18,28 @@ type Props = NativeStackScreenProps<ChoreStackParams>;
 
 const ChoresScreen = ({ navigation }: Props) => {
   const [refresh, setRefresh] = useState(false);
+  const [editPressed, setEditPressed] = useState(false);
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
   const household = useAppSelector((state) => state.household.household);
   const chores = useAppSelector(selectChores);
   const profile = useAppSelector(selectCurrentProfile);
   const modalizeRef = useRef<Modalize>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const toggleEdit = () => {
+    setEditPressed((prev) => !prev);
+  };
+
+  const toggleModal = () => {
+    setModalVisible((prev) => !prev);
+  };
 
   const openModalize = () => {
     modalizeRef.current?.open();
+  };
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   useEffect(() => {
@@ -52,9 +66,16 @@ const ChoresScreen = ({ navigation }: Props) => {
 
         {chores.chores.length !== 0 ? (
           chores.chores.map((chore) => (
-            <Pressable key={chore.id} onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
-              <ChoreItem chore={chore} />
-            </Pressable>
+            <View key={chore.id}>
+              <Pressable onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
+                <ChoreItem chore={chore} editPressed={editPressed} toggleModal={toggleModal} />
+              </Pressable>
+              <View style={{ flex: 1, marginTop: 300 }}>
+                <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
+                  <EditChore chore={chore} closeModal={closeModal} />
+                </Modal>
+              </View>
+            </View>
           ))
         ) : (
           <CenteredContainer>
@@ -80,13 +101,17 @@ const ChoresScreen = ({ navigation }: Props) => {
             </View>
             <Divider style={{ width: 1, height: "auto" }} />
             <View style={{ flex: 1 }}>
-              <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={() => console.log("Ändra logik goes here")}>
+              <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={toggleEdit}>
                 Ändra
               </Button>
             </View>
           </View>
         </>
       )}
+
+      {/* <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
+        <EditChore closeModal={closeModal} />
+      </Modal> */}
     </ChoreScreenContainer>
   );
 };
