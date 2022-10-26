@@ -1,11 +1,11 @@
 import React from "react";
 import { View } from "react-native";
-import { Text } from "react-native-paper";
+import PieChartComp from "../components/PieChartComp";
 
 const StatsScreen = () => {
   return (
     <View>
-      <Text>StatsScreen</Text>
+      <PieChartComp />
     </View>
   );
 };
