@@ -1,55 +1,33 @@
 import React from "react";
+import { Text as PaperText } from "react-native-paper";
 import { Text } from "react-native-svg";
-import { PieChart } from "react-native-svg-charts";
-// type Props = {};
+import { PieChart, PieChartData } from "react-native-svg-charts";
 
-const PieChartComp = (props: any) => {
-  const data = [
-    {
-      key: 1,
-      amount: 20,
-      avatar: "🐍",
-      svg: { fill: "#21a528" },
-    },
-    {
-      key: 2,
-      amount: 10,
-      avatar: "🐷",
-      svg: { fill: "#ee6ccd" },
-    },
-    {
-      key: 3,
-      amount: 15,
-      avatar: "🦉",
-      svg: { fill: "#442e18" },
-    },
-    {
-      key: 4,
-      amount: 10,
-      avatar: "🦊",
-      svg: { fill: "#77210b" },
-    },
-    {
-      key: 5,
-      amount: 5,
-      avatar: "🐥",
-      svg: { fill: "#e2b435" },
-    },
-  ];
+export interface Data extends PieChartData {
+  // key?: string;
+  // amount?: number;
+  avatar?: string;
+  // svg?: {
+  //   fill: string;
+  // };
+}
+interface SliceProps {
+  pieCentroid: number[];
+  data: Data;
+}
 
-  interface LabelProps {
-    slices?: any;
-    height: number;
-    width: number;
-    label: string;
-  }
+type Props = {
+  data: Data[];
+};
 
-  const Labels = ({ slices }: LabelProps) => {
-    return slices.map((slice: any, index: any) => {
-      const { pieCentroid, data } = slice;
-      console.log(pieCentroid);
-      console.log(data);
-      console.log(index);
+interface LabelProps {
+  slices: SliceProps[];
+}
+
+const Labels = ({ slices }: LabelProps) => {
+  {
+    return slices.map((slice: SliceProps, index: number) => {
+      const { pieCentroid, data }: SliceProps = slice;
       return (
         <Text
           key={index}
@@ -66,13 +44,19 @@ const PieChartComp = (props: any) => {
         </Text>
       );
     });
-  };
+  }
+};
 
-  return (
-    <PieChart style={{ height: 250 }} valueAccessor={({ item }) => item.amount} data={data} innerRadius={0} padAngle={0}>
-      <Labels />
-    </PieChart>
-  );
+const PieChartComp = ({ data }: Props) => {
+  if (data.length === 0) {
+    return <PaperText>There is no data to display</PaperText>;
+  } else {
+    return (
+      <PieChart style={{ height: 250 }} valueAccessor={({ item }) => item.value} data={data} innerRadius={0} padAngle={0}>
+        <Labels slices={[]} />
+      </PieChart>
+    );
+  }
 };
 
 export default PieChartComp;
