@@ -88,7 +88,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
       <Button mode={"contained"} style={{ width: 200, alignSelf: "center", marginBottom: 50 }} onPress={handleSignOut}>
         Logga ut
       </Button>
-      <Modalize ref={modalizeRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
+      <Modalize ref={modalizeRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.background, padding: 10 }} adjustToContentHeight={true}>
         <CreateHousehold closeModal={() => modalizeRef.current?.close()} />
       </Modalize>
       <Modalize ref={householdModalRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
