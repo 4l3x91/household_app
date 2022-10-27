@@ -1,6 +1,6 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Badge, Surface, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { Chore } from "../../store/chore/choreModel";
@@ -43,16 +43,9 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
       </View>
       <InnerContainer>
         {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
-          <AvatarContainer>
-            {completedChores.completedChores.map(
-              (cc) =>
-                cc.choreId === chore.id && (
-                  <Text key={cc.profileId + "-" + cc.choreId + "-" + cc.date}>
-                    <DisplayCompleted choreId={cc.choreId} />
-                  </Text>
-                )
-            )}
-          </AvatarContainer>
+          
+            <DisplayCompleted choreId={chore.id} />
+          
         ) : completedChores.completedChores.find(
             (cc) => cc.choreId === chore.id && cc.date.setDate(cc.date.getDate() + chore.interval) > Date.now()
           ) ? (
@@ -96,9 +89,7 @@ const ChoreName = styled.Text<{ theme: Theme }>`
   padding: 15px;
 `;
 
-const AvatarContainer = styled.View`
-  flex-direction: row;
-`;
+
 
 const InnerContainer = styled.View`
   flex-direction: row;
