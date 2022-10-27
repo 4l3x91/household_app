@@ -1,5 +1,6 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
 import React from "react";
+import { Dimensions } from "react-native";
 import { Button, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
@@ -20,6 +21,7 @@ const ChoreDetailsScreen = () => {
   const dispatch = useAppDispatch();
   const completedChore = completedChores.find((completedChore) => completedChore.choreId === chore?.id);
   const today = new Date().getDate();
+  const width = Dimensions.get("screen").width - 40;
 
   function handlePress() {
     if (chore?.id && profile?.id) {
@@ -31,7 +33,7 @@ const ChoreDetailsScreen = () => {
     const energyLevels = [2, 4, 6, 8, 10];
     return (
       <Container>
-        <OuterSurface elevation={3}>
+        <OuterSurface elevation={3} width={width}>
           <TitleContainer>
             <Surface elevation={0}>
               <Text variant="headlineLarge">{chore.name}</Text>
@@ -90,18 +92,18 @@ const ChoreDetailsScreen = () => {
 export default ChoreDetailsScreen;
 
 const Container = styled.View`
-  flex: 1;
   align-items: center;
+  margin: 20px;
 `;
-const OuterSurface = styled(Surface)`
-  margin: 30px auto;
+const OuterSurface = styled(Surface)<{ width: number }>`
+  margin: 0 20px;
   flex: 1;
-  width: 97%;
   border-radius: 20px;
+  width: ${(props) => props.width}px;
 `;
 
 const TitleContainer = styled.View`
-  margin-top: 20px;
+  margin: 20px 20px 0 20px;
   align-items: center;
 `;
 const DescriptionContainer = styled.View`
@@ -133,6 +135,7 @@ const IntervalInnerContainer = styled.View`
 `;
 
 const ButtonContainer = styled.View`
+  margin: 0 20px;
   flex: 1;
   justify-content: flex-end;
   margin-bottom: 20px;
