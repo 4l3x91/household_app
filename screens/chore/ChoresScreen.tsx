@@ -1,9 +1,10 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useRef, useState } from "react";
-import { Modal, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
+import { Modal, Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { Modalize } from "react-native-modalize";
-import { Button, Divider, Portal, Theme, useTheme } from "react-native-paper";
+import { Button, Divider, Portal, Text, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import ArchiveChore from "../../components/chore/ArchiveChore";
 import ChoreItem from "../../components/chore/ChoreItem";
 import CreateChore from "../../components/chore/CreateChore";
 import DeleteChore from "../../components/chore/DeleteChore";
@@ -25,6 +26,7 @@ const ChoresScreen = ({ navigation }: Props) => {
   const [selectedChore, setSelectedChore] = useState<Chore>();
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [archiveModalVisible, setArchiveModalVisible] = useState(false);
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
   const household = useAppSelector((state) => state.household.household);
@@ -42,6 +44,7 @@ const ChoresScreen = ({ navigation }: Props) => {
   const closeModal = () => {
     setEditModalVisible(false);
     setDeleteModalVisible(false);
+    setArchiveModalVisible(false);
   };
 
   useEffect(() => {
@@ -67,19 +70,23 @@ const ChoresScreen = ({ navigation }: Props) => {
         <HouseholdName householdName={household.name} role={profile?.role} />
 
         {chores.chores.length !== 0 ? (
-          chores.chores.map((chore) => (
-            <View key={chore.id}>
-              <Pressable onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
-                <ChoreItem
-                  setSelectedChore={setSelectedChore}
-                  chore={chore}
-                  editMode={editMode}
-                  toggleEditModal={() => setEditModalVisible((prev) => !prev)}
-                  toggleDeleteModal={() => setDeleteModalVisible((prev) => !prev)}
-                />
-              </Pressable>
-            </View>
-          ))
+          chores.chores.map(
+            (chore) =>
+              !chore.archived && (
+                <View key={chore.id}>
+                  <Pressable onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
+                    <ChoreItem
+                      setSelectedChore={setSelectedChore}
+                      chore={chore}
+                      editMode={editMode}
+                      toggleEditModal={() => setEditModalVisible((prev) => !prev)}
+                      toggleDeleteModal={() => setDeleteModalVisible((prev) => !prev)}
+                      toggleArchiveModal={() => setArchiveModalVisible((prev) => !prev)}
+                    />
+                  </Pressable>
+                </View>
+              )
+          )
         ) : (
           <CenteredContainer>
             <Text style={{ color: theme.colors.primary }}>Här var det tomt!</Text>
@@ -101,8 +108,35 @@ const ChoresScreen = ({ navigation }: Props) => {
         {selectedChore && <DeleteChore toggleOverlay={toggleOverlay} chore={selectedChore} closeModal={closeModal} />}
       </Modal>
 
+      <Modal animationType="slide" transparent={true} visible={archiveModalVisible} statusBarTranslucent>
+        {selectedChore && <ArchiveChore toggleOverlay={toggleOverlay} chore={selectedChore} closeModal={closeModal} />}
+      </Modal>
+
       {profile && profile?.role === "owner" && (
         <>
+          {chores.chores.filter((chore) => chore.archived).length > 0 && (
+            <Text variant="bodyLarge" style={{ alignSelf: "center" }}>
+              Arkiverade sysslor
+            </Text>
+          )}
+
+          {chores.chores.map(
+            (chore) =>
+              chore.archived && (
+                <View key={chore.id}>
+                  <Pressable onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
+                    <ChoreItem
+                      setSelectedChore={setSelectedChore}
+                      chore={chore}
+                      editMode={editMode}
+                      toggleEditModal={() => setEditModalVisible((prev) => !prev)}
+                      toggleDeleteModal={() => setDeleteModalVisible((prev) => !prev)}
+                      toggleArchiveModal={() => setArchiveModalVisible((prev) => !prev)}
+                    />
+                  </Pressable>
+                </View>
+              )
+          )}
           <Divider style={{ height: 1 }} />
           <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <View style={{ flex: 1 }}>

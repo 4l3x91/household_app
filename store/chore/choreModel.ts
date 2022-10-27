@@ -5,4 +5,5 @@ export interface Chore {
     description: string;
     interval: number;
     energy: number;
+    archived: boolean
   }

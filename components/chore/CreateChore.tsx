@@ -41,6 +41,7 @@ const CreateChore = ({ closeModal }: Props) => {
       householdId: household.id,
       interval: interval,
       energy: energy,
+      archived: false,
     };
     dispatch(postChore(newChore));
     closeModal();
