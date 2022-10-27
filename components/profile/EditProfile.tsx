@@ -5,12 +5,12 @@ import { Pressable, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
-import { avatarData } from "../../store/profile/profileData";
 import { Avatar } from "../../store/profile/profileModel";
-import { selectMemoizedCurrentProfile } from "../../store/profile/profileSelectors";
+import { selectMemoizedCurrentProfile, selectMemoizedHouseholdMember } from "../../store/profile/profileSelectors";
 import { updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import Input from "../common/Input";
+import AvatarPicker from "./AvatarPicker";
 
 const validation = Yup.object().shape({
   name: Yup.string()
@@ -21,14 +21,13 @@ const validation = Yup.object().shape({
 
 interface Props {
   closeModal: () => void;
-  overlay: boolean;
-  toggleOverlay: () => void;
 }
 
-const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
+const EditProfile = ({ closeModal }: Props) => {
   const profile = useAppSelector(selectMemoizedCurrentProfile);
   const [avatar, setAvatar] = useState<Avatar>(profile?.avatar as Avatar);
   const [selectedAvatar, setSelectedAvatar] = useState(3);
+  const members = useAppSelector(selectMemoizedHouseholdMember);
   const { colors } = useTheme();
 
   const dispatch = useAppDispatch();
@@ -39,7 +38,7 @@ const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
   };
 
   return (
-    <Container overlay={overlay}>
+    <Container>
       <Content>
         <Text variant="headlineMedium">Redigera profil</Text>
         <ModalContent elevation={0}>
@@ -54,25 +53,12 @@ const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
                   <Input label="Namn" value={values.name as string} handleChange={handleChange("name")} />
                   {errors.name && <Text>{errors.name}</Text>}
                   <AvatarContainer>
-                    <Text variant="headlineSmall">Välj din avatar</Text>
-                    {/* TODO: will be replaced */}
-                    <AvatarContent elevation={0}>
-                      {avatarData.map((avatar, index) => (
-                        <View key={avatar.avatar}>
-                          <AvatarCard
-                            onPress={() => {
-                              setAvatar(avatar);
-                              setSelectedAvatar(index);
-                            }}
-                            color={avatar.color}
-                            selected={index === selectedAvatar}
-                          >
-                            <AvatarText>{avatar.avatar}</AvatarText>
-                          </AvatarCard>
-                        </View>
-                      ))}
-                    </AvatarContent>
-                    {/* TODO: will be replaced ^ */}
+                    <AvatarPicker
+                      setAvatar={setAvatar}
+                      selectedAvatar={selectedAvatar}
+                      setSelectedAvatar={setSelectedAvatar}
+                      profilesInHousehold={members}
+                    />
                   </AvatarContainer>
                   <Button onPress={handleSubmit}>Spara</Button>
                 </View>
@@ -81,14 +67,7 @@ const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
           </Formik>
         </ModalContent>
       </Content>
-      <Pressable
-        onPress={() => {
-          toggleOverlay();
-          setTimeout(() => {
-            closeModal();
-          }, 500);
-        }}
-      >
+      <Pressable onPress={closeModal}>
         <SimpleLineIcons name="close" size={42} color={colors.primary} />
       </Pressable>
     </Container>
@@ -97,10 +76,9 @@ const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
 
 export default EditProfile;
 
-const Container = styled.View<{ overlay: boolean }>`
+const Container = styled.View`
   flex: 1;
   justify-content: center;
-  background-color: ${(props) => (props.overlay ? "rgba(0,0,0,0.5)" : undefined)};
   align-items: center;
 `;
 

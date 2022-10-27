@@ -9,9 +9,10 @@ import HouseholdCard from "./HouseholdCard";
 
 interface Props {
   goToChores?: () => void;
+  closeModal?: () => void;
 }
 
-const MyHouseholds = ({ goToChores }: Props) => {
+const MyHouseholds = ({ goToChores, closeModal }: Props) => {
   const profiles = useAppSelector(selectUserProfiles);
   const [households, setHouseholds] = useState<HouseholdModel[]>([]);
 
@@ -36,7 +37,7 @@ const MyHouseholds = ({ goToChores }: Props) => {
   return (
     <>
       {households.length === profiles.length &&
-        profiles.map((profile, index) => <HouseholdCard key={profile.id} profile={profile} household={households[index]} goToChores={goToChores} />)}
+        profiles.map((profile, index) => <HouseholdCard key={profile.id} closeModal={closeModal} profile={profile} household={households[index]} goToChores={goToChores} />)}
     </>
   );
 };

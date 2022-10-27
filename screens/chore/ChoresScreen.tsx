@@ -6,6 +6,7 @@ import { Button, Divider, Portal, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import ChoreItem from "../../components/chore/ChoreItem";
 import CreateChore from "../../components/chore/CreateChore";
+import DeleteChore from "../../components/chore/DeleteChore";
 import EditChore from "../../components/chore/EditChore";
 import HouseholdName from "../../components/household/HouseholdName";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
@@ -20,23 +21,16 @@ type Props = NativeStackScreenProps<ChoreStackParams>;
 const ChoresScreen = ({ navigation }: Props) => {
   const [refresh, setRefresh] = useState(false);
   const [overlay, setOverlay] = useState(false);
-  const [editPressed, setEditPressed] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [selectedChore, setSelectedChore] = useState<Chore>();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
   const household = useAppSelector((state) => state.household.household);
   const chores = useAppSelector(selectChores);
   const profile = useAppSelector(selectCurrentProfile);
   const modalizeRef = useRef<Modalize>(null);
-
-  const toggleEdit = () => {
-    setEditPressed((prev) => !prev);
-  };
-
-  const toggleModal = () => {
-    setModalVisible((prev) => !prev);
-  };
 
   function toggleOverlay() {
     setOverlay((prev) => !prev);
@@ -46,7 +40,8 @@ const ChoresScreen = ({ navigation }: Props) => {
     modalizeRef.current?.open();
   };
   const closeModal = () => {
-    setModalVisible(false);
+    setEditModalVisible(false);
+    setDeleteModalVisible(false);
   };
 
   useEffect(() => {
@@ -75,7 +70,13 @@ const ChoresScreen = ({ navigation }: Props) => {
           chores.chores.map((chore) => (
             <View key={chore.id}>
               <Pressable onPress={() => navigation.navigate("ChoreDetailsScreen", { id: chore.id, name: chore.name })}>
-                <ChoreItem setSelectedChore={setSelectedChore} chore={chore} editPressed={editPressed} toggleModal={toggleModal} />
+                <ChoreItem
+                  setSelectedChore={setSelectedChore}
+                  chore={chore}
+                  editMode={editMode}
+                  toggleEditModal={() => setEditModalVisible((prev) => !prev)}
+                  toggleDeleteModal={() => setDeleteModalVisible((prev) => !prev)}
+                />
               </Pressable>
             </View>
           ))
@@ -92,8 +93,12 @@ const ChoresScreen = ({ navigation }: Props) => {
         </Modalize>
       </Portal>
 
-      <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
+      <Modal animationType="slide" transparent={true} visible={editModalVisible} statusBarTranslucent>
         {selectedChore && <EditChore toggleOverlay={toggleOverlay} chore={selectedChore} closeModal={closeModal} />}
+      </Modal>
+
+      <Modal animationType="slide" transparent={true} visible={deleteModalVisible} statusBarTranslucent>
+        {selectedChore && <DeleteChore toggleOverlay={toggleOverlay} chore={selectedChore} closeModal={closeModal} />}
       </Modal>
 
       {profile && profile?.role === "owner" && (
@@ -107,7 +112,7 @@ const ChoresScreen = ({ navigation }: Props) => {
             </View>
             <Divider style={{ width: 1, height: "auto" }} />
             <View style={{ flex: 1 }}>
-              <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={toggleEdit}>
+              <Button style={{ padding: 15 }} mode={"text"} icon="plus-circle-outline" onPress={() => setEditMode((prev) => !prev)}>
                 Ändra
               </Button>
             </View>

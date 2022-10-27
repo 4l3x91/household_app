@@ -68,45 +68,6 @@ export const deleteProfile = createAsyncThunk<Profile, Profile, { rejectValue: s
   }
 });
 
-// export const setProfileToOwner = createAsyncThunk<Profile[], Profile, { rejectValue: string }>(
-//   "profile/setProfileToOwner",
-//   //void for now to test snapshot
-//   async (profile, thunkAPI) => {
-//     try {
-//       const state = thunkAPI.getState() as AppState;
-//         const profileState = state.profile;
-
-//       const profilesRef = collection(db, "profiles");
-
-//       const q = query(profilesRef, where("id", "==", profile.id));
-
-//       const profileIds = profileState.profiles.map((x) => x.id);
-
-//       const q2 = query(profilesRef, where("id", "in", profileIds));
-
-//       const querySnapshot = await getDocs(q);
-
-//       if (!querySnapshot.empty) {
-//         const profileDocId = querySnapshot.docs[0].id;
-//         await updateDoc(doc(profilesRef, profileDocId), { role: "owner" });
-//       }
-//       const profiles: Profile[] = [];
-//       onSnapshot(q2, (snapshot) => {
-//         snapshot.docs.forEach((doc) => {
-//           console.log(doc.data() as Profile);
-//           profiles.push(doc.data() as Profile);
-//         });
-
-//         console.log("profiles in snapshot: " + profiles.join(", "));
-//       });
-//       return profiles;
-//     } catch (error) {
-//       console.log(error);
-//       return thunkAPI.rejectWithValue("something went wrong!");
-//     }
-//   }
-// );
-
 export const updateProfile = createAsyncThunk<Profile, Profile, { rejectValue: string }>("profile/editProfile", async (profile, thunkAPI) => {
   try {
     const collectionRef = collection(db, "profiles");
