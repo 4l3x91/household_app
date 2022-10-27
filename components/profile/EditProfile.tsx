@@ -6,7 +6,7 @@ import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { Avatar } from "../../store/profile/profileModel";
-import { selectMemoizedCurrentProfile, selectMemoizedHouseholdMember } from "../../store/profile/profileSelectors";
+import { selectMemoizedCurrentProfile, selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";
 import { updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import Input from "../common/Input";
@@ -27,7 +27,7 @@ const EditProfile = ({ closeModal }: Props) => {
   const profile = useAppSelector(selectMemoizedCurrentProfile);
   const [avatar, setAvatar] = useState<Avatar>(profile?.avatar as Avatar);
   const [selectedAvatar, setSelectedAvatar] = useState(3);
-  const members = useAppSelector(selectMemoizedHouseholdMember);
+  const members = useAppSelector(selectMemoizedHouseholdMembers);
   const { colors } = useTheme();
 
   const dispatch = useAppDispatch();

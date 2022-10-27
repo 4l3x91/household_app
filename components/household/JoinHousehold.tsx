@@ -35,6 +35,20 @@ const JoinHousehold = ({ closeModal }: Props) => {
   const [profilesInHousehold, setProfilesInHousehold] = useState<Profile[]>([]);
   const pinCodeLength = 6;
 
+  async function getUnavalibleAvatars() {
+    const profilesRef = collection(db, "profiles");
+
+    const q = query(profilesRef, where("householdId", "==", household.household.id));
+
+    const result = await getDocs(q);
+
+    console.log(result);
+
+    if (!result.empty) {
+      result.forEach((doc) => setProfilesInHousehold((prev) => [...prev, doc.data() as Profile]));
+    }
+  }
+
   //resetting errormessage
   useEffect(() => {
     if (text?.length !== 6) {
@@ -45,19 +59,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
   useEffect(() => {
     if (text === household.household.code) {
       setProfilesInHousehold([]);
-      async function getUnavalibleAvatars() {
-        const profilesRef = collection(db, "profiles");
 
-        const q = query(profilesRef, where("householdId", "==", household.household.id));
-
-        const result = await getDocs(q);
-
-        console.log(result);
-
-        if (!result.empty) {
-          result.forEach((doc) => setProfilesInHousehold((prev) => [...prev, doc.data() as Profile]));
-        }
-      }
       getUnavalibleAvatars();
     }
   }, [household]);
