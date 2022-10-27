@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, where } from "@firebase/firestore";
+import { addDoc, collection, getDocs, query, Timestamp, where } from "@firebase/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { Profile } from "../profile/profileModel";
@@ -32,7 +32,13 @@ export const getCompletedChoresPerHousehold = createAsyncThunk<completedChoreMod
 
       if (!documentsFromQuery.empty) {
         const completedChores: completedChoreModel[] = [];
-        documentsFromQuery.forEach((doc) => completedChores.push(doc.data() as completedChoreModel));
+        documentsFromQuery.forEach((doc) =>
+          completedChores.push({
+            profileId: doc.get("profileId"),
+            date: (doc.get("date") as Timestamp).toDate(),
+            choreId: doc.get("choreId"),
+          } as completedChoreModel)
+        );
         return completedChores;
       } else return thunkApi.rejectWithValue("cannot find any completed chores on this profile");
     } catch (error) {
