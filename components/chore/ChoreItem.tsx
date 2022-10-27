@@ -6,6 +6,7 @@ import styled from "styled-components/native";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { useAppSelector } from "../../store/store";
+import DisplayCompleted from "./DisplayCompleted";
 
 type Props = {
   chore: Chore;
@@ -44,7 +45,12 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
         {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
           <AvatarContainer>
             {completedChores.completedChores.map(
-              (cc) => cc.choreId === chore.id && <Text key={cc.profileId + "-" + cc.choreId + "-" + cc.date}>🐍</Text>
+              (cc) =>
+                cc.choreId === chore.id && (
+                  <Text key={cc.profileId + "-" + cc.choreId + "-" + cc.date}>
+                    <DisplayCompleted choreId={cc.choreId} />
+                  </Text>
+                )
             )}
           </AvatarContainer>
         ) : completedChores.completedChores.find(
