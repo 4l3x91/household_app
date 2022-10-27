@@ -1,4 +1,4 @@
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { Text, View } from "react-native";
 import { Badge, Surface, Theme, useTheme } from "react-native-paper";
@@ -9,16 +9,34 @@ import { useAppSelector } from "../../store/store";
 
 type Props = {
   chore: Chore;
-  editPressed: boolean;
-  toggleModal: () => void;
+  editMode: boolean;
+  toggleEditModal: () => void;
+  setSelectedChore: React.Dispatch<React.SetStateAction<Chore | undefined>>;
+  toggleDeleteModal: () => void;
+  toggleArchiveModal: () => void;
 };
 
-const ChoreItem = ({ chore, editPressed, toggleModal }: Props) => {
+const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedChore, toggleDeleteModal, toggleArchiveModal }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
 
+  function handleEditPress() {
+    toggleEditModal();
+    setSelectedChore(chore);
+  }
+
+  function handleDeletePress() {
+    toggleDeleteModal();
+    setSelectedChore(chore);
+  }
+
+  function handleArchivePress() {
+    toggleArchiveModal();
+    setSelectedChore(chore);
+  }
+
   return (
-    <ChoreItemContainer>
+    <ChoreItemContainer archived={chore.archived}>
       <View>
         <ChoreName theme={theme}>{chore.name}</ChoreName>
       </View>
@@ -37,20 +55,34 @@ const ChoreItem = ({ chore, editPressed, toggleModal }: Props) => {
           <Badge style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>{chore.interval}</Badge>
         )}
         {editPressed && (
-          <CogButton onPress={toggleModal}>
-            <FontAwesome style={{ marginLeft: 10 }} name="cog" size={25} color={theme.colors.primary} />
-          </CogButton>
+          <OwnerButtons>
+            <OwnerButton onPress={handleEditPress}>
+              <FontAwesome style={{ marginLeft: 10 }} name="cog" size={20} color={theme.colors.primary} />
+            </OwnerButton>
+            <OwnerButton onPress={handleDeletePress}>
+              <FontAwesome5 name="trash-alt" size={20} color={theme.colors.primary} />
+            </OwnerButton>
+            <OwnerButton onPress={handleArchivePress}>
+              <FontAwesome5 name="archive" size={20} color={theme.colors.primary} />
+            </OwnerButton>
+          </OwnerButtons>
         )}
       </InnerContainer>
     </ChoreItemContainer>
   );
 };
 
-const ChoreItemContainer = styled(Surface)`
+const OwnerButtons = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ChoreItemContainer = styled(Surface)<{ archived: boolean }>`
   flex-direction: row;
   border-radius: 10px;
   margin: 5px;
   justify-content: space-between;
+  ${({ archived }) => archived && "opacity: .6;"}
 `;
 
 const ChoreName = styled.Text<{ theme: Theme }>`
@@ -68,7 +100,11 @@ const InnerContainer = styled.View`
   margin-right: 10px;
 `;
 
-const CogButton = styled.Pressable`
+const OwnerButton = styled.Pressable`
+  padding: 10px 10px 10px 0;
+`;
+
+const TrashButton = styled.Pressable`
   padding: 10px 10px 10px 0;
 `;
 
