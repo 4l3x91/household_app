@@ -6,12 +6,12 @@ export default {
     slug: "household_app",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/myIcon.jpg",
     userInterfaceStyle: "automatic",
     splash: {
-      image: "./assets/splash.png",
+      image: "./assets/splashScreen.png",
       resizeMode: "contain",
-      backgroundColor: "#ffffff",
+      backgroundColor: "#191c1e",
     },
     updates: {
       fallbackToCacheTimeout: 0,
@@ -22,8 +22,8 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#FFFFFF",
+        foregroundImage: "./assets/myAdaptiveIcon.jpg",
+        backgroundColor: "#191c1e",
       },
     },
     web: {
