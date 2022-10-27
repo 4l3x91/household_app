@@ -44,7 +44,7 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
                   </ComponentContainer>
 
                   <ComponentContainer>
-                    <Input label="Beskrivning" value={values.description} numberOfLines={4} handleChange={handleChange("description")} />
+                    <Input label="Beskrivning" multiline value={values.description} numberOfLines={4} handleChange={handleChange("description")} />
                     {errors.description && <Text>{errors.description}</Text>}
                   </ComponentContainer>
 
