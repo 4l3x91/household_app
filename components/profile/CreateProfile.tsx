@@ -1,20 +1,18 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
-import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
 import { selectHouseholdId } from "../../store/household/householdSelector";
-import { avatarData } from "../../store/profile/profileData";
 import { Avatar, Profile } from "../../store/profile/profileModel";
-import { selectHouseholdMembers } from "../../store/profile/profileSelectors";
+import { selectMemoizedHouseholdMember } from "../../store/profile/profileSelectors";
 import { postProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
 import { profileSchema } from "../../utils/yupSchemas";
 import Input from "../common/Input";
+import AvatarPicker from "./AvatarPicker";
 
 interface Props {
   closeModal: () => void;
@@ -27,7 +25,7 @@ const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
-  const members = useAppSelector(selectHouseholdMembers);
+  const members = useAppSelector(selectMemoizedHouseholdMember);
   const householdId = useAppSelector(selectHouseholdId);
   const pending = useAppSelector((state) => state.profile).pending;
 
@@ -70,52 +68,12 @@ const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
                 />
                 {errors.profileName && <Text>{errors.profileName}</Text>}
               </View>
-              <AvatarContainer>
-                <Text variant="headlineSmall" style={{ marginHorizontal: 10, alignSelf: "center" }}>
-                  Välj din avatar
-                </Text>
-                <AvatarContent elevation={3}>
-                  {avatarData.map((avatar, index) => (
-                    <View key={avatar.avatar} style={{ alignItems: "center", justifyContent: "center" }}>
-                      <AvatarCard
-                        onPress={() => {
-                          if (profilesInHousehold) {
-                            if (!profilesInHousehold.find((a) => a.avatar.avatar === avatar.avatar)) {
-                              setAvatar(avatar);
-                              setSelectedAvatar(index);
-                            }
-                          } else {
-                            setAvatar(avatar);
-                            setSelectedAvatar(index);
-                          }
-                        }}
-                        color={avatar.color}
-                        selected={index === selectedAvatar}
-                      >
-                        <AvatarText>{avatar.avatar}</AvatarText>
-                      </AvatarCard>
-                      {profilesInHousehold && profilesInHousehold.find((profile) => profile.avatar.avatar === avatar.avatar) && (
-                        <View style={{ position: "absolute" }}>
-                          <Tooltip
-                            backgroundColor={colors.surface}
-                            width={200}
-                            height={80}
-                            popover={
-                              <Text>
-                                Den här avataren används av
-                                {profilesInHousehold.find((profile) => profile.avatar.avatar === avatar.avatar)?.profileName}
-                              </Text>
-                            }
-                            actionType="press"
-                          >
-                            <MaterialCommunityIcons name="close" size={65} color={colors.error} />
-                          </Tooltip>
-                        </View>
-                      )}
-                    </View>
-                  ))}
-                </AvatarContent>
-              </AvatarContainer>
+              <AvatarPicker
+                setAvatar={setAvatar}
+                selectedAvatar={selectedAvatar}
+                setSelectedAvatar={setSelectedAvatar}
+                profilesInHousehold={profilesInHousehold}
+              />
               <Button
                 style={{ marginHorizontal: 30 }}
                 disabled={!inputsOk}
