@@ -97,7 +97,6 @@ const Container = styled.View`
 `;
 const OuterSurface = styled(Surface)<{ width: number }>`
   margin: 0 20px;
-  /* flex: 1; */
   border-radius: 20px;
   width: ${(props) => props.width}px;
 `;
@@ -137,8 +136,6 @@ const IntervalInnerContainer = styled.View`
 `;
 
 const ButtonContainer = styled.View`
-  /* margin: 0 20px; */
-  /* flex: 1; */
   justify-content: flex-end;
   margin-bottom: 20px;
   margin: 100px 20px 20px 20px;
