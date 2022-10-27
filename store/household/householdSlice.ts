@@ -1,107 +1,93 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from "@firebase/firestore";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { db } from "../../config/firebase";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HouseholdModel } from "./householdModel";
 import { initialState } from "./householdState";
-
-export const createHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdModel, { rejectValue: string }>(
-  "household/setHousehold",
-  async (household, thunkAPI) => {
-    try {
-      const collectionRef = collection(db, "households");
-
-      await addDoc(collectionRef, household);
-
-      return household;
-    } catch (error) {
-      return thunkAPI.rejectWithValue("something went wrong");
-    }
-  }
-);
-
-export const deleteHouseholdThunk = createAsyncThunk<HouseholdModel, HouseholdModel, { rejectValue: string }>(
-  "household/deleteHousehold",
-  async (household, thunkAPI) => {
-    //TODO: think about logic to delete all profiles corresponding to this household. USE this with caution :]
-    try {
-      const collectionRef = collection(db, "households");
-
-      const q = query(collectionRef, where("id", "==", household.id));
-
-      const result = await getDocs(q);
-
-      if (!result.empty) {
-        const householdToDelete = result.docs[0].id;
-        await deleteDoc(doc(db, "households", householdToDelete));
-      }
-      return {} as HouseholdModel;
-    } catch (error) {
-      console.log(error);
-      return thunkAPI.rejectWithValue("error");
-    }
-  }
-);
-
-export const getHouseholdByCodeThunk = createAsyncThunk<HouseholdModel, string, { rejectValue: string }>(
-  "household/getHouseholdByCode",
-  async (code, thunkAPI) => {
-    try {
-      const householdRef = collection(db, "households");
-      const q = query(householdRef, where("code", "==", code));
-      const queryResult = await getDocs(q);
-      if (!queryResult.empty) {
-        const household = queryResult.docs[0].data() as HouseholdModel;
-        return household;
-      } else {
-        return thunkAPI.rejectWithValue("Household does not exist");
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue("something went wrong");
-    }
-  }
-);
+import { deleteHousehold, getHouseholdByCode, getHouseholdById, postHousehold, updateHouseholdName } from "./householdThunks";
 
 const householdSlice = createSlice({
   name: "household",
   initialState,
-  reducers: {},
+  reducers: {
+    setError(state, action: PayloadAction<string>) {
+      state.error = action.payload;
+    },
+    resetHousehold(state) {
+      state.household = initialState.household;
+    },
+    setHousehold(state, action: PayloadAction<HouseholdModel>) {
+      state.household = action.payload;
+    },
+  },
+
   extraReducers: (builder) => {
-    builder.addCase(createHouseholdThunk.pending, (state) => {
+    //CREATE HOUSEHOLD
+    builder.addCase(postHousehold.pending, (state) => {
       state.pending = true;
     });
-    builder.addCase(createHouseholdThunk.fulfilled, (state, action) => {
+    builder.addCase(postHousehold.fulfilled, (state, action) => {
       state.pending = false;
       state.household = action.payload;
     });
-    builder.addCase(createHouseholdThunk.rejected, (state) => {
+    builder.addCase(postHousehold.rejected, (state) => {
       state.pending = false;
       state.error = "Error: no household data found";
     });
-    builder.addCase(getHouseholdByCodeThunk.pending, (state) => {
+
+    //UPDATE HOUSEHOLD NAME
+    builder.addCase(updateHouseholdName.pending, (state) => {
+      state.pending = true;
+    });
+    builder.addCase(updateHouseholdName.fulfilled, (state, action) => {
+      state.pending = false;
+      state.household.name = action.payload;
+    });
+    builder.addCase(updateHouseholdName.rejected, (state) => {
+      state.pending = false;
+      state.error = "didnt change mayne";
+    });
+
+    //GET HOUSEHOLD BY CODE
+    builder.addCase(getHouseholdByCode.pending, (state) => {
       state.pending = true;
       state.error = "";
     });
-    builder.addCase(getHouseholdByCodeThunk.fulfilled, (state, action) => {
+    builder.addCase(getHouseholdByCode.fulfilled, (state, action) => {
       state.pending = false;
       state.household = action.payload;
     });
-    builder.addCase(getHouseholdByCodeThunk.rejected, (state) => {
+    builder.addCase(getHouseholdByCode.rejected, (state, action) => {
+      state.pending = false;
+      state.error = action.payload || "unknown error";
+    });
+
+    //GET HOUSEHOLD BY ID
+    builder.addCase(getHouseholdById.pending, (state) => {
+      state.pending = true;
+      state.error = "";
+    });
+    builder.addCase(getHouseholdById.fulfilled, (state, action) => {
+      state.pending = false;
+      state.household = action.payload;
+    });
+    builder.addCase(getHouseholdById.rejected, (state) => {
       state.pending = false;
       state.error = "Error: no household data found";
     });
-    builder.addCase(deleteHouseholdThunk.pending, (state) => {
-      state.isLoading = true;
+
+    //DELETE HOUSEHOLD
+    builder.addCase(deleteHousehold.pending, (state) => {
+      state.pending = true;
       state.error = "";
     });
-    builder.addCase(deleteHouseholdThunk.fulfilled, (state, action) => {
-      state.isLoading = false;
+    builder.addCase(deleteHousehold.fulfilled, (state, action) => {
+      state.pending = false;
       state.household = action.payload;
     });
-    builder.addCase(deleteHouseholdThunk.rejected, (state) => {
-      state.isLoading = false;
+    builder.addCase(deleteHousehold.rejected, (state) => {
+      state.pending = false;
       state.error = "Error: no household data found";
     });
   },
 });
 
 export const householdReducer = householdSlice.reducer;
+export const { resetHousehold, setHousehold, setError } = householdSlice.actions;

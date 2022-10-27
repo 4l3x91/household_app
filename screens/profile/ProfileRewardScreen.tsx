@@ -2,12 +2,12 @@ import React from "react";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 
-const StatsScreen = () => {
+const ProfileRewardScreen = () => {
   return (
     <View>
-      <Text>StatsScreen</Text>
+      <Text>UserRewardScreen</Text>
     </View>
   );
 };
 
-export default StatsScreen;
+export default ProfileRewardScreen;

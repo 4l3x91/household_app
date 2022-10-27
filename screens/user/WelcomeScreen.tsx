@@ -2,8 +2,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
-import { RootStackParams } from "../navigation/RootStackNavigator";
-import { getTheme } from "../theme";
+import { RootStackParams } from "../../navigation/RootStackNavigator";
+import { getTheme } from "../../theme";
 
 type Props = NativeStackScreenProps<RootStackParams>;
 

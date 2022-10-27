@@ -1,16 +1,12 @@
 import React from "react";
-import { Text, View } from "react-native";
+import StatsScreen from "../screens/stats/StatsScreen";
 
 export type StatsStackParams = {
   StatsScreen: undefined;
 };
 
 const StatsStackNavigator = () => {
-  return (
-    <View>
-      <Text>StatsStackNavigator</Text>
-    </View>
-  );
+  return <StatsScreen />;
 };
 
 export default StatsStackNavigator;

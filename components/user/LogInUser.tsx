@@ -1,13 +1,14 @@
+import {} from "firebase/auth";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { signInUser } from "../../store/user/userSlice";
-import BottomButtons from "../BottomButtons";
-import ErrorTranslator from "../ErrorTranslator";
-import Input from "../Input";
+import { signInUser } from "../../store/user/userThunks";
+import BottomButtons from "../common/BottomButtons";
+import ErrorTranslator from "../common/ErrorTranslator";
+import Input from "../common/Input";
 
 interface Props {
   close: () => void;
@@ -22,7 +23,12 @@ const validation = Yup.object().shape({
 const LoginUser = ({ close, register }: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const dispatch = useAppDispatch();
-  const { pending, error } = useAppSelector((state) => state.userState);
+  const { error } = useAppSelector((state) => state.userState);
+  const userPending = useAppSelector((state) => state.userState).pending;
+  const profilePending = useAppSelector((state) => state.profile).pending;
+  const householdPending = useAppSelector((state) => state.household).pending;
+
+  const pending = userPending || profilePending || householdPending;
 
   return (
     <>

@@ -6,6 +6,7 @@ export interface Profile {
   avatar: Avatar;
   role: "user" | "owner";
   isPaused: boolean;
+  isApproved?: boolean;
 }
 
 export interface Avatar {

@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import CreateUserScreen from "../screens/CreateUserScreen";
 import HouseholdOptionsScreen from "../screens/HouseholdOptionsScreen";
-import LoginScreen from "../screens/LoginScreen";
-import WelcomeScreen from "../screens/WelcomeScreen";
+import CreateUserScreen from "../screens/user/CreateUserScreen";
+import LoginScreen from "../screens/user/LoginScreen";
+import WelcomeScreen from "../screens/user/WelcomeScreen";
 import TabStackNavigator from "./TabStackNavigator";
 
 export type RootStackParams = {

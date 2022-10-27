@@ -7,6 +7,7 @@ interface Props {
   handleChange: (string: string) => void;
   secureTextEntry?: boolean;
   height?: number;
+  width?: number;
   marginHorizontal?: number;
   marginVertical?: number;
   multiline?: boolean;
@@ -14,6 +15,7 @@ interface Props {
   left?: React.ReactNode;
   activeOutlineColor?: string | undefined;
   outlineColor?: string | undefined;
+  numberOfLines?: number;
 }
 
 const Input = ({
@@ -23,23 +25,26 @@ const Input = ({
   secureTextEntry,
   height,
   multiline,
+  numberOfLines,
   activeOutlineColor,
   marginHorizontal,
   marginVertical,
   outlineColor,
   right,
+  width,
 }: Props) => {
   return (
     <TextInput
       outlineColor={outlineColor}
       activeOutlineColor={activeOutlineColor}
       multiline={multiline}
+      numberOfLines={numberOfLines}
       label={label}
       mode={"outlined"}
       value={value}
       onChangeText={handleChange}
       secureTextEntry={secureTextEntry}
-      style={{ marginHorizontal: marginHorizontal, marginVertical: marginVertical, height: height }}
+      style={{ marginHorizontal: marginHorizontal, marginVertical: marginVertical, height: height, width: width }}
       right={right}
     />
   );
