@@ -4,7 +4,7 @@ import { Pressable } from "react-native";
 import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { Chore } from "../../store/chore/choreModel";
-import { deleteChore } from "../../store/chore/choreThunks";
+import { deleteChore, updateChore } from "../../store/chore/choreThunks";
 import { useAppDispatch } from "../../store/store";
 
 interface Props {
@@ -23,19 +23,39 @@ const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
         <Text variant="headlineMedium">Ta bort syssla</Text>
         <ModalContent elevation={0}>
           <Text>Vill du verkligen ta bort sysslan {chore.name} ?</Text>
+          {!chore.archived && (
+            <Text>
+              När du tar bort en syssla kommer även all statistik som är kopplad till sysslan att försvinna! Du kan istället välja att arkivera
+              sysslan för att behålla statistiken.
+            </Text>
+          )}
         </ModalContent>
-
-        <Button
-          onPress={() => {
-            dispatch(deleteChore(chore));
-            closeModal();
-            toggleOverlay();
-          }}
-          mode="contained"
-          buttonColor={colors.errorContainer}
-        >
-          <Text>Ta bort</Text>
-        </Button>
+        <ButtonContainer>
+          <Button
+            onPress={() => {
+              dispatch(deleteChore(chore));
+              closeModal();
+              toggleOverlay();
+            }}
+            mode="contained"
+            buttonColor={colors.errorContainer}
+            style={{ marginRight: 5 }}
+          >
+            <Text>Ta bort</Text>
+          </Button>
+          {!chore.archived && (
+            <Button
+              onPress={() => {
+                dispatch(updateChore({ ...chore, archived: true }));
+                closeModal();
+                toggleOverlay();
+              }}
+              mode="outlined"
+            >
+              Arkivera
+            </Button>
+          )}
+        </ButtonContainer>
       </Content>
       <Pressable
         onPress={() => {
@@ -65,7 +85,10 @@ const Content = styled(Surface)`
   align-items: center;
 `;
 const ModalContent = styled(Surface)`
-  flex-direction: row;
   padding: 20px;
   margin-top: 10px;
+`;
+
+const ButtonContainer = styled.View`
+  flex-direction: row;
 `;

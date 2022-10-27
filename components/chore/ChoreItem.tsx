@@ -6,15 +6,17 @@ import styled from "styled-components/native";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { useAppSelector } from "../../store/store";
+
 type Props = {
   chore: Chore;
   editMode: boolean;
   toggleEditModal: () => void;
   setSelectedChore: React.Dispatch<React.SetStateAction<Chore | undefined>>;
   toggleDeleteModal: () => void;
+  toggleArchiveModal: () => void;
 };
 
-const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedChore, toggleDeleteModal }: Props) => {
+const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedChore, toggleDeleteModal, toggleArchiveModal }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
 
@@ -28,8 +30,13 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
     setSelectedChore(chore);
   }
 
+  function handleArchivePress() {
+    toggleArchiveModal();
+    setSelectedChore(chore);
+  }
+
   return (
-    <ChoreItemContainer>
+    <ChoreItemContainer archived={chore.archived}>
       <View>
         <ChoreName theme={theme}>{chore.name}</ChoreName>
       </View>
@@ -49,12 +56,15 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
         )}
         {editPressed && (
           <OwnerButtons>
-            <CogButton onPress={handleEditPress}>
+            <OwnerButton onPress={handleEditPress}>
               <FontAwesome style={{ marginLeft: 10 }} name="cog" size={20} color={theme.colors.primary} />
-            </CogButton>
-            <TrashButton onPress={handleDeletePress}>
+            </OwnerButton>
+            <OwnerButton onPress={handleDeletePress}>
               <FontAwesome5 name="trash-alt" size={20} color={theme.colors.primary} />
-            </TrashButton>
+            </OwnerButton>
+            <OwnerButton onPress={handleArchivePress}>
+              <FontAwesome5 name="archive" size={20} color={theme.colors.primary} />
+            </OwnerButton>
           </OwnerButtons>
         )}
       </InnerContainer>
@@ -67,11 +77,12 @@ const OwnerButtons = styled.View`
   align-items: center;
 `;
 
-const ChoreItemContainer = styled(Surface)`
+const ChoreItemContainer = styled(Surface)<{ archived: boolean }>`
   flex-direction: row;
   border-radius: 10px;
   margin: 5px;
   justify-content: space-between;
+  ${({ archived }) => archived && "opacity: .6;"}
 `;
 
 const ChoreName = styled.Text<{ theme: Theme }>`
@@ -89,7 +100,7 @@ const InnerContainer = styled.View`
   margin-right: 10px;
 `;
 
-const CogButton = styled.Pressable`
+const OwnerButton = styled.Pressable`
   padding: 10px 10px 10px 0;
 `;
 
