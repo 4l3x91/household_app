@@ -17,7 +17,11 @@ const ChoreStackNavigator = () => {
   return (
     <ChoreStack.Navigator initialRouteName="ChoresScreen">
       <ChoreStack.Screen name="ChoresScreen" component={ChoresScreen} options={{ headerShown: false }} />
-      <ChoreStack.Screen name="ChoreDetailsScreen" component={ChoreDetailsScreen} options={({ route }) => ({ title: route.params.name })} />
+      <ChoreStack.Screen
+        name="ChoreDetailsScreen"
+        component={ChoreDetailsScreen}
+        options={({ route }) => ({ title: route.params.name, headerShown: false })}
+      />
     </ChoreStack.Navigator>
   );
 };
