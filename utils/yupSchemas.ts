@@ -17,3 +17,14 @@ export const profileSchema = Yup.object().shape({
     .min(2, "must contain atleast 2 characters")
     .matches(/^\S*$/, "profile name cannot contain spaces"),
 });
+
+export const createOrEditChoreSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(2, "Titel måste vara minst två tecken")
+    .max(20, "Titel kan inte vara längre än 20 tecken")
+    .required("Titel kan inte vara tom"),
+  description: Yup.string()
+    .min(10, "Beskrivning måste vara minst 10 tecken")
+    .max(100, "Beskrivning kan inte vara längre än 100 tecken")
+    .required("Beskrivning kan inte vara tom"),
+});

@@ -5,12 +5,12 @@ import { Pressable, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
-import { avatarData } from "../../store/profile/profileData";
 import { Avatar } from "../../store/profile/profileModel";
-import { selectMemoizedCurrentProfile } from "../../store/profile/profileSelectors";
+import { selectMemoizedCurrentProfile, selectMemoizedHouseholdMember } from "../../store/profile/profileSelectors";
 import { updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import Input from "../common/Input";
+import AvatarPicker from "./AvatarPicker";
 
 const validation = Yup.object().shape({
   name: Yup.string()
@@ -27,6 +27,7 @@ const EditProfile = ({ closeModal }: Props) => {
   const profile = useAppSelector(selectMemoizedCurrentProfile);
   const [avatar, setAvatar] = useState<Avatar>(profile?.avatar as Avatar);
   const [selectedAvatar, setSelectedAvatar] = useState(3);
+  const members = useAppSelector(selectMemoizedHouseholdMember);
   const { colors } = useTheme();
 
   const dispatch = useAppDispatch();
@@ -52,25 +53,12 @@ const EditProfile = ({ closeModal }: Props) => {
                   <Input label="Namn" value={values.name as string} handleChange={handleChange("name")} />
                   {errors.name && <Text>{errors.name}</Text>}
                   <AvatarContainer>
-                    <Text variant="headlineSmall">Välj din avatar</Text>
-                    {/* TODO: will be replaced */}
-                    <AvatarContent elevation={0}>
-                      {avatarData.map((avatar, index) => (
-                        <View key={avatar.avatar}>
-                          <AvatarCard
-                            onPress={() => {
-                              setAvatar(avatar);
-                              setSelectedAvatar(index);
-                            }}
-                            color={avatar.color}
-                            selected={index === selectedAvatar}
-                          >
-                            <AvatarText>{avatar.avatar}</AvatarText>
-                          </AvatarCard>
-                        </View>
-                      ))}
-                    </AvatarContent>
-                    {/* TODO: will be replaced ^ */}
+                    <AvatarPicker
+                      setAvatar={setAvatar}
+                      selectedAvatar={selectedAvatar}
+                      setSelectedAvatar={setSelectedAvatar}
+                      profilesInHousehold={members}
+                    />
                   </AvatarContainer>
                   <Button onPress={handleSubmit}>Spara</Button>
                 </View>
