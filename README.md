@@ -57,8 +57,8 @@ Sysslor (6)
   ytterligare.
 - [x] En ägare ska kunna redigera en syssla. \*
 - [x] En ägare ska kunna ta bort en syssla.
-- [] När en syssla tas bort ska användaren få en varning om att all statistik gällande sysslan
-  också kommer att tas bort och få valet att arkivera sysslan istället.
+- [x] När en syssla tas bort ska användaren få en varning om att all statistik gällande sysslan
+      också kommer att tas bort och få valet att arkivera sysslan istället.
 
   Dagsvyn (3)
 
@@ -68,10 +68,10 @@ Sysslor (6)
 
 Statistik (6)
 
-- [] En användare ska kunna se fördelningen av gjorda sysslor mellan användarna i sitt
-  hushåll. \*
-- [] Varje statistikvy ska visa den totala fördelningen (inräknat vikterna för sysslorna) samt
-  fördelning av varje enskild syssla. \*
+- [x] En användare ska kunna se fördelningen av gjorda sysslor mellan användarna i sitt
+      hushåll. \*
+- [x] Varje statistikvy ska visa den totala fördelningen (inräknat vikterna för sysslorna) samt
+      fördelning av varje enskild syssla. \*
 - [] Det ska finnas en statistikvy över ”nuvarande vecka”. \*
 - [] Det ska finnas en statistikvy över ”förra vecka”.
 - [] Det ska finnas en statistikvy över ”förra månaden”.
