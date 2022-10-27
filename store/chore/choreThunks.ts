@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from "@firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from "@firebase/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { Chore } from "./choreModel";
@@ -48,5 +48,26 @@ export const updateChore = createAsyncThunk<Chore, Chore, { rejectValue: string 
       return thunkApi.rejectWithValue(error.message);
     }
     return thunkApi.rejectWithValue("errror");
+  }
+});
+
+export const deleteChore = createAsyncThunk<Chore, Chore, { rejectValue: string }>("profile/deleteProfile", async (chore, thunkAPI) => {
+  try {
+    const collectionRef = collection(db, "chores");
+
+    const q = query(collectionRef, where("id", "==", chore.id));
+
+    const result = await getDocs(q);
+
+    if (!result.empty) {
+      const choreToDeleteId = result.docs[0].id;
+      await deleteDoc(doc(db, "chores", choreToDeleteId));
+      return chore;
+    } else {
+      return thunkAPI.rejectWithValue("cant find chore to delete");
+    }
+  } catch (error) {
+    console.log(error);
+    return thunkAPI.rejectWithValue("cant find chore to delete");
   }
 });
