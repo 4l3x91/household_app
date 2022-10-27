@@ -1,18 +1,17 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Modal } from "react-native";
+import { Modal, Pressable, View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { Profile } from "../../store/profile/profileModel";
 import { selectCurrentProfile, selectMemoizedHouseholdMember } from "../../store/profile/profileSelectors";
-import { useAppDispatch, useAppSelector } from "../../store/store";
+import { useAppSelector } from "../../store/store";
 import AvatarCard from "./AvatarCard";
 import HouseholdMember from "./HouseholdMember";
 
 const HouseholdMembers = () => {
   const members = useAppSelector(selectMemoizedHouseholdMember);
   const currentProfile = useAppSelector(selectCurrentProfile);
-  const dispatch = useAppDispatch();
   const { colors } = useTheme();
   const [selectedMember, setSelectedMember] = useState<Profile>();
   const [overlay, setOverlay] = useState(false);
@@ -26,32 +25,34 @@ const HouseholdMembers = () => {
   };
 
   return (
-    <HouseholdMembersContainer>
+    <View>
       <Text variant="headlineSmall">Hushållsmedlemmar</Text>
       {members.map(
         (member) =>
           member.isApproved && (
-            <MemberCard key={member.id}>
-              <ProfileContent>
-                <AvatarCard profile={member} />
-                <ProfileName variant="bodyLarge">{member.profileName}</ProfileName>
-              </ProfileContent>
-              {currentProfile?.role === "owner" && (
-                <ButtonContainer>
-                  <IconButton
-                    onPress={() => {
-                      setSelectedMember(member);
-                      setModalVisible(true);
-                      setTimeout(() => {
+            <View key={member.id}>
+              <Container>
+                <ProfileContainer>
+                  <AvatarContainer>
+                    <AvatarCard profile={member} size={32} />
+                  </AvatarContainer>
+                  <Text variant="headlineSmall">{member.profileName}</Text>
+                </ProfileContainer>
+                {currentProfile?.role === "owner" && (
+                  <IconContainer>
+                    <Pressable
+                      onPress={() => {
+                        setModalVisible(true);
+                        setSelectedMember(member);
                         setOverlay(true);
-                      }, 300);
-                    }}
-                  >
-                    <FontAwesome5 name="cog" size={24} color={colors.onSurface} />
-                  </IconButton>
-                </ButtonContainer>
-              )}
-            </MemberCard>
+                      }}
+                    >
+                      <FontAwesome5 name="cog" size={24} color={colors.onSurface} />
+                    </Pressable>
+                  </IconContainer>
+                )}
+              </Container>
+            </View>
           )
       )}
       {selectedMember && (
@@ -59,46 +60,31 @@ const HouseholdMembers = () => {
           <HouseholdMember member={selectedMember} closeModal={closeModal} toggleOverlay={toggleOverlay} overlay={overlay} />
         </Modal>
       )}
-    </HouseholdMembersContainer>
+    </View>
   );
 };
 
-const HouseholdMembersContainer = styled.View`
+export default HouseholdMembers;
+
+const Container = styled(Surface)`
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  border-radius: 10px;
+  margin: 5px 0;
 `;
 
-const MemberCard = styled(Surface)`
-  margin: 5px 10px;
-  justify-content: space-between;
-  align-items: center;
+const ProfileContainer = styled.View`
   flex-direction: row;
+  align-items: center;
+  flex: 1;
+`;
+
+const AvatarContainer = styled.View`
+  padding: 10px;
+  margin-right: 10px;
   border-radius: 10px;
 `;
 
-const ProfileContent = styled.View`
-  flex: 5;
-  flex-direction: row;
-  padding: 10px;
-  align-items: center;
+const IconContainer = styled.View`
+  margin: 0 10px;
 `;
-
-const ProfileName = styled(Text)`
-  margin-left: 10px;
-`;
-
-const ButtonContainer = styled.View`
-  flex-direction: row;
-  flex: 1;
-`;
-
-const IconButton = styled.Pressable`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  padding: 10px 0;
-  margin-right: 10px;
-`;
-
-export default HouseholdMembers;

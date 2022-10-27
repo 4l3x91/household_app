@@ -1,8 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
+import { View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { selectHouseholdId } from "../../store/household/householdSelector";
 import { selectMemoizedCurrentProfile, selectPendingProfiles } from "../../store/profile/profileSelectors";
 import { deleteProfile, updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -15,72 +15,66 @@ const PendingProfiles = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <Container>
+    <View>
       {currentProfile?.role === "owner" && pendingProfiles.length > 0 && (
         <>
-          <Text>Ansökande profiler</Text>
+      <Text variant="headlineSmall">Väntande profiler</Text>
           {pendingProfiles.map(
             (profile) =>
               profile.isApproved === false && (
-                <ProfileCard key={profile.id}>
-                  <ProfileContent>
-                    <AvatarCard profile={profile} />
-                    <ProfileName key={profile.id} variant={"titleMedium"} style={{ marginRight: 8 }}>
-                      {profile.profileName}
-                    </ProfileName>
-                  </ProfileContent>
-                  <ButtonContainer>
-                    <IconButton background={colors.surfaceVariant} onPress={() => dispatch(updateProfile({ ...profile, isApproved: true }))}>
-                      <MaterialIcons name="check-circle-outline" size={20} color={colors.onSecondaryContainer} />
-                    </IconButton>
-                    <IconButton background={colors.errorContainer} onPress={async () => dispatch(deleteProfile(profile))}>
-                      <MaterialIcons name="cancel" size={20} color={colors.onErrorContainer} />
-                    </IconButton>
-                  </ButtonContainer>
-                </ProfileCard>
+                <View key={profile.id}>
+                  <Container>
+                    <ProfileContainer>
+                      <AvatarContainer>
+                        <AvatarCard profile={profile} size={32} />
+                      </AvatarContainer>
+                      <Text variant="titleMedium">{profile.profileName}</Text>
+                    </ProfileContainer>
+                    <IconContainer>
+                      <IconButton onPress={() => dispatch(updateProfile({ ...profile, isApproved: true }))}>
+                        <MaterialIcons name="check-circle-outline" size={24} color={colors.onSecondaryContainer} />
+                      </IconButton>
+
+                      <IconButton onPress={() => dispatch(deleteProfile(profile))}>
+                        <MaterialIcons name="cancel" size={24} color={colors.onErrorContainer} />
+                      </IconButton>
+                    </IconContainer>
+                  </Container>
+                </View>
               )
           )}
         </>
       )}
-    </Container>
+    </View>
   );
 };
 
 export default PendingProfiles;
 
-const Container = styled.View`
-  margin-top: 10px;
-  justify-content: center;
+const Container = styled(Surface)`
+  flex-direction: row;
   align-items: center;
+  border-radius: 10px;
+  margin: 5px 0;
 `;
 
-const ProfileCard = styled(Surface)`
-  margin: 5px 10px;
-  justify-content: space-between;
-  align-items: center;
+const ProfileContainer = styled.View`
   flex-direction: row;
+  align-items: center;
+  flex: 1;
+`;
+
+const AvatarContainer = styled.View`
+  padding: 10px;
+  margin-right: 10px;
   border-radius: 10px;
 `;
 
-const ProfileContent = styled.View`
-  flex: 2;
-  flex-direction: row;
-  align-items: center;
-  padding: 10px;
-`;
-
-const ProfileName = styled(Text)`
-  margin-left: 10px;
-`;
-
-const ButtonContainer = styled.View`
-  flex: 1;
+const IconContainer = styled.View`
   flex-direction: row;
 `;
 
-const IconButton = styled.Pressable<{ background: string }>`
-  flex: 1;
-  background-color: ${(props) => props.background};
+const IconButton = styled.Pressable`
   justify-content: center;
   align-items: center;
   border-radius: 4px;

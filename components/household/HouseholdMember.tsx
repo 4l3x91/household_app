@@ -67,7 +67,7 @@ const HouseholdMember = ({ member, closeModal, toggleOverlay, overlay }: Props) 
               }}
             >
               <FontAwesome5 name="play" size={30} color={colors.onSecondaryContainer} />
-              <ButtonText variant="bodySmall">Pausa</ButtonText>
+              <ButtonText variant="bodySmall">Återuppta</ButtonText>
             </IconButton>
           )}
         </ButtonContainer>
@@ -93,7 +93,6 @@ const Container = styled.View<{ overlay: boolean; background: string }>`
   justify-content: center;
   align-items: center;
   flex: 1;
-  margin-top: 22px;
 `;
 
 const ModalContainer = styled.View<{ background: string }>`
