@@ -65,13 +65,13 @@ const ChoreDetailsScreen = () => {
           <IntervalOuterContainer>
             <Text variant="bodySmall">Intervall</Text>
             <IntervalInnerContainer>
-              <Text variant="headlineSmall">
-                Återkommer var{"  "}
-                <Interval elevation={2}>
-                  <Text variant="headlineSmall">{chore.interval}</Text>
-                </Interval>
-                {"  "}dag
-              </Text>
+              <Text variant="headlineSmall">Återkommer var</Text>
+
+              <Interval elevation={2}>
+                <Text variant="headlineSmall">{chore.interval}</Text>
+              </Interval>
+
+              <Text variant="headlineSmall">dag</Text>
             </IntervalInnerContainer>
           </IntervalOuterContainer>
           <ButtonContainer>
@@ -93,11 +93,11 @@ export default ChoreDetailsScreen;
 
 const Container = styled.View`
   align-items: center;
-  margin: 20px;
+  margin: auto;
 `;
 const OuterSurface = styled(Surface)<{ width: number }>`
   margin: 0 20px;
-  flex: 1;
+  /* flex: 1; */
   border-radius: 20px;
   width: ${(props) => props.width}px;
 `;
@@ -125,18 +125,21 @@ const Interval = styled(Surface)`
   align-items: center;
   border-radius: 20px;
   padding: 0 10px;
+  margin: 0 5px;
 `;
 const IntervalOuterContainer = styled.View`
   margin: 20px;
 `;
 
 const IntervalInnerContainer = styled.View`
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const ButtonContainer = styled.View`
-  margin: 0 20px;
-  flex: 1;
+  /* margin: 0 20px; */
+  /* flex: 1; */
   justify-content: flex-end;
   margin-bottom: 20px;
+  margin: 100px 20px 20px 20px;
 `;
