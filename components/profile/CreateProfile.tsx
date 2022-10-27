@@ -6,7 +6,7 @@ import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
 import { selectHouseholdId } from "../../store/household/householdSelector";
 import { Avatar, Profile } from "../../store/profile/profileModel";
-import { selectMemoizedHouseholdMember } from "../../store/profile/profileSelectors";
+import { selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";
 import { postProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
@@ -25,7 +25,7 @@ const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
-  const members = useAppSelector(selectMemoizedHouseholdMember);
+  const members = useAppSelector(selectMemoizedHouseholdMembers);
   const householdId = useAppSelector(selectHouseholdId);
   const pending = useAppSelector((state) => state.profile).pending;
 
