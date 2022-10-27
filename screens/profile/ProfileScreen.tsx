@@ -4,6 +4,7 @@ import { Modal, ScrollView, View } from "react-native";
 import { Button, Surface, Text } from "react-native-paper";
 import HouseholdMembers from "../../components/household/HouseholdMembers";
 import EditProfile from "../../components/profile/EditProfile";
+import PendingProfiles from "../../components/profile/PendingProfiles";
 import { UserStackParams } from "../../navigation/UserStackNavigator";
 import { selectHouseholdName } from "../../store/household/householdSelector";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";
@@ -56,6 +57,7 @@ const ProfileScreen = ({ navigation, route }: Props) => {
         </ScrollView>
       </Surface>
       <HouseholdMembers />
+      <PendingProfiles />
       <View style={{ flex: 1 }}>
         <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
           <EditProfile overlay={overlay} toggleOverlay={toggleOverlay} closeModal={closeModal} />
