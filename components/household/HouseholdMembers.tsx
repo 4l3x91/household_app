@@ -4,13 +4,13 @@ import { Modal, Pressable, View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { Profile } from "../../store/profile/profileModel";
-import { selectCurrentProfile, selectMemoizedHouseholdMember } from "../../store/profile/profileSelectors";
+import { selectCurrentProfile, selectHouseholdMembers } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
 import AvatarCard from "./AvatarCard";
 import HouseholdMember from "./HouseholdMember";
 
 const HouseholdMembers = () => {
-  const members = useAppSelector(selectMemoizedHouseholdMember);
+  const members = useAppSelector(selectHouseholdMembers);
   const currentProfile = useAppSelector(selectCurrentProfile);
   const { colors } = useTheme();
   const [selectedMember, setSelectedMember] = useState<Profile>();
