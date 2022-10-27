@@ -114,7 +114,11 @@ const ChoresScreen = ({ navigation }: Props) => {
 
       {profile && profile?.role === "owner" && (
         <>
-          {chores.chores.filter((chore) => chore.archived).length > 0 && <Text>Arkiverade sysslor</Text>}
+          {chores.chores.filter((chore) => chore.archived).length > 0 && (
+            <Text variant="bodyLarge" style={{ alignSelf: "center" }}>
+              Arkiverade sysslor
+            </Text>
+          )}
 
           {chores.chores.map(
             (chore) =>
