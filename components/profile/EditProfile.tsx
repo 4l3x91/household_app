@@ -21,11 +21,9 @@ const validation = Yup.object().shape({
 
 interface Props {
   closeModal: () => void;
-  overlay: boolean;
-  toggleOverlay: () => void;
 }
 
-const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
+const EditProfile = ({ closeModal }: Props) => {
   const profile = useAppSelector(selectMemoizedCurrentProfile);
   const [avatar, setAvatar] = useState<Avatar>(profile?.avatar as Avatar);
   const [selectedAvatar, setSelectedAvatar] = useState(3);
@@ -39,7 +37,7 @@ const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
   };
 
   return (
-    <Container overlay={overlay}>
+    <Container>
       <Content>
         <Text variant="headlineMedium">Redigera profil</Text>
         <ModalContent elevation={0}>
@@ -81,14 +79,7 @@ const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
           </Formik>
         </ModalContent>
       </Content>
-      <Pressable
-        onPress={() => {
-          toggleOverlay();
-          setTimeout(() => {
-            closeModal();
-          }, 500);
-        }}
-      >
+      <Pressable onPress={closeModal}>
         <SimpleLineIcons name="close" size={42} color={colors.primary} />
       </Pressable>
     </Container>
@@ -97,10 +88,9 @@ const EditProfile = ({ closeModal, toggleOverlay, overlay }: Props) => {
 
 export default EditProfile;
 
-const Container = styled.View<{ overlay: boolean }>`
+const Container = styled.View`
   flex: 1;
   justify-content: center;
-  background-color: ${(props) => (props.overlay ? "rgba(0,0,0,0.5)" : undefined)};
   align-items: center;
 `;
 

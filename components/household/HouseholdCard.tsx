@@ -13,9 +13,10 @@ interface Props {
   profile: Profile;
   household: HouseholdModel;
   goToChores?: () => void;
+  closeModal?: () => void;
 }
 
-const HouseholdCard = ({ profile, household, goToChores }: Props) => {
+const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) => {
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
 
@@ -24,6 +25,7 @@ const HouseholdCard = ({ profile, household, goToChores }: Props) => {
       onPress={() => {
         dispatch(setHousehold(household));
         goToChores && goToChores();
+        closeModal && closeModal();
       }}
     >
       <ProfilesContainer>
