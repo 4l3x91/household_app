@@ -9,7 +9,7 @@ type Props = {
   choreId: string;
 };
 
-const DisplayCompleted = ({ choreId }: Props) => {
+const DisplayCompletedAvatars = ({ choreId }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const allMembers = useAppSelector(selectAllHouseholdMembers);
   const profilesCompleted = allMembers.filter(
@@ -26,7 +26,7 @@ const DisplayCompleted = ({ choreId }: Props) => {
   );
 };
 
-export default DisplayCompleted;
+export default DisplayCompletedAvatars;
 
 const AvatarContainer = styled.View`
   flex-direction: row;
