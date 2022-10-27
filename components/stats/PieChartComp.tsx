@@ -46,15 +46,15 @@ const Labels = ({ slices }: LabelProps) => {
 
 const PieChartComp = ({ data, size, showAvatars }: Props) => {
   if (data.length === 0) {
-    return <PaperText>There is no data to display</PaperText>;
+    return <PaperText>There is no data</PaperText>;
   } else {
     return (
       <PieChart
-        style={{ height: size ? size : 200 }}
+        style={{ height: size ? size : 270 }}
         valueAccessor={({ item }) => item.value}
         data={data}
         innerRadius={0}
-        outerRadius={"80%"}
+        outerRadius={"90%"}
         padAngle={0}
       >
         {showAvatars && <Labels />}

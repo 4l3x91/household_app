@@ -23,7 +23,7 @@ const ChorePieChart = ({ choosenChore, size, showAvatars }: Props) => {
       const key = member.id;
       const completedChoresByMember: completedChoreModel[] = completedChores.filter((chore) => chore.profileId === member.id);
       const statistics: number = completedChoresByMember.reduce((acc, curr) => {
-        const currChore = householdChores.find((x) => (x.id === curr.choreId && choosenChore ? curr.choreId === choosenChore : true));
+        const currChore = householdChores.find((x) => x.id === curr.choreId && (choosenChore ? curr.choreId === choosenChore : true));
         acc += currChore ? currChore.energy : 0;
         return acc;
       }, 0);
