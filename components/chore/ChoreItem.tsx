@@ -6,7 +6,7 @@ import styled from "styled-components/native";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { useAppSelector } from "../../store/store";
-import DisplayCompleted from "./DisplayCompleted";
+import DisplayCompletedAvatars from "./DisplayCompletedAvatars";
 
 type Props = {
   chore: Chore;
@@ -43,9 +43,7 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
       </View>
       <InnerContainer>
         {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
-          
-            <DisplayCompleted choreId={chore.id} />
-          
+          <DisplayCompletedAvatars choreId={chore.id} />
         ) : completedChores.completedChores.find(
             (cc) => cc.choreId === chore.id && cc.date.setDate(cc.date.getDate() + chore.interval) > Date.now()
           ) ? (
@@ -88,8 +86,6 @@ const ChoreName = styled.Text<{ theme: Theme }>`
   color: ${(props) => props.theme.colors.primary};
   padding: 15px;
 `;
-
-
 
 const InnerContainer = styled.View`
   flex-direction: row;
