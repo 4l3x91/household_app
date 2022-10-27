@@ -1,54 +1,64 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import React from "react";
-import { Text, useTheme } from "react-native-paper";
+import React, { useState } from "react";
+import { Modal } from "react-native";
+import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { Profile } from "../../store/profile/profileModel";
 import { selectCurrentProfile, selectHouseholdMembers } from "../../store/profile/profileSelectors";
-import { deleteProfile, updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import AvatarCard from "./AvatarCard";
+import HouseholdMember from "./HouseholdMember";
 
 const HouseholdMembers = () => {
   const members = useAppSelector(selectHouseholdMembers);
   const currentProfile = useAppSelector(selectCurrentProfile);
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
+  const [selectedMember, setSelectedMember] = useState<Profile>();
+  const [overlay, setOverlay] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+  const toggleOverlay = () => {
+    setOverlay(false);
+  };
+
   return (
     <HouseholdMembersContainer>
       <Text variant="headlineSmall">Hushållsmedlemmar</Text>
-      {members.map((member) => (
-        <MemberCard key={member.id} background={colors.surface}>
-          <ProfileContent>
-            <AvatarBox background={member.avatar.color}>
-              <Avatar variant="bodyMedium">{member.avatar.avatar}</Avatar>
-            </AvatarBox>
-            <Text variant="bodyLarge">{member.profileName}</Text>
-          </ProfileContent>
-          {currentProfile?.role === "owner" && (
-            <ButtonContainer>
-              <IconButton background={colors.surfaceVariant} onPress={() => dispatch(deleteProfile(member))}>
-                <FontAwesome5 name="trash-alt" size={18} color={colors.onSecondaryContainer} />
-              </IconButton>
-              <IconButton
-                background={colors.surfaceVariant}
-                onPress={() => {
-                  dispatch(updateProfile({ ...member, role: "owner" }));
-                }}
-              >
-                <FontAwesome5 name="crown" size={18} color={colors.onSecondaryContainer} />
-              </IconButton>
-
-              {member.isPaused ? (
-                <IconButton background={colors.surfaceVariant} onPress={() => dispatch(updateProfile({ ...member, isPaused: false }))}>
-                  <FontAwesome5 name="play" size={18} color={colors.onSecondaryContainer} />
-                </IconButton>
-              ) : (
-                <IconButton background={colors.surfaceVariant} onPress={() => dispatch(updateProfile({ ...member, isPaused: true }))}>
-                  <FontAwesome5 name="pause" size={18} color={colors.onSecondaryContainer} />
-                </IconButton>
+      {members.map(
+        (member) =>
+          member.isApproved && (
+            <MemberCard key={member.id}>
+              <ProfileContent>
+                <AvatarCard profile={member} />
+                <ProfileName variant="bodyLarge">{member.profileName}</ProfileName>
+              </ProfileContent>
+              {currentProfile?.role === "owner" && (
+                <ButtonContainer>
+                  <IconButton
+                    onPress={() => {
+                      setSelectedMember(member);
+                      setModalVisible(true);
+                      setTimeout(() => {
+                        setOverlay(true);
+                      }, 300);
+                    }}
+                  >
+                    <FontAwesome5 name="cog" size={24} color={colors.onSurface} />
+                  </IconButton>
+                </ButtonContainer>
               )}
-            </ButtonContainer>
-          )}
-        </MemberCard>
-      ))}
+            </MemberCard>
+          )
+      )}
+      {selectedMember && (
+        <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
+          <HouseholdMember member={selectedMember} closeModal={closeModal} toggleOverlay={toggleOverlay} overlay={overlay} />
+        </Modal>
+      )}
     </HouseholdMembersContainer>
   );
 };
@@ -58,8 +68,7 @@ const HouseholdMembersContainer = styled.View`
   justify-content: center;
 `;
 
-const MemberCard = styled.View<{ background: string }>`
-  background-color: ${(props) => props.background};
+const MemberCard = styled(Surface)`
   margin: 5px 10px;
   justify-content: space-between;
   align-items: center;
@@ -68,21 +77,14 @@ const MemberCard = styled.View<{ background: string }>`
 `;
 
 const ProfileContent = styled.View`
-  flex: 1;
+  flex: 5;
   flex-direction: row;
   padding: 10px;
   align-items: center;
 `;
 
-const AvatarBox = styled.View<{ background: string }>`
-  background-color: ${(props) => props.background};
-  margin: 0px 5px;
-  padding: 5px;
-  border-radius: 4px;
-`;
-
-const Avatar = styled(Text)`
-  /* font-size: 20px; */
+const ProfileName = styled(Text)`
+  margin-left: 10px;
 `;
 
 const ButtonContainer = styled.View`
@@ -90,9 +92,8 @@ const ButtonContainer = styled.View`
   flex: 1;
 `;
 
-const IconButton = styled.Pressable<{ background: string }>`
+const IconButton = styled.Pressable`
   flex: 1;
-  background-color: ${(props) => props.background};
   justify-content: center;
   align-items: center;
   border-radius: 4px;

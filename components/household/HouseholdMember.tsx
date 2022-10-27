@@ -20,7 +20,7 @@ const HouseholdMember = ({ member, closeModal, toggleOverlay, overlay }: Props) 
   const dispatch = useAppDispatch();
   return (
     <Container background={"black"} overlay={overlay}>
-      <ModalContainer background={colors.surface}>
+      <ModalContainer background={colors.background}>
         <ProfileContent>
           <ProfileName variant={"displayLarge"}>{member.profileName}</ProfileName>
           <AvatarCard profile={member} size={40} />
@@ -77,7 +77,7 @@ const HouseholdMember = ({ member, closeModal, toggleOverlay, overlay }: Props) 
           toggleOverlay();
           setTimeout(() => {
             closeModal();
-          }, 500);
+          }, 300);
         }}
       >
         <SimpleLineIcons name="close" size={42} color={colors.primary} style={{ marginTop: 10 }} />
