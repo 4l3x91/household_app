@@ -55,22 +55,6 @@ const profileSlice = createSlice({
       console.log("rejected");
       state.error = action.payload || "Unknown error";
     });
-    //SET PROFILE TO OWNER
-    // builder.addCase(setProfileToOwner.pending, (state) => {
-    //   state.pending = true;
-    //   console.log("pending");
-    // });
-    // builder.addCase(setProfileToOwner.fulfilled, (state, action) => {
-    //   state.pending = false;
-    //   console.log("fullfilled");
-    //   state.profiles = action.payload;
-    // });
-    // builder.addCase(setProfileToOwner.rejected, (state, action) => {
-    //   state.pending = false;
-    //   console.log("rejected");
-    //   state.error = action.payload || "Unknown error";
-    // });
-
     // UPDATE PROFILE
     builder.addCase(updateProfile.pending, (state) => {
       state.pending = true;
