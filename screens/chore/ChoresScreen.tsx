@@ -14,7 +14,8 @@ import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
 import { Chore } from "../../store/chore/choreModel";
 import { selectChores } from "../../store/chore/choreSelectors";
 import { getChores } from "../../store/chore/choreThunks";
-import { selectCurrentProfile } from "../../store/profile/profileSelectors";
+import { getCompletedChoresPerHousehold } from "../../store/completedChore/completedChoreThunks";
+import { selectAllHouseholdMembers, selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 
 type Props = NativeStackScreenProps<ChoreStackParams>;
@@ -33,6 +34,7 @@ const ChoresScreen = ({ navigation }: Props) => {
   const chores = useAppSelector(selectChores);
   const profile = useAppSelector(selectCurrentProfile);
   const modalizeRef = useRef<Modalize>(null);
+  const allMembers = useAppSelector(selectAllHouseholdMembers);
 
   function toggleOverlay() {
     setOverlay((prev) => !prev);
@@ -49,7 +51,10 @@ const ChoresScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (household) {
-      if (household.id) dispatch(getChores(household.id));
+      if (household.id) {
+        dispatch(getChores(household.id));
+        dispatch(getCompletedChoresPerHousehold(allMembers));
+      }
     }
   }, [household]);
 
