@@ -1,6 +1,6 @@
 import React from "react";
-import { View } from "react-native";
-import { selectChore } from "../../store/chore/choreSelectors";
+import { Text } from "react-native-paper";
+import styled from "styled-components/native";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { selectAllHouseholdMembers } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
@@ -12,12 +12,22 @@ type Props = {
 const DisplayCompleted = ({ choreId }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const allMembers = useAppSelector(selectAllHouseholdMembers);
-  const chore = useAppSelector((state) => selectChore(state, choreId));
-  if (chore) {
-    const profilesCompleted = allMembers.filter((p) => p.id in completedChores.filter(cc => cc.choreId === chore.id && cc.profileId === p.id));
-  }
+  const profilesCompleted = allMembers.filter(
+    (p) => p.id === completedChores.find((cc) => cc.profileId === p.id && cc.choreId === choreId)?.profileId
+  );
 
-  return <View>
-    
-  </View>;
+  return (
+    <AvatarContainer>
+      {profilesCompleted?.map((p) => {
+        const avatar = p.avatar.avatar ? p.avatar.avatar : "💀";
+        return <Text key={avatar}>{avatar}</Text>;
+      })}
+    </AvatarContainer>
+  );
 };
+
+export default DisplayCompleted;
+
+const AvatarContainer = styled.View`
+  flex-direction: row;
+`;
