@@ -94,9 +94,9 @@ const Container = styled.View`
   align-items: center;
 `;
 const OuterSurface = styled(Surface)`
-  margin: 30px;
+  margin: 30px auto;
   flex: 1;
-  width: 350px;
+  width: 97%;
   border-radius: 20px;
 `;
 
