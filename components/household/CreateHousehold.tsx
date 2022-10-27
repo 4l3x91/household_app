@@ -47,6 +47,7 @@ const CreateHousehold = ({ closeModal }: Props) => {
         profileName: values.profileName,
         avatar: avatar,
         role: "owner",
+        isApproved: true,
         isPaused: false,
       };
       dispatch(postProfile(newProfile));
