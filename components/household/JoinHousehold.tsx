@@ -32,7 +32,6 @@ const JoinHousehold = ({ closeModal }: Props) => {
   const dispatch = useAppDispatch();
   const household = useAppSelector(selectHousehold);
   const user = useAppSelector(selectUser);
-  const error = useAppSelector(selectHousehold).error;
   const [profilesInHousehold, setProfilesInHousehold] = useState<Profile[]>([]);
   const pinCodeLength = 6;
   const { colors } = useTheme();
@@ -138,7 +137,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
                       </>
                     )
                   )}
-                  <ErrorBox>{error && <ErrorTranslator error={error as string} />}</ErrorBox>
+                  <ErrorBox>{household.error && <ErrorTranslator error={household.error as string} />}</ErrorBox>
                 </Container>
               </ModalContent>
             </Content>
