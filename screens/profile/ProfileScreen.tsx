@@ -89,7 +89,7 @@ const ProfileScreen = ({ navigation }: Props) => {
 
       <Portal>
         <Modal animationType="slide" transparent={true} visible={joinModalVisible} statusBarTranslucent>
-          <JoinHousehold closeModal={closeJoinModal} />
+            <JoinHousehold closeModal={closeJoinModal} />
         </Modal>
       </Portal>
 
