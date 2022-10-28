@@ -58,7 +58,6 @@ const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
           return (
             <View>
               <View>
-                {members && members.map((member) => <Text key={member.id}>{member.profileName}</Text>)}
                 <Input
                   marginHorizontal={30}
                   label="Profilnamn"

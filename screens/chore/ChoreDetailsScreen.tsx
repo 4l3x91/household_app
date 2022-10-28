@@ -1,9 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Audio } from "expo-av";
 import Constants from "expo-constants";
-import React from "react";
-import { Dimensions, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Dimensions, Image, Pressable } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
@@ -28,7 +29,21 @@ const ChoreDetailsScreen = () => {
   const completedChore = completedChores.find((completedChore) => completedChore.choreId === chore?.id && profile?.id === completedChore?.profileId);
   const today = new Date().getDate();
   const width = Dimensions.get("screen").width - 40;
+  const [sound, setSound] = useState<Audio.Sound>();
   const { colors } = useTheme();
+
+  useEffect(() => {
+    if (chore?.soundUrl) {
+      const loadSound = async () => {
+        const loadedSound = new Audio.Sound();
+        await loadedSound.loadAsync({
+          uri: chore.soundUrl,
+        });
+        setSound(loadedSound);
+      };
+      loadSound();
+    }
+  }, []);
 
   function handlePress() {
     if (chore?.id && profile?.id) {
@@ -86,8 +101,14 @@ const ChoreDetailsScreen = () => {
                 <Text variant="headlineSmall">dag</Text>
               </IntervalInnerContainer>
             </IntervalOuterContainer>
+
+            {/* ------ Temp display of picture and playback button ------ */}
+            {chore.imgUrl && <Image source={{ uri: chore.imgUrl }} style={{ width: 200, height: 200 }} />}
+            {sound && <FontAwesome5 name="play" size={24} color={colors.primary} onPress={() => sound.replayAsync()} />}
+            {/* --------------------------------------------------------- */}
+
             <ButtonContainer>
-              {!(completedChore && today === completedChore.date.getDate()) && (
+              {!(completedChore && today === completedChore.date.getDate() && profile?.id === completedChore?.profileId) && (
                 <Button onPress={handlePress} style={{ marginHorizontal: 20 }} mode="contained">
                   Markera som klar
                 </Button>

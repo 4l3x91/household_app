@@ -1,29 +1,46 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
-import React, { useRef, useState } from "react";
-import { Modal, ScrollView, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Modal, RefreshControl, ScrollView, View } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { Button, Portal, Surface, Text, useTheme } from "react-native-paper";
 import AvatarCard from "../../components/household/AvatarCard";
+import CreateHousehold from "../../components/household/CreateHousehold";
 import HouseholdMembers from "../../components/household/HouseholdMembers";
+import JoinHousehold from "../../components/household/JoinHousehold";
 import MyHouseholds from "../../components/household/MyHouseholds";
 import EditProfile from "../../components/profile/EditProfile";
 import PendingProfiles from "../../components/profile/PendingProfiles";
 import { UserStackParams } from "../../navigation/UserStackNavigator";
-import { selectHouseholdName } from "../../store/household/householdSelector";
+import { selectHouseholdId, selectHouseholdName } from "../../store/household/householdSelector";
+import { getHouseholdById } from "../../store/household/householdThunks";
 import { Profile } from "../../store/profile/profileModel";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";
-import { useAppSelector } from "../../store/store";
+import { getAllProfiles } from "../../store/profile/profileThunks";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { selectUser } from "../../store/user/userSelectors";
 
 type Props = NativeStackScreenProps<UserStackParams, "UserProfileScreen">;
 
 const ProfileScreen = ({ navigation }: Props) => {
   const profile = useAppSelector(selectCurrentProfile);
+  const [refresh, setRefresh] = useState(false);
   const householdName = useAppSelector(selectHouseholdName);
+  const householdId = useAppSelector(selectHouseholdId);
+  const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const [modalVisible, setModalVisible] = useState(false);
+  const [joinModalVisible, setJoinModalVisible] = useState(false);
+  const [createModalVisible, setCreateModalVisible] = useState(false);
   const householdModalRef = useRef<Modalize>(null);
+  const optionsModalRef = useRef<Modalize>(null);
   const { colors } = useTheme();
+
+  useEffect(() => {
+    console.log("ändra");
+  }, [householdName]);
+
   const openMyHouseholds = () => {
     householdModalRef.current?.open();
   };
@@ -32,8 +49,16 @@ const ProfileScreen = ({ navigation }: Props) => {
     setModalVisible(false);
   };
 
+  const closeJoinModal = () => {
+    setJoinModalVisible(false);
+  };
+
+  const closeCreateModal = () => {
+    setCreateModalVisible(false);
+  };
+
   return (
-    <View style={{ opacity: modalVisible ? 0.3 : 1 }}>
+    <View style={{ opacity: modalVisible || joinModalVisible || createModalVisible ? 0.5 : 1 }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: Constants.statusBarHeight }}>
         <Button onPress={() => openMyHouseholds()}>
           <Text variant="titleLarge">
@@ -45,7 +70,21 @@ const ProfileScreen = ({ navigation }: Props) => {
         </Button>
       </View>
 
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={() => {
+              setRefresh(true);
+              if (user) {
+                dispatch(getHouseholdById(householdId));
+                dispatch(getAllProfiles(user));
+              }
+              setRefresh(false);
+            }}
+          />
+        }
+      >
         <Surface elevation={0} style={{ margin: 10, padding: 10, borderRadius: 10 }}>
           <View style={{ marginBottom: 5 }}>
             <Surface style={{ padding: 10, borderRadius: 10 }}>
@@ -55,7 +94,7 @@ const ProfileScreen = ({ navigation }: Props) => {
             <Surface style={{ marginTop: 10, padding: 10, borderRadius: 10 }}>
               <Text variant="bodySmall">Profil</Text>
               <View style={{ flexDirection: "row", paddingVertical: 5, alignItems: "center" }}>
-                <AvatarCard profile={profile as Profile} size={32} />
+                {profile && <AvatarCard profile={profile as Profile} size={32} />}
                 <Text variant="headlineMedium" style={{ marginHorizontal: 15 }}>
                   {profile?.profileName}
                 </Text>
@@ -71,20 +110,67 @@ const ProfileScreen = ({ navigation }: Props) => {
         </Surface>
         <View style={{ height: 70 }}></View>
       </ScrollView>
+
       <Portal>
         <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
           <EditProfile closeModal={closeModal} />
         </Modal>
       </Portal>
+
+      <Portal>
+        <Modal animationType="slide" transparent={true} visible={joinModalVisible} statusBarTranslucent>
+          <JoinHousehold closeModal={closeJoinModal} />
+        </Modal>
+      </Portal>
+
+      <Portal>
+        <Modal animationType="slide" transparent={true} visible={createModalVisible} statusBarTranslucent>
+          <CreateHousehold closeModal={closeCreateModal} />
+        </Modal>
+      </Portal>
+
       <Portal>
         <Modalize ref={householdModalRef} adjustToContentHeight modalStyle={{ backgroundColor: colors.surface }}>
-          <Surface style={{ paddingHorizontal: 20, marginBottom: 80, backgroundColor: "transparent" }}>
+          <Surface style={{ paddingHorizontal: 20, backgroundColor: "transparent" }}>
             <Text variant="headlineMedium" style={{ marginVertical: 15 }}>
               Mina hushåll
             </Text>
             <MyHouseholds closeModal={() => householdModalRef.current?.close()} />
-            <Button style={{ padding: 10 }} onPress={() => navigation.navigate("HouseholdOptions")} icon="plus">
+            <Button style={{ padding: 10 }} onPress={() => optionsModalRef?.current?.open()} icon="plus">
               Lägg till hushåll
+            </Button>
+          </Surface>
+        </Modalize>
+      </Portal>
+
+      <Portal>
+        <Modalize ref={optionsModalRef} adjustToContentHeight modalStyle={{ backgroundColor: colors.surface }}>
+          <Surface style={{ paddingHorizontal: 20, backgroundColor: "transparent" }}>
+            <Button
+              style={{ padding: 10 }}
+              onPress={() => {
+                householdModalRef.current?.close();
+                optionsModalRef?.current?.close();
+                setTimeout(() => {
+                  setJoinModalVisible(true);
+                }, 200);
+              }}
+              icon="plus"
+            >
+              Gå med i hushåll
+            </Button>
+            <Button
+              style={{ padding: 10 }}
+              onPress={() => {
+                householdModalRef.current?.close();
+                optionsModalRef?.current?.close();
+                setTimeout(() => {
+                  setCreateModalVisible(true);
+                }, 200);
+              }}
+              icon="plus"
+            >
+              Skapa hushåll
             </Button>
           </Surface>
         </Modalize>

@@ -1,41 +1,79 @@
 import { uuidv4 } from "@firebase/util";
+import { Audio } from "expo-av";
+import * as ImagePicker from "expo-image-picker";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { Modal, View } from "react-native";
 import { Button, Divider, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
 import { Chore } from "../../store/chore/choreModel";
 import { postChore } from "../../store/chore/choreThunks";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import { newChoreValidation } from "../../utils/yupSchemas";
+import AppModal from "../common/AppModal";
 import Input from "../common/Input";
+import SoundRecorder from "./SoundRecorder";
 import ValuePicker from "./ValuePicker";
-const validation = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Titel måste vara minst två tecken")
-    .max(20, "Titel kan inte vara längre än 20 tecken")
-    .required("Titel kan inte vara tom"),
-  description: Yup.string()
-    .min(10, "Beskrivning måste vara minst 10 tecken")
-    .max(100, "Beskrivning kan inte vara längre än 100 tecken")
-    .required("Beskrivning kan inte vara tom"),
-});
 
 interface Props {
   closeModal: () => void;
 }
 
 const CreateChore = ({ closeModal }: Props) => {
+  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string | null>(null);
+  const [recording, setRecording] = React.useState<Audio.Recording>();
+  const [deviceImageUri, setDeviceImageUri] = useState("");
   const [interval, setInterval] = useState(1);
   const [energy, setEnergy] = useState(2);
+  const [overlay, setOverlay] = useState(false);
+  const [soundModalOpen, setSoundModalOpen] = useState(false);
   const { household } = useAppSelector(selectHousehold);
   const dispatch = useAppDispatch();
   const choreState = useAppSelector((state) => state.chores);
+  const storage = getStorage();
+  const choreId = uuidv4();
 
-  const handleSubmit = (values: { name: string; description: string }) => {
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setDeviceImageUri(result.uri);
+    }
+  };
+
+  const uploadAttatchments = async () => {
+    let attatchments = { firebaseImgUrl: "", firebaseSoundUrl: "" };
+
+    if (deviceImageUri) {
+      const imageRef = ref(storage, `${choreId}/image.jpg`);
+      const img = await fetch(deviceImageUri);
+      const bytes = await img.blob();
+      await uploadBytes(imageRef, bytes);
+
+      attatchments.firebaseImgUrl = await getDownloadURL(imageRef);
+    }
+    if (deviceRecordingUri) {
+      const soundRef = ref(storage, `${choreId}/sound.m4a`);
+      const recording = await fetch(deviceRecordingUri);
+      const bytes = await recording.blob();
+      await uploadBytes(soundRef, bytes);
+
+      attatchments.firebaseSoundUrl = await getDownloadURL(soundRef);
+    }
+    return attatchments;
+  };
+
+  const handleSubmit = async (values: { name: string; description: string }) => {
+    const attatchments = await uploadAttatchments();
+
     const newChore: Chore = {
-      id: uuidv4(),
+      id: choreId,
       name: values.name,
       description: values.description,
       householdId: household.id,
@@ -43,14 +81,18 @@ const CreateChore = ({ closeModal }: Props) => {
       energy: energy,
       archived: false,
       dateCreated: new Date(),
+      imgUrl: attatchments.firebaseImgUrl,
+      soundUrl: attatchments.firebaseSoundUrl,
+
     };
+
     dispatch(postChore(newChore));
     closeModal();
   };
 
   return (
     <View>
-      <Formik initialValues={{ name: "", description: "" }} validationSchema={validation} onSubmit={(values) => handleSubmit(values)}>
+      <Formik initialValues={{ name: "", description: "" }} validationSchema={newChoreValidation} onSubmit={(values) => handleSubmit(values)}>
         {({ handleChange, handleSubmit, values, errors }) => {
           return (
             <View>
@@ -84,6 +126,14 @@ const CreateChore = ({ closeModal }: Props) => {
                     value={energy}
                   />
                 </Container>
+                <AttatchmentContainer>
+                  <Button onPress={pickImage} icon={deviceImageUri === "" ? "image" : "check-bold"}>
+                    Lägg till bild
+                  </Button>
+                  <Button onPress={() => setSoundModalOpen(true)} icon={deviceRecordingUri ? "check-bold" : "volume-high"}>
+                    Lägg till ljud
+                  </Button>
+                </AttatchmentContainer>
               </ContentContainer>
               <Divider style={{ height: 1, width: "100%" }} />
               <ButtonContainer>
@@ -103,11 +153,34 @@ const CreateChore = ({ closeModal }: Props) => {
           );
         }}
       </Formik>
+      <Modal animationType="slide" transparent={true} visible={soundModalOpen} statusBarTranslucent>
+        <AppModal
+          title="Lägg till ljud"
+          closeModal={() => {
+            setSoundModalOpen(false);
+            setDeviceRecordingUri(null);
+          }}
+          toggleOverlay={() => setOverlay((prev) => !prev)}
+        >
+          <SoundRecorder
+            setDeviceRecordingUri={setDeviceRecordingUri}
+            recording={recording}
+            setRecording={setRecording}
+            closeModal={() => setSoundModalOpen(false)}
+          />
+        </AppModal>
+      </Modal>
     </View>
   );
 };
 
 export default CreateChore;
+
+const AttatchmentContainer = styled.View`
+  margin-top: 20px;
+  flex-direction: row;
+  justify-content: space-around;
+`;
 
 const ButtonWrapper = styled.View`
   flex: 1;
@@ -120,7 +193,7 @@ const ButtonContainer = styled(ButtonWrapper)`
 const ContentContainer = styled(Surface)`
   padding: 10px 20px;
   background-color: transparent;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
 `;
 
 const Container = styled.View`
