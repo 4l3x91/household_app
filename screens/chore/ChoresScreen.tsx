@@ -77,7 +77,7 @@ const ChoresScreen = ({ navigation }: Props) => {
       >
         <HouseholdName householdName={household.name} role={profile?.role} />
 
-        {chores.chores.length !== 0 || !profile?.isPaused ? (
+        {chores.chores.length !== 0 || !profile?.isPaused || !profile.isApproved ? (
           chores.chores.map(
             (chore) =>
               !chore.archived && (
