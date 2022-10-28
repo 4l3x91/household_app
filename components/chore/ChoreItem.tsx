@@ -33,7 +33,7 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
   } else {
     dateToInterval = addDays(chore.dateCreated, chore.interval);
   }
-  const timeLeft = (dateToInterval.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24);
+  const timeLeft = Math.round((dateToInterval.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
 
   function handleEditPress() {
     toggleEditModal();
@@ -56,10 +56,10 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
         <Text variant="headlineSmall">{chore.name}</Text>
         {isOverdue ? (
           <Text variant="bodySmall">
-            Försenad {-timeLeft} {-timeLeft === 1 ? "dag" : "dagar "}
+            Försenad {-timeLeft} {-timeLeft === 0 ? "dag" : "dagar "}
           </Text>
         ) : (
-          <Text variant="bodySmall">Ska göras {timeLeft === 0 ? "idag" : "inom " + (timeLeft + 1) + " dagar"}</Text>
+          <Text variant="bodySmall">Ska göras {timeLeft === 1 ? "idag" : "inom " + timeLeft + " dagar"}</Text>
         )}
       </View>
       <InnerContainer>
@@ -74,7 +74,7 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
             </Badge>
           ))
         ) : (
-          chore.dateCreated.toLocaleDateString() < today.toLocaleDateString() &&
+          chore.dateCreated.toLocaleDateString() <= today.toLocaleDateString() &&
           (isOverdue && setIsOverdue(false),
           (
             <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
