@@ -14,9 +14,9 @@ type ErrorTranslatorNavProps = NativeStackNavigationProp<RootStackParams, "Login
 
 const ErrorTranslator = ({ error, register }: Props) => {
   const theme = useTheme();
-  const navigation = useNavigation<ErrorTranslatorNavProps>();
 
   if (error.includes("auth/email-already-in-use")) {
+    const navigation = useNavigation<ErrorTranslatorNavProps>();
     return (
       <ErrorContainer>
         <ErrorText theme={theme}>Angiven email finns redan registrerad</ErrorText>
