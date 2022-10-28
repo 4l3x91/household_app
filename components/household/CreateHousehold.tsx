@@ -1,6 +1,8 @@
+import { SimpleLineIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Button, Text, useTheme } from "react-native-paper";
+import { Pressable, View } from "react-native";
+import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
 import { HouseholdModel } from "../../store/household/householdModel";
@@ -56,7 +58,7 @@ const CreateHousehold = ({ closeModal }: Props) => {
   };
 
   return (
-    <Container>
+    <FlexContainer>
       <Formik
         validationSchema={createHouseholdSchema}
         initialValues={{
@@ -73,38 +75,65 @@ const CreateHousehold = ({ closeModal }: Props) => {
             values.householdName.length >= 2 &&
             values.profileName.length >= 2;
           return (
-            <Container>
+            <Content>
+            <ModalContent elevation={0}>
+                <Container>
+                  
               <HeaderText variant="headlineMedium">Skapa hushåll</HeaderText>
-              <InputContainer>
-                <Input
+                  
+                  <InputContainer>
+                  <Input
+                  width={200}
                   label="Namn på hushåll"
                   value={values.householdName}
                   handleChange={handleChange("householdName")}
                   activeOutlineColor={colors.primary}
-                />
+                      />
+                      </InputContainer>
                 {errors.householdName && <Text>{errors.householdName}</Text>}
+               
                 <HouseholdCode householdCode={householdCode} setHouseholdCode={setHouseholdCode} />
-                <Input label="Profilnamn" value={values.profileName} handleChange={handleChange("profileName")} />
-                {errors.profileName && <Text>{errors.profileName}</Text>}
-              </InputContainer>
+                <InputContainer>
+                  <Input width={200} label="Profilnamn" value={values.profileName} handleChange={handleChange("profileName")} />
+                </InputContainer>
+                  {errors.profileName && <Text>{errors.profileName}</Text>}
+                  <View style={{padding: 10}}>
               <AvatarPicker setAvatar={setAvatar} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
+              </View>
 
               <Button disabled={!inputsOk} mode="contained" onPress={() => handleSubmit()} loading={pending}>
                 Skapa
               </Button>
-            </Container>
+                </Container>
+              </ModalContent>
+                </Content>
           );
         }}
       </Formik>
-    </Container>
+      <Pressable onPress={closeModal}>
+        <SimpleLineIcons name="close" size={42} color={colors.primary} />
+      </Pressable>
+    </FlexContainer>
   );
 };
 
 export default CreateHousehold;
 
+
 const Container = styled.View`
   justify-content: center;
-  padding: 10px;
+  background-color: transparent;
+  align-items: center;
+`;
+
+const FlexContainer = styled(Container)`
+  flex: 1;
+`;
+
+const Content = styled(Surface)`
+  margin: 20px;
+  border-radius: 20px;
+  align-items: center;
 `;
 
 const HeaderText = styled(Text)`
@@ -112,6 +141,14 @@ const HeaderText = styled(Text)`
   margin-bottom: 10px;
 `;
 
-const InputContainer = styled.View`
-  padding: 0px;
+const ModalContent = styled(Surface)`
+  padding: 0px 10px 20px 10px;
+  margin-top: 10px;
+`;
+
+const InputContainer = styled(Surface)`
+  background-color: transparent;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
