@@ -6,6 +6,7 @@ export interface Chore {
   interval: number;
   energy: number;
   archived: boolean;
+  dateCreated: Date;
   imgUrl: string;
   soundUrl: string;
 }

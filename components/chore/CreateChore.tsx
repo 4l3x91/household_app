@@ -80,8 +80,10 @@ const CreateChore = ({ closeModal }: Props) => {
       interval: interval,
       energy: energy,
       archived: false,
+      dateCreated: new Date(),
       imgUrl: attatchments.firebaseImgUrl,
       soundUrl: attatchments.firebaseSoundUrl,
+
     };
 
     dispatch(postChore(newChore));

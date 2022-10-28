@@ -1,11 +1,12 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import { Badge, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { useAppSelector } from "../../store/store";
+import { addDays } from "../../utils/utils";
 import DisplayCompletedAvatars from "./DisplayCompletedAvatars";
 
 type Props = {
@@ -20,6 +21,19 @@ type Props = {
 const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedChore, toggleDeleteModal, toggleArchiveModal }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
+  let dateToInterval: Date = new Date();
+  const [isOverdue, setIsOverdue] = useState(false);
+  const today = new Date();
+  const completedForThisChore = completedChores.completedChores.filter((cc) => cc.choreId === chore.id).sort((a, b) => (a.date > b.date ? -1 : 1));
+
+  if (completedForThisChore.length > 0) {
+    completedForThisChore.find((cc) => {
+      dateToInterval = addDays(cc.date, chore.interval);
+    });
+  } else {
+    dateToInterval = addDays(chore.dateCreated, chore.interval);
+  }
+  const timeLeft = (dateToInterval.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24);
 
   function handleEditPress() {
     toggleEditModal();
@@ -40,18 +54,33 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
     <ChoreItemContainer archived={chore.archived}>
       <View>
         <Text variant="headlineSmall">{chore.name}</Text>
+        {isOverdue ? (
+          <Text variant="bodySmall">
+            Försenad {-timeLeft} {-timeLeft === 1 ? "dag" : "dagar "}
+          </Text>
+        ) : (
+          <Text variant="bodySmall">Ska göras {timeLeft === 0 ? "idag" : "inom " + (timeLeft + 1) + " dagar"}</Text>
+        )}
       </View>
       <InnerContainer>
-        {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
+        {completedForThisChore[0]?.date.toLocaleDateString() === today.toLocaleDateString() ? (
           <DisplayCompletedAvatars choreId={chore.id} />
-        ) : completedChores.completedChores.find(
-            (cc) => cc.choreId === chore.id && cc.date.setDate(cc.date.getDate() + chore.interval) > Date.now()
-          ) ? (
-          <Badge style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>{chore.interval}</Badge>
+        ) : dateToInterval.toLocaleDateString() < today.toLocaleDateString() ||
+          chore.dateCreated.toLocaleDateString() > today.toLocaleDateString() ? (
+          (!isOverdue && setIsOverdue(true),
+          (
+            <Badge size={30} style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>
+              {chore.interval}
+            </Badge>
+          ))
         ) : (
-          <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
-            {chore.interval}
-          </Badge>
+          chore.dateCreated.toLocaleDateString() < today.toLocaleDateString() &&
+          (isOverdue && setIsOverdue(false),
+          (
+            <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
+              {chore.interval}
+            </Badge>
+          ))
         )}
         {editPressed && (
           <OwnerButtons>
