@@ -1,11 +1,12 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
-import { Text, View } from "react-native";
-import { Badge, Surface, Theme, useTheme } from "react-native-paper";
+import { View } from "react-native";
+import { Badge, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { useAppSelector } from "../../store/store";
+import DisplayCompletedAvatars from "./DisplayCompletedAvatars";
 
 type Props = {
   chore: Chore;
@@ -38,21 +39,19 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
   return (
     <ChoreItemContainer archived={chore.archived}>
       <View>
-        <ChoreName theme={theme}>{chore.name}</ChoreName>
+        <Text variant="headlineSmall">{chore.name}</Text>
       </View>
       <InnerContainer>
         {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
-          <AvatarContainer>
-            {completedChores.completedChores.map(
-              (cc) => cc.choreId === chore.id && <Text key={cc.profileId + "-" + cc.choreId + "-" + cc.date}>🐍</Text>
-            )}
-          </AvatarContainer>
+          <DisplayCompletedAvatars choreId={chore.id} />
         ) : completedChores.completedChores.find(
             (cc) => cc.choreId === chore.id && cc.date.setDate(cc.date.getDate() + chore.interval) > Date.now()
           ) ? (
           <Badge style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>{chore.interval}</Badge>
         ) : (
-          <Badge style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>{chore.interval}</Badge>
+          <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
+            {chore.interval}
+          </Badge>
         )}
         {editPressed && (
           <OwnerButtons>
@@ -82,16 +81,8 @@ const ChoreItemContainer = styled(Surface)<{ archived: boolean }>`
   border-radius: 10px;
   margin: 5px;
   justify-content: space-between;
-  ${({ archived }) => archived && "opacity: .6;"}
-`;
-
-const ChoreName = styled.Text<{ theme: Theme }>`
-  color: ${(props) => props.theme.colors.primary};
   padding: 15px;
-`;
-
-const AvatarContainer = styled.View`
-  flex-direction: row;
+  ${({ archived }) => archived && "opacity: .6;"}
 `;
 
 const InnerContainer = styled.View`
