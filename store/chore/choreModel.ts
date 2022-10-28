@@ -6,4 +6,6 @@ export interface Chore {
   interval: number;
   energy: number;
   archived: boolean;
+  imgUrl: string;
+  soundUrl: string;
 }
