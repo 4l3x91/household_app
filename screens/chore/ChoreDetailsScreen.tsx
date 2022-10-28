@@ -1,7 +1,10 @@
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import Constants from "expo-constants";
 import React from "react";
-import { Dimensions } from "react-native";
-import { Button, Surface, Text } from "react-native-paper";
+import { Dimensions, Pressable } from "react-native";
+import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
 import { selectChore } from "../../store/chore/choreSelectors";
@@ -12,77 +15,87 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 
 type ChoreDetailsScreenRouteProp = RouteProp<ChoreStackParams, "ChoreDetailsScreen">;
 
+type ChoreDetailsScreenNavProp = NativeStackNavigationProp<ChoreStackParams, "ChoresScreen">;
+
 const ChoreDetailsScreen = () => {
   const route = useRoute<ChoreDetailsScreenRouteProp>();
+  const navigation = useNavigation<ChoreDetailsScreenNavProp>();
   const { id } = route.params;
   const chore = useAppSelector((state) => selectChore(state, id));
   const profile = useAppSelector(selectCurrentProfile);
   const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const dispatch = useAppDispatch();
-  const completedChore = completedChores.find((completedChore) => completedChore.choreId === chore?.id);
+  const completedChore = completedChores.find((completedChore) => completedChore.choreId === chore?.id && profile?.id === completedChore?.profileId);
   const today = new Date().getDate();
   const width = Dimensions.get("screen").width - 40;
+  const { colors } = useTheme();
 
   function handlePress() {
     if (chore?.id && profile?.id) {
       dispatch(postCompletedChore({ choreId: chore?.id, date: new Date(), profileId: profile?.id }));
+      navigation.navigate("ChoresScreen");
     }
   }
 
   if (chore) {
     const energyLevels = [2, 4, 6, 8, 10];
     return (
-      <Container>
-        <OuterSurface elevation={3} width={width}>
-          <TitleContainer>
-            <Surface elevation={0}>
-              <Text variant="headlineLarge">{chore.name}</Text>
-            </Surface>
-          </TitleContainer>
+      <>
+        <Pressable onPress={() => navigation.goBack()} style={{ marginTop: Constants.statusBarHeight, padding: 10, marginHorizontal: 10 }}>
+          <Ionicons name="arrow-back-circle-outline" size={50} color={colors.primary} />
+        </Pressable>
+        <Container>
+          <OuterSurface elevation={1} width={width}>
+            <TitleContainer>
+              <Surface elevation={0}>
+                <Text variant="headlineLarge">{chore.name}</Text>
+              </Surface>
+            </TitleContainer>
 
-          <DescriptionContainer>
-            <Surface elevation={0}>
-              <Text variant="bodySmall">Beskrivning</Text>
-              <Text variant="headlineSmall">{chore.description}</Text>
-            </Surface>
-          </DescriptionContainer>
+            <DescriptionContainer>
+              <Surface elevation={0}>
+                <Text variant="bodySmall">Beskrivning</Text>
+                <Text variant="headlineSmall">{chore.description}</Text>
+              </Surface>
+            </DescriptionContainer>
 
-          <EnergyOuterContainer>
-            <Text variant="bodySmall">Energinivå</Text>
-            <EnergyInnerContainer elevation={2}>
-              {energyLevels.map((level) => (
-                <Text
-                  key={level}
-                  variant={level === chore.energy ? "headlineLarge" : "headlineMedium"}
-                  style={{ opacity: level === chore.energy ? 1 : 0.5 }}
-                >
-                  {level}
-                </Text>
-              ))}
-            </EnergyInnerContainer>
-          </EnergyOuterContainer>
+            <EnergyOuterContainer>
+              <Text variant="bodySmall">Energinivå</Text>
+              <EnergyInnerContainer elevation={2}>
+                {energyLevels.map((level) => (
+                  <Text
+                    key={level}
+                    variant={level === chore.energy ? "headlineLarge" : "headlineMedium"}
+                    style={{ opacity: level === chore.energy ? 1 : 0.5 }}
+                  >
+                    {level}
+                  </Text>
+                ))}
+              </EnergyInnerContainer>
+            </EnergyOuterContainer>
 
-          <IntervalOuterContainer>
-            <Text variant="bodySmall">Intervall</Text>
-            <IntervalInnerContainer>
-              <Text variant="headlineSmall">Återkommer var</Text>
+            <IntervalOuterContainer>
+              <Text variant="bodySmall">Intervall</Text>
+              <IntervalInnerContainer>
+                <Text variant="headlineSmall">Återkommer var</Text>
 
-              <Interval elevation={2}>
-                <Text variant="headlineSmall">{chore.interval}</Text>
-              </Interval>
+                <Interval elevation={2}>
+                  <Text variant="headlineSmall">{chore.interval}</Text>
+                </Interval>
 
-              <Text variant="headlineSmall">dag</Text>
-            </IntervalInnerContainer>
-          </IntervalOuterContainer>
-          <ButtonContainer>
-            {!(completedChore && today === completedChore.date.getDate() && profile?.id === completedChore?.profileId) && (
-              <Button onPress={handlePress} style={{ marginHorizontal: 20 }} mode="contained">
-                Markera som klar
-              </Button>
-            )}
-          </ButtonContainer>
-        </OuterSurface>
-      </Container>
+                <Text variant="headlineSmall">dag</Text>
+              </IntervalInnerContainer>
+            </IntervalOuterContainer>
+            <ButtonContainer>
+              {!(completedChore && today === completedChore.date.getDate()) && (
+                <Button onPress={handlePress} style={{ marginHorizontal: 20 }} mode="contained">
+                  Markera som klar
+                </Button>
+              )}
+            </ButtonContainer>
+          </OuterSurface>
+        </Container>
+      </>
     );
   } else {
     return null;
@@ -93,7 +106,7 @@ export default ChoreDetailsScreen;
 
 const Container = styled.View`
   align-items: center;
-  margin: auto;
+  margin: 10px auto;
 `;
 const OuterSurface = styled(Surface)<{ width: number }>`
   margin: 0 20px;

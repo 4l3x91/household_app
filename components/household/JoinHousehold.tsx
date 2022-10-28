@@ -1,8 +1,9 @@
+import { SimpleLineIcons } from "@expo/vector-icons";
 import { collection, getDocs, query, where } from "@firebase/firestore";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
-import { Keyboard } from "react-native";
-import { Surface, Text } from "react-native-paper";
+import { Keyboard, Pressable, View } from "react-native";
+import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import * as Yup from "yup";
 import { db } from "../../config/firebase";
@@ -23,7 +24,7 @@ const householdCodeSchema = Yup.object().shape({
 });
 
 interface Props {
-  closeModal?: () => void;
+  closeModal: () => void;
 }
 
 const JoinHousehold = ({ closeModal }: Props) => {
@@ -34,6 +35,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
   const error = useAppSelector(selectHousehold).error;
   const [profilesInHousehold, setProfilesInHousehold] = useState<Profile[]>([]);
   const pinCodeLength = 6;
+  const { colors } = useTheme();
 
   async function getUnavalibleAvatars() {
     const profilesRef = collection(db, "profiles");
@@ -70,7 +72,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
       let filled = false;
       if (text && text[i]) filled = true;
       inputBoxes.push(
-        <InputBox elevation={0} key={i} filled={filled}>
+        <InputBox elevation={0} key={i} filled={filled} style={{ borderColor: colors.primary, backgroundColor: colors.onPrimary }}>
           <Text variant="headlineLarge">{text && text.toUpperCase()[i]}</Text>
         </InputBox>
       );
@@ -78,60 +80,91 @@ const JoinHousehold = ({ closeModal }: Props) => {
     return inputBoxes;
   }
   return (
-    <Formik
-      validationSchema={householdCodeSchema}
-      initialValues={{
-        householdCode: "",
-      }}
-      onSubmit={(values) => {
-        if (values.householdCode && user) {
-          dispatch(getHouseholdByCode({ code: values.householdCode, user: user }));
-        }
-      }}
-    >
-      {({ handleSubmit, values }) => {
-        return (
-          <>
-            <Container>
-              <Text style={{ padding: 10, fontSize: 30 }}>Fyll i hushållskoden</Text>
-              <InputContainer>
-                <Input
-                  maxLength={pinCodeLength}
-                  mode="outlined"
-                  value={text}
-                  onChangeText={(text: string) => {
-                    values.householdCode = text.toUpperCase();
-                    setText(text.toUpperCase());
+    <FlexContainer>
+      <Formik
+        validationSchema={householdCodeSchema}
+        initialValues={{
+          householdCode: "",
+        }}
+        onSubmit={(values) => {
+          if (values.householdCode && user) {
+            dispatch(getHouseholdByCode({ code: values.householdCode, user: user }));
+          }
+        }}
+      >
+        {({ handleSubmit, values }) => {
+          return (
+            <Content>
+              <ModalContent elevation={0}>
+                <Container>
+                  {household.household.code !== "" && household.household.code !== values.householdCode ? (
+                    <>
+                      <Text variant="headlineMedium">Ange hushållskod</Text>
+                      <Text variant="bodySmall" style={{ textAlign: "left", margin: 4 }}>
+                        Skriv in den sexsiffriga koden i rutorna!
+                      </Text>
+                      <InputContainer>
+                        <Input
+                          maxLength={pinCodeLength}
+                          mode="outlined"
+                          value={text}
+                          onChangeText={(text: string) => {
+                            values.householdCode = text.toUpperCase();
+                            setText(text.toUpperCase());
 
-                    if (text.length === 6) {
-                      Keyboard.dismiss();
-                      handleSubmit();
-                    }
-                  }}
-                />
-                {InputBoxes()}
-              </InputContainer>
-              {error && <ErrorTranslator error={error as string} />}
-              {household.household.code !== "" && household.household.code === values.householdCode && (
-                <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={() => closeModal} />
-              )}
-            </Container>
-          </>
-        );
-      }}
-    </Formik>
+                            if (text.length === 6) {
+                              Keyboard.dismiss();
+                              handleSubmit();
+                            }
+                          }}
+                        />
+                        {InputBoxes()}
+                      </InputContainer>
+                    </>
+                  ) : (
+                    <>
+                      <Text variant="headlineMedium">Skapa din profil</Text>
+                      <InfoBox style={{ borderColor: colors.primary }}>
+                        <View style={{ flexDirection: "row" }}>
+                          <Text variant="bodySmall">Välkommen till</Text>
+                          <Text variant="bodySmall" style={{ fontWeight: "bold" }}>
+                            {" "}
+                            {household.household.name}
+                          </Text>
+                        </View>
+                        <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
+                      </InfoBox>
+                      <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={closeModal} />
+                    </>
+                  )}
+                  <ErrorBox>{error && <ErrorTranslator error={error as string} />}</ErrorBox>
+                </Container>
+              </ModalContent>
+            </Content>
+          );
+        }}
+      </Formik>
+      <Pressable onPress={closeModal}>
+        <SimpleLineIcons name="close" size={42} color={colors.primary} />
+      </Pressable>
+    </FlexContainer>
   );
 };
 
 export default JoinHousehold;
 
-const Container = styled.View`
-  justify-content: center;
-  align-items: center;
+const InfoBox = styled.View`
+  border-radius: 10px;
+  margin: 20px;
+  padding: 10px;
+  border-width: 1px;
+`;
+const ErrorBox = styled.View`
+  padding: 5px;
+  margin-top: 10px;
 `;
 
 const InputBox = styled(Surface)<{ filled: boolean }>`
-  background-color: transparent;
   border-width: 2px;
   min-width: 50px;
   min-height: 70px;
@@ -139,7 +172,7 @@ const InputBox = styled(Surface)<{ filled: boolean }>`
   margin: 4px;
   justify-content: center;
   align-items: center;
-  opacity: ${({ filled }) => (filled ? 1 : 0.3)};
+  opacity: ${({ filled }) => (filled ? 1 : 0.69)};
 `;
 
 const InputContainer = styled(Surface)`
@@ -158,4 +191,25 @@ const Input = styled.TextInput`
   right: 0;
   bottom: 0;
   z-index: 99999;
+`;
+
+const Container = styled.View`
+  justify-content: center;
+  background-color: transparent;
+  align-items: center;
+`;
+
+const FlexContainer = styled(Container)`
+  flex: 1;
+`;
+
+const Content = styled(Surface)`
+  margin: 20px;
+  border-radius: 20px;
+  align-items: center;
+`;
+
+const ModalContent = styled(Surface)`
+  padding: 0px 10px 20px 10px;
+  margin-top: 10px;
 `;

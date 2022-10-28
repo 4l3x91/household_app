@@ -37,7 +37,7 @@ const ChangeHouseholdName = ({ setShowTooltip, showTooltip }: Props) => {
           setShowTooltip(false);
         }}
       >
-        {!toggleForm && <DayViewTitle style={{ color: colors.primary }}>{household.name}</DayViewTitle>}
+        {!toggleForm && <DayViewTitle variant="headlineLarge">{household.name}</DayViewTitle>}
       </Pressable>
       {toggleForm && (
         <Formik
@@ -76,9 +76,8 @@ const ChangeHouseholdName = ({ setShowTooltip, showTooltip }: Props) => {
 
 export default ChangeHouseholdName;
 
-const DayViewTitle = styled.Text`
+const DayViewTitle = styled(Text)`
   align-items: center;
-  font-size: 25px;
   padding: 0 30px;
 `;
 
