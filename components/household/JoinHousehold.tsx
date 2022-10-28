@@ -108,7 +108,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
                           mode="outlined"
                           value={text}
                           onChangeText={(text: string) => {
-                            values.householdCode = text;
+                            values.householdCode = text.toUpperCase();
                             setText(text);
 
                             if (text.length === 6) {
