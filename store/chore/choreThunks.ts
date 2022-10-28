@@ -1,4 +1,16 @@
-import { addDoc, collection, deleteDoc, doc, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  DocumentData,
+  DocumentReference,
+  getDocs,
+  query,
+  Timestamp,
+  updateDoc,
+  where,
+} from "@firebase/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { Chore } from "./choreModel";
@@ -20,7 +32,7 @@ export const getChores = createAsyncThunk<Chore[], string, { rejectValue: string
     const documentsFromQuery = await getDocs(q);
     if (!documentsFromQuery.empty) {
       const chores: Chore[] = [];
-      documentsFromQuery.docs.forEach((doc) => chores.push(doc.data() as Chore));
+      documentsFromQuery.docs.forEach((doc) => chores.push({ ...doc.data(), dateCreated: (doc.get("createdDate") as Timestamp).toDate() } as Chore));
       return chores;
     } else {
       return thunkAPI.rejectWithValue("Cannot find any chores with that household id");
