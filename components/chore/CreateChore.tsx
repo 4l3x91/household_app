@@ -1,26 +1,21 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { uuidv4 } from "@firebase/util";
+import * as ImagePicker from "expo-image-picker";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { Modal, View } from "react-native";
 import { Button, Divider, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
 import { Chore } from "../../store/chore/choreModel";
 import { postChore } from "../../store/chore/choreThunks";
 import { selectHousehold } from "../../store/household/householdSelector";
+import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import { newChoreValidation } from "../../utils/yupSchemas";
+import AppModal from "../common/AppModal";
 import Input from "../common/Input";
 import ValuePicker from "./ValuePicker";
-const validation = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Titel måste vara minst två tecken")
-    .max(20, "Titel kan inte vara längre än 20 tecken")
-    .required("Titel kan inte vara tom"),
-  description: Yup.string()
-    .min(10, "Beskrivning måste vara minst 10 tecken")
-    .max(100, "Beskrivning kan inte vara längre än 100 tecken")
-    .required("Beskrivning kan inte vara tom"),
-});
 
 interface Props {
   closeModal: () => void;
@@ -29,27 +24,65 @@ interface Props {
 const CreateChore = ({ closeModal }: Props) => {
   const [interval, setInterval] = useState(1);
   const [energy, setEnergy] = useState(2);
+  const [overlay, setOverlay] = useState(false);
+  const [soundModalOpen, setSoundModalOpen] = useState(false);
   const { household } = useAppSelector(selectHousehold);
   const dispatch = useAppDispatch();
   const choreState = useAppSelector((state) => state.chores);
+  const storage = getStorage();
+  const currentProfile = useAppSelector(selectCurrentProfile);
+  const [localImage, setLocalImage] = useState<any>("");
+  const choreId = uuidv4();
 
-  const handleSubmit = (values: { name: string; description: string }) => {
-    const newChore: Chore = {
-      id: uuidv4(),
-      name: values.name,
-      description: values.description,
-      householdId: household.id,
-      interval: interval,
-      energy: energy,
-      archived: false,
-    };
-    dispatch(postChore(newChore));
-    closeModal();
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setLocalImage(result.uri);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (currentProfile) {
+      const imageRef = ref(storage, `${household.id}/${choreId}/image.jpg`);
+      const img = await fetch(localImage);
+      const bytes = await img.blob();
+      await uploadBytes(imageRef, bytes);
+
+      return await getDownloadURL(imageRef);
+    }
+  };
+
+  const handleSubmit = async (values: { name: string; description: string }) => {
+    let imageUrl: string | undefined = "";
+
+    if (localImage !== "") {
+      imageUrl = await uploadImage();
+    }
+
+    if (imageUrl) {
+      const newChore: Chore = {
+        id: choreId,
+        name: values.name,
+        description: values.description,
+        householdId: household.id,
+        interval: interval,
+        energy: energy,
+        archived: false,
+        imgUrl: imageUrl,
+      };
+      dispatch(postChore(newChore));
+      closeModal();
+    }
   };
 
   return (
     <View>
-      <Formik initialValues={{ name: "", description: "" }} validationSchema={validation} onSubmit={(values) => handleSubmit(values)}>
+      <Formik initialValues={{ name: "", description: "" }} validationSchema={newChoreValidation} onSubmit={(values) => handleSubmit(values)}>
         {({ handleChange, handleSubmit, values, errors }) => {
           return (
             <View>
@@ -83,6 +116,14 @@ const CreateChore = ({ closeModal }: Props) => {
                     value={energy}
                   />
                 </Container>
+                <AttatchmentContainer>
+                  <Button onPress={pickImage} icon={localImage === "" ? "image" : "check-bold"}>
+                    Lägg till bild
+                  </Button>
+                  <Button onPress={() => setSoundModalOpen(true)} icon="volume-high">
+                    Lägg till ljud
+                  </Button>
+                </AttatchmentContainer>
               </ContentContainer>
               <Divider style={{ height: 1, width: "100%" }} />
               <ButtonContainer>
@@ -102,11 +143,23 @@ const CreateChore = ({ closeModal }: Props) => {
           );
         }}
       </Formik>
+      <Modal animationType="slide" transparent={true} visible={soundModalOpen} statusBarTranslucent>
+        <AppModal title="Lägg till ljud" closeModal={() => setSoundModalOpen(false)} toggleOverlay={() => setOverlay((prev) => !prev)}>
+          <Text>Spela in ett ljudklipp till din syssla.</Text>
+          <MaterialCommunityIcons name="record-circle-outline" size={40} color="red" />
+        </AppModal>
+      </Modal>
     </View>
   );
 };
 
 export default CreateChore;
+
+const AttatchmentContainer = styled.View`
+  margin-top: 20px;
+  flex-direction: row;
+  justify-content: space-around;
+`;
 
 const ButtonWrapper = styled.View`
   flex: 1;
@@ -119,7 +172,7 @@ const ButtonContainer = styled(ButtonWrapper)`
 const ContentContainer = styled(Surface)`
   padding: 10px 20px;
   background-color: transparent;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
 `;
 
 const Container = styled.View`

@@ -1,6 +1,6 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
 import React from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, Image } from "react-native";
 import { Button, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
@@ -74,6 +74,7 @@ const ChoreDetailsScreen = () => {
               <Text variant="headlineSmall">dag</Text>
             </IntervalInnerContainer>
           </IntervalOuterContainer>
+          <Image source={{ uri: chore.imgUrl }} style={{ width: 200, height: 200 }} />
           <ButtonContainer>
             {!(completedChore && today === completedChore.date.getDate() && profile?.id === completedChore?.profileId) && (
               <Button onPress={handlePress} style={{ marginHorizontal: 20 }} mode="contained">
