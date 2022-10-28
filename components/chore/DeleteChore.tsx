@@ -1,4 +1,5 @@
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { deleteObject, getStorage, ref } from "firebase/storage";
 import React from "react";
 import { Pressable } from "react-native";
 import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
@@ -16,6 +17,33 @@ interface Props {
 const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
+  const storage = getStorage();
+
+  const deleteAttachments = () => {
+    if (chore.imgUrl) {
+      const imageRef = ref(storage, `${chore.id}/image.jpg`);
+
+      deleteObject(imageRef)
+        .then(() => {
+          console.log("Attachments deleted successfully");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (chore.soundUrl) {
+      const imageRef = ref(storage, `${chore.id}/sound.m4a`);
+
+      deleteObject(imageRef)
+        .then(() => {
+          console.log("Attachments deleted successfully");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
 
   return (
     <Container overlay={overlay}>
@@ -34,6 +62,7 @@ const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
           <Button
             onPress={() => {
               dispatch(deleteChore(chore));
+              deleteAttachments();
               closeModal();
               toggleOverlay();
             }}
