@@ -15,7 +15,7 @@ const WelcomeScreen = ({ navigation }: Props) => {
   return (
     <>
       <Container>
-        <Image source={require("../../assets/splashScreen.png")} style={{ flex: 1, resizeMode: "contain" }} />
+        <Image source={require("../../assets/catbroomSplash.png")} style={{ flex: 1, resizeMode: "contain" }} />
         <InnerContainer>
           <Button
             contentStyle={{ flexDirection: "row-reverse", paddingHorizontal: 15, paddingVertical: 5 }}

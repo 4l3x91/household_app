@@ -6,12 +6,12 @@ export default {
     slug: "household_app",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/myIcon.jpg",
+    icon: "./assets/catbroomIcon.png",
     userInterfaceStyle: "automatic",
     splash: {
-      image: "./assets/splashScreen.png",
+      image: "./assets/catbroomSplash.png",
       resizeMode: "contain",
-      backgroundColor: "#191c1e",
+      backgroundColor: "#191c1e0",
     },
     updates: {
       fallbackToCacheTimeout: 0,
@@ -22,7 +22,7 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/myAdaptiveIcon.jpg",
+        foregroundImage: "./assets/catbroomAdaptiveIcon.png",
         backgroundColor: "#191c1e",
       },
     },
