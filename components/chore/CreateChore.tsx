@@ -42,6 +42,7 @@ const CreateChore = ({ closeModal }: Props) => {
       interval: interval,
       energy: energy,
       archived: false,
+      dateCreated: new Date(),
     };
     dispatch(postChore(newChore));
     closeModal();
