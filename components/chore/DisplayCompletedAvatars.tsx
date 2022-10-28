@@ -20,7 +20,11 @@ const DisplayCompletedAvatars = ({ choreId }: Props) => {
     <AvatarContainer>
       {profilesCompleted?.map((p) => {
         const avatar = p.avatar.avatar ? p.avatar.avatar : "💀";
-        return <Text key={avatar}>{avatar}</Text>;
+        return (
+          <Text variant="titleLarge" key={avatar}>
+            {avatar}
+          </Text>
+        );
       })}
     </AvatarContainer>
   );
