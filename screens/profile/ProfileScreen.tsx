@@ -12,7 +12,6 @@ import EditProfile from "../../components/profile/EditProfile";
 import PendingProfiles from "../../components/profile/PendingProfiles";
 import { UserStackParams } from "../../navigation/UserStackNavigator";
 import { selectHouseholdName } from "../../store/household/householdSelector";
-import { Profile } from "../../store/profile/profileModel";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
 
@@ -55,7 +54,8 @@ const ProfileScreen = ({ navigation }: Props) => {
             <Surface style={{ marginTop: 10, padding: 10, borderRadius: 10 }}>
               <Text variant="bodySmall">Profil</Text>
               <View style={{ flexDirection: "row", paddingVertical: 5, alignItems: "center" }}>
-                <AvatarCard profile={profile as Profile} size={32} />
+                {profile && <AvatarCard profile={profile} size={32} />}
+
                 <Text variant="headlineMedium" style={{ marginHorizontal: 15 }}>
                   {profile?.profileName}
                 </Text>
