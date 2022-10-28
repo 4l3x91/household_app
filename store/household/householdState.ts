@@ -7,7 +7,7 @@ export interface HouseholdState {
 }
 
 export const initialState: HouseholdState = {
-  household: { id: "", name: "", code: "" },
+  household: { id: "", name: "", code: "???---" },
   pending: false,
   error: "",
 };
