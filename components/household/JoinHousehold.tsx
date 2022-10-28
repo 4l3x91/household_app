@@ -108,8 +108,8 @@ const JoinHousehold = ({ closeModal }: Props) => {
                           mode="outlined"
                           value={text}
                           onChangeText={(text: string) => {
-                            values.householdCode = text.toUpperCase();
-                            setText(text.toUpperCase());
+                            values.householdCode = text;
+                            setText(text);
 
                             if (text.length === 6) {
                               Keyboard.dismiss();
