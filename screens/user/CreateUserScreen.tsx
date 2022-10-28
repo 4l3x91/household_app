@@ -26,7 +26,8 @@ const CreateUserScreen = ({ navigation }: Props) => {
   return (
     <View>
       {/* TODO check how to properly use useNavigation() hook instead of passing navigation */}
-      <CreateUser close={() => navigation.goBack()} logIn={() => navigation.navigate("Login")} />
+      {/* logIn={() => navigation.navigate("Login")} */}
+      <CreateUser close={() => navigation.goBack()} />
     </View>
   );
 };

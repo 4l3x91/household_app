@@ -1,21 +1,26 @@
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
 import { Button, Surface, Text, Theme, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { RootStackParams } from "../../navigation/RootStackNavigator";
 
 interface Props {
   error: string;
-  logIn?: () => void;
   register?: () => void;
 }
 
-const ErrorTranslator = ({ error, logIn, register }: Props) => {
+type ErrorTranslatorNavProps = NativeStackNavigationProp<RootStackParams, "Login">;
+
+const ErrorTranslator = ({ error, register }: Props) => {
   const theme = useTheme();
+  const navigation = useNavigation<ErrorTranslatorNavProps>();
 
   if (error.includes("auth/email-already-in-use")) {
     return (
       <ErrorContainer>
         <ErrorText theme={theme}>Angiven email finns redan registrerad</ErrorText>
-        <Button mode="text" onPress={logIn}>
+        <Button mode="text" onPress={() => navigation.navigate("Login")}>
           Logga in
         </Button>
       </ErrorContainer>
