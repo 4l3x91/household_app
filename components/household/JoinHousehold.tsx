@@ -24,7 +24,7 @@ const householdCodeSchema = Yup.object().shape({
 });
 
 interface Props {
-  closeModal?: () => void;
+  closeModal: () => void;
 }
 
 const JoinHousehold = ({ closeModal }: Props) => {
@@ -80,7 +80,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
     return inputBoxes;
   }
   return (
-    <Container style={{ flex: 1 }}>
+    <FlexContainer>
       <Formik
         validationSchema={householdCodeSchema}
         initialValues={{
@@ -124,23 +124,20 @@ const JoinHousehold = ({ closeModal }: Props) => {
                   ) : (
                     <>
                       <Text variant="headlineMedium">Skapa din profil</Text>
-                        <InfoBox style={{ borderColor: colors.primary }}>
-                          <View style={{flexDirection: 'row'}}>
-                        <Text variant="bodySmall">
-                            Välkommen till 
-                            </Text>
-                          <Text variant="bodySmall" style={{fontWeight:'bold'}}> {household.household.name}</Text>
-                          </View>
-                            <Text variant="bodySmall">
-                            Fyll i ditt namn och välj en ledig avatar för att gå vidare.
-                        </Text>
+                      <InfoBox style={{ borderColor: colors.primary }}>
+                        <View style={{ flexDirection: "row" }}>
+                          <Text variant="bodySmall">Välkommen till</Text>
+                          <Text variant="bodySmall" style={{ fontWeight: "bold" }}>
+                            {" "}
+                            {household.household.name}
+                          </Text>
+                        </View>
+                        <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
                       </InfoBox>
-                      <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={() => closeModal} />
+                      <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={closeModal} />
                     </>
                   )}
-              <ErrorBox>
-              {error && <ErrorTranslator error={error as string} />}
-              </ErrorBox>
+                  <ErrorBox>{error && <ErrorTranslator error={error as string} />}</ErrorBox>
                 </Container>
               </ModalContent>
             </Content>
@@ -150,21 +147,22 @@ const JoinHousehold = ({ closeModal }: Props) => {
       <Pressable onPress={closeModal}>
         <SimpleLineIcons name="close" size={42} color={colors.primary} />
       </Pressable>
-    </Container>
+    </FlexContainer>
   );
 };
 
 export default JoinHousehold;
+
 const InfoBox = styled.View`
   border-radius: 10px;
   margin: 20px;
   padding: 10px;
-border-width: 1px;
-`
+  border-width: 1px;
+`;
 const ErrorBox = styled.View`
   padding: 5px;
   margin-top: 10px;
-`
+`;
 
 const InputBox = styled(Surface)<{ filled: boolean }>`
   border-width: 2px;
@@ -199,6 +197,10 @@ const Container = styled.View`
   justify-content: center;
   background-color: transparent;
   align-items: center;
+`;
+
+const FlexContainer = styled(Container)`
+  flex: 1;
 `;
 
 const Content = styled(Surface)`

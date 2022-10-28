@@ -25,9 +25,9 @@ const ProfileScreen = ({ navigation }: Props) => {
   const householdName = useAppSelector(selectHouseholdName);
   const [modalVisible, setModalVisible] = useState(false);
   const [joinModalVisible, setJoinModalVisible] = useState(false);
+  const [createModalVisible, setCreateModalVisible] = useState(false);
   const householdModalRef = useRef<Modalize>(null);
   const optionsModalRef = useRef<Modalize>(null);
-  const createHouseholdModalRef = useRef<Modalize>(null);
   const { colors } = useTheme();
   const openMyHouseholds = () => {
     householdModalRef.current?.open();
@@ -41,8 +41,12 @@ const ProfileScreen = ({ navigation }: Props) => {
     setJoinModalVisible(false);
   };
 
+  const closeCreateModal = () => {
+    setCreateModalVisible(false);
+  };
+
   return (
-    <View style={{ opacity: modalVisible || joinModalVisible ? 0.5 : 1 }}>
+    <View style={{ opacity: modalVisible || joinModalVisible || createModalVisible ? 0.5 : 1 }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: Constants.statusBarHeight }}>
         <Button onPress={() => openMyHouseholds()}>
           <Text variant="titleLarge">
@@ -89,13 +93,19 @@ const ProfileScreen = ({ navigation }: Props) => {
 
       <Portal>
         <Modal animationType="slide" transparent={true} visible={joinModalVisible} statusBarTranslucent>
-            <JoinHousehold closeModal={closeJoinModal} />
+          <JoinHousehold closeModal={closeJoinModal} />
+        </Modal>
+      </Portal>
+
+      <Portal>
+        <Modal animationType="slide" transparent={true} visible={createModalVisible} statusBarTranslucent>
+          <CreateHousehold closeModal={closeCreateModal} />
         </Modal>
       </Portal>
 
       <Portal>
         <Modalize ref={householdModalRef} adjustToContentHeight modalStyle={{ backgroundColor: colors.surface }}>
-          <Surface style={{ paddingHorizontal: 20, marginBottom: 80, backgroundColor: "transparent" }}>
+          <Surface style={{ paddingHorizontal: 20, backgroundColor: "transparent" }}>
             <Text variant="headlineMedium" style={{ marginVertical: 15 }}>
               Mina hushåll
             </Text>
@@ -126,21 +136,17 @@ const ProfileScreen = ({ navigation }: Props) => {
             <Button
               style={{ padding: 10 }}
               onPress={() => {
-                createHouseholdModalRef?.current?.open();
                 householdModalRef.current?.close();
                 optionsModalRef?.current?.close();
+                setTimeout(() => {
+                  setCreateModalVisible(true);
+                }, 200);
               }}
               icon="plus"
             >
               Skapa hushåll
             </Button>
           </Surface>
-        </Modalize>
-      </Portal>
-
-      <Portal>
-        <Modalize ref={createHouseholdModalRef} rootStyle={{}} modalStyle={{ backgroundColor: colors.background, padding: 10 }} adjustToContentHeight>
-          <CreateHousehold closeModal={() => createHouseholdModalRef.current?.close()} />
         </Modalize>
       </Portal>
     </View>
