@@ -97,7 +97,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
             <Content>
               <ModalContent elevation={0}>
                 <Container>
-                  {household.household.code !== "" && household.household.code !== values.householdCode ? (
+                  {household.household.code !== values.householdCode || household.error ? (
                     <>
                       <Text variant="headlineMedium">Ange hushållskod</Text>
                       <Text variant="bodySmall" style={{ textAlign: "left", margin: 4 }}>
@@ -122,20 +122,21 @@ const JoinHousehold = ({ closeModal }: Props) => {
                       </InputContainer>
                     </>
                   ) : (
-                    <>
-                      <Text variant="headlineMedium">Skapa din profil</Text>
-                      <InfoBox style={{ borderColor: colors.primary }}>
-                        <View style={{ flexDirection: "row" }}>
-                          <Text variant="bodySmall">Välkommen till</Text>
-                          <Text variant="bodySmall" style={{ fontWeight: "bold" }}>
-                            {" "}
-                            {household.household.name}
-                          </Text>
-                        </View>
-                        <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
-                      </InfoBox>
-                      <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={closeModal} />
-                    </>
+                    !household.error && (
+                      <>
+                        <Text variant="headlineMedium">Skapa din profil</Text>
+                        <InfoBox style={{ borderColor: colors.primary }}>
+                          <View style={{ flexDirection: "row" }}>
+                            <Text variant="bodySmall">Välkommen till</Text>
+                            <Text variant="bodySmall" style={{ fontWeight: "bold" }}>
+                              {household.household.name}
+                            </Text>
+                          </View>
+                          <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
+                        </InfoBox>
+                        <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={closeModal} />
+                      </>
+                    )
                   )}
                   <ErrorBox>{error && <ErrorTranslator error={error as string} />}</ErrorBox>
                 </Container>
