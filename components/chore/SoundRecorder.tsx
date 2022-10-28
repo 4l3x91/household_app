@@ -39,6 +39,7 @@ export default function SoundRecorder({ setDeviceRecordingUri, recording, setRec
         const duration = getDurationFormatted(status.durationMillis);
         setPlayback({ sound: sound, duration: duration });
       }
+
       const uri = recording.getURI();
       setDeviceRecordingUri(uri);
     }
