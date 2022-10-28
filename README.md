@@ -2,7 +2,7 @@
 
 Kravlista (4)
 
-- [] En logga, splashscreen och appikon ska designas och användas. \*\*
+- [x] En logga, splashscreen och appikon ska designas och användas. \*\*
 - [x] Applikationen ska byggas med RN, Expo & TS. \*\*
 - [x] Designen av appen ska utgå ifrån befintliga skisser, undantag kan ges men ska diskuteras
       med produktägare, godkännas och dokumenteras. \*\*
@@ -53,8 +53,8 @@ Sysslor (6)
 - [x] En ägare ska kunna lägga till sysslor att göra i hemmet. \*
 - [x] En syssla ska ha ett namn, en beskrivning (text), hur ofta den ska göras (dagar), och en
       vikt som beskriver hur energikrävande den är. \*
-- [] En användare ska kunna lägga till en ljudinspelning och en bild för att beskriva sysslan
-  ytterligare.
+- [x] En användare ska kunna lägga till en ljudinspelning och en bild för att beskriva sysslan
+      ytterligare.
 - [x] En ägare ska kunna redigera en syssla. \*
 - [x] En ägare ska kunna ta bort en syssla.
 - [x] När en syssla tas bort ska användaren få en varning om att all statistik gällande sysslan
