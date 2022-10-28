@@ -33,7 +33,7 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
   } else {
     dateToInterval = addDays(chore.dateCreated, chore.interval);
   }
-  const timeLeft = (dateToInterval.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24);
+  const timeLeft = Math.round((dateToInterval.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
 
   function handleEditPress() {
     toggleEditModal();
