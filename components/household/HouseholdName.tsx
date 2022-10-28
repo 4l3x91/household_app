@@ -1,7 +1,6 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Text } from "react-native";
-import { useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
 import ChangeHouseholdName from "./ChangeHouseholdName";
@@ -34,7 +33,7 @@ const HouseholdName = ({ role, householdName }: Props) => {
     </TitleContainer>
   ) : (
     <TitleContainer>
-      <DayViewTitle style={{ color: colors.primary }}>{householdName}</DayViewTitle>
+      <DayViewTitle variant="headlineLarge">{householdName}</DayViewTitle>
     </TitleContainer>
   );
 };
@@ -47,13 +46,13 @@ const TitleContainer = styled.View`
   margin-bottom: 20px;
   flex-direction: row;
 `;
+
 const CodeInnerContainer = styled.View`
   align-items: center;
 `;
 
-const DayViewTitle = styled.Text`
+const DayViewTitle = styled(Text)`
   align-items: center;
-  font-size: 25px;
   padding: 0 30px;
 `;
 

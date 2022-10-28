@@ -25,7 +25,7 @@ const ChoreDetailsScreen = () => {
   const profile = useAppSelector(selectCurrentProfile);
   const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const dispatch = useAppDispatch();
-  const completedChore = completedChores.find((completedChore) => completedChore.choreId === chore?.id);
+  const completedChore = completedChores.find((completedChore) => completedChore.choreId === chore?.id && profile?.id === completedChore?.profileId);
   const today = new Date().getDate();
   const width = Dimensions.get("screen").width - 40;
   const { colors } = useTheme();
@@ -87,7 +87,7 @@ const ChoreDetailsScreen = () => {
               </IntervalInnerContainer>
             </IntervalOuterContainer>
             <ButtonContainer>
-              {!(completedChore && today === completedChore.date.getDate() && profile?.id === completedChore?.profileId) && (
+              {!(completedChore && today === completedChore.date.getDate()) && (
                 <Button onPress={handlePress} style={{ marginHorizontal: 20 }} mode="contained">
                   Markera som klar
                 </Button>

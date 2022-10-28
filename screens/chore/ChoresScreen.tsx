@@ -66,7 +66,10 @@ const ChoresScreen = ({ navigation }: Props) => {
             refreshing={refresh}
             onRefresh={() => {
               setRefresh(true);
-              if (household) dispatch(getChores(household.id));
+              if (household) {
+                dispatch(getChores(household.id));
+                dispatch(getCompletedChoresPerHousehold(allMembers));
+              }
               setRefresh(false);
             }}
           />
@@ -74,7 +77,7 @@ const ChoresScreen = ({ navigation }: Props) => {
       >
         <HouseholdName householdName={household.name} role={profile?.role} />
 
-        {chores.chores.length !== 0 ? (
+        {chores.chores.length !== 0 || !profile?.isPaused ? (
           chores.chores.map(
             (chore) =>
               !chore.archived && (
