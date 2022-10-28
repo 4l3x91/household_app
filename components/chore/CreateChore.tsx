@@ -1,5 +1,5 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { uuidv4 } from "@firebase/util";
+import { Audio } from "expo-av";
 import * as ImagePicker from "expo-image-picker";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Formik } from "formik";
@@ -10,11 +10,11 @@ import styled from "styled-components/native";
 import { Chore } from "../../store/chore/choreModel";
 import { postChore } from "../../store/chore/choreThunks";
 import { selectHousehold } from "../../store/household/householdSelector";
-import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { newChoreValidation } from "../../utils/yupSchemas";
 import AppModal from "../common/AppModal";
 import Input from "../common/Input";
+import SoundRecorder from "./SoundRecorder";
 import ValuePicker from "./ValuePicker";
 
 interface Props {
@@ -22,6 +22,9 @@ interface Props {
 }
 
 const CreateChore = ({ closeModal }: Props) => {
+  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string | null>(null);
+  const [recording, setRecording] = React.useState<Audio.Recording>();
+  const [deviceImageUri, setDeviceImageUri] = useState("");
   const [interval, setInterval] = useState(1);
   const [energy, setEnergy] = useState(2);
   const [overlay, setOverlay] = useState(false);
@@ -30,8 +33,6 @@ const CreateChore = ({ closeModal }: Props) => {
   const dispatch = useAppDispatch();
   const choreState = useAppSelector((state) => state.chores);
   const storage = getStorage();
-  const currentProfile = useAppSelector(selectCurrentProfile);
-  const [localImage, setLocalImage] = useState<any>("");
   const choreId = uuidv4();
 
   const pickImage = async () => {
@@ -42,42 +43,49 @@ const CreateChore = ({ closeModal }: Props) => {
       quality: 1,
     });
     if (!result.cancelled) {
-      setLocalImage(result.uri);
+      setDeviceImageUri(result.uri);
     }
   };
 
-  const uploadImage = async () => {
-    if (currentProfile) {
-      const imageRef = ref(storage, `${household.id}/${choreId}/image.jpg`);
-      const img = await fetch(localImage);
+  const uploadAttatchments = async () => {
+    let attatchments = { firebaseImgUrl: "", firebaseSoundUrl: "" };
+
+    if (deviceImageUri) {
+      const imageRef = ref(storage, `${choreId}/image.jpg`);
+      const img = await fetch(deviceImageUri);
       const bytes = await img.blob();
       await uploadBytes(imageRef, bytes);
 
-      return await getDownloadURL(imageRef);
+      attatchments.firebaseImgUrl = await getDownloadURL(imageRef);
     }
+    if (deviceRecordingUri) {
+      const soundRef = ref(storage, `${choreId}/sound.m4a`);
+      const recording = await fetch(deviceRecordingUri);
+      const bytes = await recording.blob();
+      await uploadBytes(soundRef, bytes);
+
+      attatchments.firebaseSoundUrl = await getDownloadURL(soundRef);
+    }
+    return attatchments;
   };
 
   const handleSubmit = async (values: { name: string; description: string }) => {
-    let imageUrl: string | undefined = "";
+    const attatchments = await uploadAttatchments();
 
-    if (localImage !== "") {
-      imageUrl = await uploadImage();
-    }
+    const newChore: Chore = {
+      id: choreId,
+      name: values.name,
+      description: values.description,
+      householdId: household.id,
+      interval: interval,
+      energy: energy,
+      archived: false,
+      imgUrl: attatchments.firebaseImgUrl,
+      soundUrl: attatchments.firebaseSoundUrl,
+    };
 
-    if (imageUrl) {
-      const newChore: Chore = {
-        id: choreId,
-        name: values.name,
-        description: values.description,
-        householdId: household.id,
-        interval: interval,
-        energy: energy,
-        archived: false,
-        imgUrl: imageUrl,
-      };
-      dispatch(postChore(newChore));
-      closeModal();
-    }
+    dispatch(postChore(newChore));
+    closeModal();
   };
 
   return (
@@ -117,10 +125,10 @@ const CreateChore = ({ closeModal }: Props) => {
                   />
                 </Container>
                 <AttatchmentContainer>
-                  <Button onPress={pickImage} icon={localImage === "" ? "image" : "check-bold"}>
+                  <Button onPress={pickImage} icon={deviceImageUri === "" ? "image" : "check-bold"}>
                     Lägg till bild
                   </Button>
-                  <Button onPress={() => setSoundModalOpen(true)} icon="volume-high">
+                  <Button onPress={() => setSoundModalOpen(true)} icon={deviceRecordingUri ? "check-bold" : "volume-high"}>
                     Lägg till ljud
                   </Button>
                 </AttatchmentContainer>
@@ -144,9 +152,20 @@ const CreateChore = ({ closeModal }: Props) => {
         }}
       </Formik>
       <Modal animationType="slide" transparent={true} visible={soundModalOpen} statusBarTranslucent>
-        <AppModal title="Lägg till ljud" closeModal={() => setSoundModalOpen(false)} toggleOverlay={() => setOverlay((prev) => !prev)}>
-          <Text>Spela in ett ljudklipp till din syssla.</Text>
-          <MaterialCommunityIcons name="record-circle-outline" size={40} color="red" />
+        <AppModal
+          title="Lägg till ljud"
+          closeModal={() => {
+            setSoundModalOpen(false);
+            setDeviceRecordingUri(null);
+          }}
+          toggleOverlay={() => setOverlay((prev) => !prev)}
+        >
+          <SoundRecorder
+            setDeviceRecordingUri={setDeviceRecordingUri}
+            recording={recording}
+            setRecording={setRecording}
+            closeModal={() => setSoundModalOpen(false)}
+          />
         </AppModal>
       </Modal>
     </View>

@@ -7,4 +7,5 @@ export interface Chore {
   energy: number;
   archived: boolean;
   imgUrl: string;
+  soundUrl: string;
 }
