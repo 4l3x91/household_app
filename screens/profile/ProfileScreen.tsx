@@ -1,8 +1,8 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
-import React, { useRef, useState } from "react";
-import { Modal, ScrollView, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Modal, RefreshControl, ScrollView, View } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { Button, Portal, Surface, Text, useTheme } from "react-native-paper";
 import AvatarCard from "../../components/household/AvatarCard";
@@ -13,22 +13,34 @@ import MyHouseholds from "../../components/household/MyHouseholds";
 import EditProfile from "../../components/profile/EditProfile";
 import PendingProfiles from "../../components/profile/PendingProfiles";
 import { UserStackParams } from "../../navigation/UserStackNavigator";
-import { selectHouseholdName } from "../../store/household/householdSelector";
+import { selectHouseholdId, selectHouseholdName } from "../../store/household/householdSelector";
+import { getHouseholdById } from "../../store/household/householdThunks";
 import { Profile } from "../../store/profile/profileModel";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";
-import { useAppSelector } from "../../store/store";
+import { getAllProfiles } from "../../store/profile/profileThunks";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { selectUser } from "../../store/user/userSelectors";
 
 type Props = NativeStackScreenProps<UserStackParams, "UserProfileScreen">;
 
 const ProfileScreen = ({ navigation }: Props) => {
   const profile = useAppSelector(selectCurrentProfile);
+  const [refresh, setRefresh] = useState(false);
   const householdName = useAppSelector(selectHouseholdName);
+  const householdId = useAppSelector(selectHouseholdId);
+  const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [joinModalVisible, setJoinModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const householdModalRef = useRef<Modalize>(null);
   const optionsModalRef = useRef<Modalize>(null);
   const { colors } = useTheme();
+
+  useEffect(() => {
+    console.log("ändra");
+  }, [householdName]);
+
   const openMyHouseholds = () => {
     householdModalRef.current?.open();
   };
@@ -58,7 +70,21 @@ const ProfileScreen = ({ navigation }: Props) => {
         </Button>
       </View>
 
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={() => {
+              setRefresh(true);
+              if (user) {
+                dispatch(getHouseholdById(householdId));
+                dispatch(getAllProfiles(user));
+              }
+              setRefresh(false);
+            }}
+          />
+        }
+      >
         <Surface elevation={0} style={{ margin: 10, padding: 10, borderRadius: 10 }}>
           <View style={{ marginBottom: 5 }}>
             <Surface style={{ padding: 10, borderRadius: 10 }}>
