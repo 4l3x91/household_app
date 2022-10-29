@@ -1,7 +1,3 @@
-export const generateHouseholdCode = () => {
-  return Math.random().toString(36).slice(2, 8).toUpperCase();
-};
-
 export function convertToRGB(hex: string, alpha: number): string {
   const newHex = hex.substring(1);
 
@@ -19,9 +15,3 @@ export function convertToRGB(hex: string, alpha: number): string {
   }
   return "rgba(0,0,0,0)";
 }
-
-export const addDays = function (date: Date, days: number) {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-};
