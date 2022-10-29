@@ -1,13 +1,15 @@
-import { SimpleLineIcons } from "@expo/vector-icons";
+import { FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
+import { Audio } from "expo-av";
+
 import { Formik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { useYup } from "../../hooks/useYup";
 import { Chore } from "../../store/chore/choreModel";
 import { updateChore } from "../../store/chore/choreThunks";
 import { useAppDispatch } from "../../store/store";
-import { createOrEditChoreSchema } from "../../utils/yupSchemas";
 import Input from "../common/Input";
 import ValuePicker from "./ValuePicker";
 
@@ -18,10 +20,29 @@ interface Props {
 }
 
 const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
+  const [recording, setRecording] = React.useState<Audio.Recording>();
+  const [deviceImageUri, setDeviceImageUri] = useState<string>();
+  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string | null>(null);
+
   const [interval, setInterval] = useState(chore.interval);
   const [energy, setEnergy] = useState(chore.energy);
   const { colors } = useTheme();
+  const [sound, setSound] = useState<Audio.Sound>();
+  const { choreSchema } = useYup();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (chore?.soundUrl) {
+      const loadSound = async () => {
+        const loadedSound = new Audio.Sound();
+        await loadedSound.loadAsync({
+          uri: chore.soundUrl,
+        });
+        setSound(loadedSound);
+      };
+      loadSound();
+    }
+  }, []);
 
   return (
     <Container overlay={overlay}>
@@ -30,7 +51,7 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
         <ModalContent elevation={0}>
           <Formik
             initialValues={{ name: chore.name, description: chore.description, energy: chore.energy, interval: chore.interval }}
-            validationSchema={createOrEditChoreSchema}
+            validationSchema={choreSchema}
             onSubmit={(values) => {
               dispatch(updateChore({ ...chore, name: values.name, description: values.description, energy: energy, interval: interval }));
             }}
@@ -63,6 +84,16 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
                       value={energy}
                     />
                   </ComponentContainer>
+                  <AttachmentsContent>
+                    {chore.imgUrl ? <AttachedImage source={{ uri: chore.imgUrl }} /> : <Button onPress={() => {}}>Lägg till bild</Button>}
+                    {sound ? (
+                      <PlayButton onPress={() => sound.replayAsync()} style={{ backgroundColor: colors.primary }}>
+                        <FontAwesome5 name="volume-up" size={40} color={colors.surface} />
+                      </PlayButton>
+                    ) : (
+                      <Button onPress={() => {}}>Lägg till ljud</Button>
+                    )}
+                  </AttachmentsContent>
                   <ComponentContainer>
                     <Button
                       onPress={() => {
@@ -115,4 +146,28 @@ const ModalContent = styled(Surface)`
 `;
 const ComponentContainer = styled.View`
   margin: 8px 0;
+`;
+
+const AttachmentsContent = styled.View`
+  flex-direction: row;
+  margin: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const PlayButton = styled.Pressable`
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  width: 70px;
+  height: 70px;
+  margin: 10px;
+`;
+
+const AttachedImage = styled.Image`
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  margin: 10px;
 `;
