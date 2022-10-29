@@ -16,14 +16,23 @@ interface Props {
 const ArchiveChore = ({ closeModal, chore, toggleOverlay }: Props) => {
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
-
   const buttonLabel = chore.archived ? "Aktivera" : "Arkivera";
+
+  const handlePress = () => {
+    dispatch(updateChore({ ...chore, archived: chore.archived ? false : true }));
+    closeModal();
+    toggleOverlay();
+  };
+
+  const handleClose = () => {
+    toggleOverlay();
+    closeModal();
+  };
 
   return (
     <Container overlay={overlay}>
       <Content>
         {chore.archived ? <Text variant="headlineMedium">Aktivera syssla</Text> : <Text variant="headlineMedium">Arkivera syssla</Text>}
-
         <ModalContent elevation={0}>
           {chore.archived ? (
             <Text>Vill du aktivera {chore.name} igen?</Text>
@@ -37,24 +46,11 @@ const ArchiveChore = ({ closeModal, chore, toggleOverlay }: Props) => {
             </>
           )}
         </ModalContent>
-
-        <Button
-          onPress={() => {
-            dispatch(updateChore({ ...chore, archived: chore.archived ? false : true }));
-            closeModal();
-            toggleOverlay();
-          }}
-          mode="outlined"
-        >
+        <Button onPress={handlePress} mode="outlined">
           {buttonLabel}
         </Button>
       </Content>
-      <Pressable
-        onPress={() => {
-          toggleOverlay();
-          closeModal();
-        }}
-      >
+      <Pressable onPress={handleClose}>
         <SimpleLineIcons name="close" size={42} color={colors.primary} />
       </Pressable>
     </Container>
