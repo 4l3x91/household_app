@@ -5,14 +5,14 @@ import { Pressable, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
+import { useUtils } from "../../hooks/useUtils";
+import { useYup } from "../../hooks/useYup";
 import { HouseholdModel } from "../../store/household/householdModel";
 import { postHousehold } from "../../store/household/householdThunks";
 import { Avatar, Profile } from "../../store/profile/profileModel";
 import { postProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
-import { generateHouseholdCode } from "../../utils/utils";
-import { createHouseholdSchema } from "../../utils/yupSchemas";
 import Input from "../common/Input";
 import AvatarPicker from "../profile/AvatarPicker";
 import HouseholdCode from "./HouseholdCode";
@@ -23,11 +23,13 @@ interface Props {
 
 const CreateHousehold = ({ closeModal }: Props) => {
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
+  const { generateHouseholdCode } = useUtils();
   const [householdCode, setHouseholdCode] = useState(generateHouseholdCode());
   const [selectedAvatar, setSelectedAvatar] = useState(-1);
   const householdPending = useAppSelector((state) => state.household).pending;
   const profilePending = useAppSelector((state) => state.profile).pending;
   const user = useAppSelector(selectUser);
+  const { newHouseholdSchema } = useYup();
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
 
@@ -60,7 +62,7 @@ const CreateHousehold = ({ closeModal }: Props) => {
   return (
     <FlexContainer>
       <Formik
-        validationSchema={createHouseholdSchema}
+        validationSchema={newHouseholdSchema}
         initialValues={{
           householdName: "",
           profileName: "",
@@ -76,37 +78,36 @@ const CreateHousehold = ({ closeModal }: Props) => {
             values.profileName.length >= 2;
           return (
             <Content>
-            <ModalContent elevation={0}>
+              <ModalContent elevation={0}>
                 <Container>
-                  
-              <HeaderText variant="headlineMedium">Skapa hushåll</HeaderText>
-                  
-                  <InputContainer>
-                  <Input
-                  width={200}
-                  label="Namn på hushåll"
-                  value={values.householdName}
-                  handleChange={handleChange("householdName")}
-                  activeOutlineColor={colors.primary}
-                      />
-                      </InputContainer>
-                {errors.householdName && <Text>{errors.householdName}</Text>}
-               
-                <HouseholdCode householdCode={householdCode} setHouseholdCode={setHouseholdCode} />
-                <InputContainer>
-                  <Input width={200} label="Profilnamn" value={values.profileName} handleChange={handleChange("profileName")} />
-                </InputContainer>
-                  {errors.profileName && <Text>{errors.profileName}</Text>}
-                  <View style={{padding: 10}}>
-              <AvatarPicker setAvatar={setAvatar} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
-              </View>
+                  <HeaderText variant="headlineMedium">Skapa hushåll</HeaderText>
 
-              <Button disabled={!inputsOk} mode="contained" onPress={() => handleSubmit()} loading={pending}>
-                Skapa
-              </Button>
+                  <InputContainer>
+                    <Input
+                      width={200}
+                      label="Namn på hushåll"
+                      value={values.householdName}
+                      handleChange={handleChange("householdName")}
+                      activeOutlineColor={colors.primary}
+                    />
+                  </InputContainer>
+                  {errors.householdName && <Text>{errors.householdName}</Text>}
+
+                  <HouseholdCode householdCode={householdCode} setHouseholdCode={setHouseholdCode} />
+                  <InputContainer>
+                    <Input width={200} label="Profilnamn" value={values.profileName} handleChange={handleChange("profileName")} />
+                  </InputContainer>
+                  {errors.profileName && <Text>{errors.profileName}</Text>}
+                  <View style={{ padding: 10 }}>
+                    <AvatarPicker setAvatar={setAvatar} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
+                  </View>
+
+                  <Button disabled={!inputsOk} mode="contained" onPress={() => handleSubmit()} loading={pending}>
+                    Skapa
+                  </Button>
                 </Container>
               </ModalContent>
-                </Content>
+            </Content>
           );
         }}
       </Formik>
@@ -118,7 +119,6 @@ const CreateHousehold = ({ closeModal }: Props) => {
 };
 
 export default CreateHousehold;
-
 
 const Container = styled.View`
   justify-content: center;
