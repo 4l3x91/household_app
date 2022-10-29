@@ -4,20 +4,13 @@ import { default as React, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
+import { useYup } from "../../hooks/useYup";
 import { Avatar } from "../../store/profile/profileModel";
 import { selectMemoizedCurrentProfile, selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";
 import { updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import Input from "../common/Input";
 import AvatarPicker from "./AvatarPicker";
-
-const validation = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Profilnamnet måste vara minst två tecken")
-    .max(20, "Profilnamnet kan inte vara längre än 20 tecken")
-    .required("Profilnamn kan inte vara tomt"),
-});
 
 interface Props {
   closeModal: () => void;
@@ -29,6 +22,7 @@ const EditProfile = ({ closeModal }: Props) => {
   const [selectedAvatar, setSelectedAvatar] = useState(3);
   const members = useAppSelector(selectMemoizedHouseholdMembers);
   const { colors } = useTheme();
+  const { profileSchema } = useYup();
 
   const dispatch = useAppDispatch();
 
@@ -44,7 +38,7 @@ const EditProfile = ({ closeModal }: Props) => {
         <ModalContent elevation={0}>
           <Formik
             initialValues={{ name: profile?.profileName }}
-            validationSchema={validation}
+            validationSchema={profileSchema}
             onSubmit={(values) => values && handleSubmit({ name: values.name as string, avatar: avatar.avatar, avatarColor: avatar.color })}
           >
             {({ handleChange, handleSubmit, values, errors }) => {

@@ -2,7 +2,7 @@ import { Formik } from "formik";
 import React, { useState } from "react";
 import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
+import { useYup } from "../../hooks/useYup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { postUser } from "../../store/user/userThunks";
 import BottomButtons from "../common/BottomButtons";
@@ -13,16 +13,11 @@ interface Props {
   close: () => void;
 }
 
-const userSchema = Yup.object().shape({
-  email: Yup.string().email("Ange en giltlig Email").required("Email kan inte vara tomt"),
-  password: Yup.string().min(6, "minst 6 tecken").required("Lösenord kan inte vara tomt"),
-  passwordConfirmation: Yup.string().oneOf([Yup.ref("password"), null], "Lösenorden matchar inte"),
-});
-
 const CreateUser = ({ close }: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.userState);
+  const { userSchema } = useYup();
 
   return (
     <Container>

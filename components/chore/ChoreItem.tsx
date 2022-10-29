@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { Badge, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { useUtils } from "../../hooks/useUtils";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
+import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
-import { addDays } from "../../utils/utils";
 import DisplayCompletedAvatars from "./DisplayCompletedAvatars";
 
 type Props = {
@@ -18,12 +19,14 @@ type Props = {
   toggleArchiveModal: () => void;
 };
 
-const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedChore, toggleDeleteModal, toggleArchiveModal }: Props) => {
+const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleDeleteModal, toggleArchiveModal }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
   let dateToInterval: Date = new Date();
   const [isOverdue, setIsOverdue] = useState(false);
   const today = new Date();
+  const { addDays } = useUtils();
+  const profile = useAppSelector(selectCurrentProfile);
   const completedForThisChore = completedChores.completedChores.filter((cc) => cc.choreId === chore.id).sort((a, b) => (a.date > b.date ? -1 : 1));
 
   if (completedForThisChore.length > 0) {
@@ -82,7 +85,7 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
             </Badge>
           ))
         )}
-        {editPressed && (
+        {editMode && profile?.role === "owner" && (
           <OwnerButtons>
             <OwnerButton onPress={handleEditPress}>
               <FontAwesome style={{ marginLeft: 10 }} name="cog" size={20} color={theme.colors.primary} />

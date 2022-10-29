@@ -30,6 +30,7 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
   const [sound, setSound] = useState<Audio.Sound>();
   const { choreSchema } = useYup();
   const dispatch = useAppDispatch();
+  const { choreSchema } = useYup();
 
   useEffect(() => {
     if (chore?.soundUrl) {

@@ -3,7 +3,7 @@ import React from "react";
 import { IconButton, Text, useTheme } from "react-native-paper";
 import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
-import { generateHouseholdCode } from "../../utils/utils";
+import { useUtils } from "../../hooks/useUtils";
 
 interface Props {
   householdCode: string;
@@ -12,6 +12,7 @@ interface Props {
 
 const HouseholdCode = ({ householdCode, setHouseholdCode }: Props) => {
   const { colors } = useTheme();
+  const { generateHouseholdCode } = useUtils();
 
   return (
     <CodeContainer background={colors.secondaryContainer}>
