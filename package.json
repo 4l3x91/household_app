@@ -9,7 +9,9 @@
     "web": "expo start --web",
     "format": "prettier ./ --check",
     "prettier": "npm run format -- --write",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "types": "tsc --noEmit",
+    "check": "npm run lint && npm run format && npm run types"
   },
   "dependencies": {
     "@firebase/firestore": "^3.7.1",
