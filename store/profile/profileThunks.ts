@@ -26,7 +26,7 @@ export const getAllProfiles = createAsyncThunk<Profile[], User, { rejectValue: s
     if (!documentsFromQuery.empty) {
       documentsFromQuery.docs.forEach((doc) => userProfiles.push(doc.data() as Profile));
     } else {
-      return thunkAPI.rejectWithValue("cannot find any profiles for this user");
+      return [] as Profile[];
     }
 
     //second call to db, to get all profiles that are related to current user.
