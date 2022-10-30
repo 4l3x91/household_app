@@ -67,6 +67,27 @@ export function useUtils() {
     return attatchments;
   };
 
+  const uploadSound = async (choreId: string, deviceRecordingUri: string) => {
+    const soundRef = ref(storage, `${choreId}/sound.m4a`);
+    const recording = await fetch(deviceRecordingUri);
+    const bytes = await recording.blob();
+    await uploadBytes(soundRef, bytes);
+
+    const downloadUrl = await getDownloadURL(soundRef);
+
+    return downloadUrl;
+  };
+
+  const uploadImage = async (choreId: string, deviceImageUri: string) => {
+    const imageRef = ref(storage, `${choreId}/image.jpg`);
+    const img = await fetch(deviceImageUri);
+    const bytes = await img.blob();
+    await uploadBytes(imageRef, bytes);
+
+    const downloadUrl = await getDownloadURL(imageRef);
+    return downloadUrl;
+  };
+
   const deleteAttachments = (chore: Chore) => {
     deleteImageAttachment(chore);
     deleteSoundAttachment(chore);
@@ -100,14 +121,43 @@ export function useUtils() {
     }
   };
 
+  const checkAttachments = async (chore: Chore, editImage: string, deviceImageUri: string, editSound: string, deviceRecordingUri: string) => {
+    const attachments: { firebaseImgUrl: string; firebaseSoundUrl: string } = { firebaseImgUrl: chore.imgUrl, firebaseSoundUrl: chore.soundUrl };
+
+    if (editImage === "delete") {
+      deleteImageAttachment(chore);
+      attachments.firebaseImgUrl = "";
+    }
+    if (editImage === "add" || editImage === "update") {
+      if (deviceImageUri) {
+        const url = await uploadImage(chore.id, deviceImageUri);
+        attachments.firebaseImgUrl = url;
+      }
+    }
+    if (editSound === "delete") {
+      deleteSoundAttachment(chore);
+      attachments.firebaseSoundUrl = "";
+    }
+    if (editSound === "add" || editSound === "update") {
+      if (deviceRecordingUri) {
+        const url = await uploadSound(chore.id, deviceRecordingUri);
+        attachments.firebaseSoundUrl = url;
+      }
+    }
+    return attachments;
+  };
+
   return {
     generateHouseholdCode,
     convertToRGB,
     addDays,
     pickImage,
     uploadAttatchments,
+    uploadImage,
+    uploadSound,
     deleteAttachments,
     deleteImageAttachment,
     deleteSoundAttachment,
+    checkAttachments,
   };
 }
