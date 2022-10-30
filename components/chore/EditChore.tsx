@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { useUtils } from "../../hooks/useUtils";
+import { useStorage } from "../../hooks/useStorage";
 import { useYup } from "../../hooks/useYup";
 import { Chore } from "../../store/chore/choreModel";
 import { updateChore } from "../../store/chore/choreThunks";
@@ -28,7 +28,7 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
   const [energy, setEnergy] = useState(chore.energy);
   const { colors } = useTheme();
   const { choreSchema } = useYup();
-  const { checkAttachments } = useUtils();
+  const { checkAttachments } = useStorage();
   const dispatch = useAppDispatch();
 
   return (
