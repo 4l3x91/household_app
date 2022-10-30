@@ -1,16 +1,16 @@
-import { FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
-import { Audio } from "expo-av";
-
+import { SimpleLineIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Pressable, View } from "react-native";
-import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
+import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { useUtils } from "../../hooks/useUtils";
 import { useYup } from "../../hooks/useYup";
 import { Chore } from "../../store/chore/choreModel";
 import { updateChore } from "../../store/chore/choreThunks";
 import { useAppDispatch } from "../../store/store";
 import Input from "../common/Input";
+import AttachmentEditor from "./AttachmentEditor";
 import ValuePicker from "./ValuePicker";
 
 interface Props {
@@ -20,41 +20,45 @@ interface Props {
 }
 
 const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
-  const [recording, setRecording] = React.useState<Audio.Recording>();
-  const [deviceImageUri, setDeviceImageUri] = useState<string>();
-  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string | null>(null);
-
+  const [deviceImageUri, setDeviceImageUri] = useState<string>("");
+  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string>("");
+  const [editImage, setEditImage] = useState<"add" | "update" | "delete" | "">("");
+  const [editSound, setEditSound] = useState<"add" | "update" | "delete" | "">("");
   const [interval, setInterval] = useState(chore.interval);
   const [energy, setEnergy] = useState(chore.energy);
   const { colors } = useTheme();
-  const [sound, setSound] = useState<Audio.Sound>();
   const { choreSchema } = useYup();
+  const { checkAttachments } = useUtils();
   const dispatch = useAppDispatch();
-  const { choreSchema } = useYup();
-
-  useEffect(() => {
-    if (chore?.soundUrl) {
-      const loadSound = async () => {
-        const loadedSound = new Audio.Sound();
-        await loadedSound.loadAsync({
-          uri: chore.soundUrl,
-        });
-        setSound(loadedSound);
-      };
-      loadSound();
-    }
-  }, []);
 
   return (
-    <Container overlay={overlay}>
+    <Container>
       <Content>
         <Text style={{ fontSize: 30 }}>Redigera syssla</Text>
         <ModalContent elevation={0}>
           <Formik
             initialValues={{ name: chore.name, description: chore.description, energy: chore.energy, interval: chore.interval }}
             validationSchema={choreSchema}
-            onSubmit={(values) => {
-              dispatch(updateChore({ ...chore, name: values.name, description: values.description, energy: energy, interval: interval }));
+            onSubmit={async (values) => {
+              const attachments: { firebaseImgUrl: string; firebaseSoundUrl: string } = await checkAttachments(
+                chore,
+                editImage,
+                deviceImageUri,
+                editSound,
+                deviceRecordingUri
+              );
+
+              dispatch(
+                updateChore({
+                  ...chore,
+                  name: values.name,
+                  description: values.description,
+                  energy: energy,
+                  interval: interval,
+                  imgUrl: attachments.firebaseImgUrl,
+                  soundUrl: attachments.firebaseSoundUrl,
+                })
+              );
             }}
           >
             {({ handleSubmit, values, handleChange, errors }) => {
@@ -85,16 +89,16 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
                       value={energy}
                     />
                   </ComponentContainer>
-                  <AttachmentsContent>
-                    {chore.imgUrl ? <AttachedImage source={{ uri: chore.imgUrl }} /> : <Button onPress={() => {}}>Lägg till bild</Button>}
-                    {sound ? (
-                      <PlayButton onPress={() => sound.replayAsync()} style={{ backgroundColor: colors.primary }}>
-                        <FontAwesome5 name="volume-up" size={40} color={colors.surface} />
-                      </PlayButton>
-                    ) : (
-                      <Button onPress={() => {}}>Lägg till ljud</Button>
-                    )}
-                  </AttachmentsContent>
+                  <AttachmentEditor
+                    chore={chore}
+                    editImage={editImage}
+                    editSound={editSound}
+                    deviceRecordingUri={deviceRecordingUri}
+                    setEditImage={setEditImage}
+                    setDeviceImageUri={setDeviceImageUri}
+                    setEditSound={setEditSound}
+                    setDeviceRecordingUri={setDeviceRecordingUri}
+                  />
                   <ComponentContainer>
                     <Button
                       onPress={() => {
@@ -127,10 +131,9 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
 
 export default EditChore;
 
-const Container = styled.View<{ overlay: boolean }>`
+const Container = styled.View`
   flex: 1;
   justify-content: center;
-  background-color: ${(props) => (props.overlay ? "rgba(0,0,0,0.5)" : undefined)};
   align-items: center;
 `;
 
@@ -147,28 +150,4 @@ const ModalContent = styled(Surface)`
 `;
 const ComponentContainer = styled.View`
   margin: 8px 0;
-`;
-
-const AttachmentsContent = styled.View`
-  flex-direction: row;
-  margin: 10px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PlayButton = styled.Pressable`
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  border-radius: 10px;
-  width: 70px;
-  height: 70px;
-  margin: 10px;
-`;
-
-const AttachedImage = styled.Image`
-  width: 70px;
-  height: 70px;
-  border-radius: 10px;
-  margin: 10px;
 `;
