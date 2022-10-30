@@ -92,7 +92,7 @@ const AttachmentEditor = ({
       )}
       {sound ? (
         <ImageContainer>
-          <PlayButton onPress={() => sound.replayAsync()} style={{ backgroundColor: editSound === "" ? colors.primary : colors.secondary }}>
+          <SoundButton onPress={() => sound.replayAsync()} style={{ backgroundColor: editSound === "" ? colors.primary : colors.secondary }}>
             <View style={{ alignItems: "center", justifyContent: "center" }}>
               <SoundIcon willBeChanged={editSound !== ""}>
                 <FontAwesome5 name="volume-up" size={40} color={colors.surface} />
@@ -100,7 +100,7 @@ const AttachmentEditor = ({
                 {editSound === "update" && <FontAwesome5 name="edit" size={40} color={colors.primary} style={{ position: "absolute" }} />}
               </SoundIcon>
             </View>
-          </PlayButton>
+          </SoundButton>
           <AttachmentButtons>
             <FontAwesome5 name="trash-alt" size={24} color={colors.primary} onPress={() => setEditSound(editSound !== "delete" ? "delete" : "")} />
             <FontAwesome5
@@ -171,16 +171,17 @@ const AttachmentButtons = styled.View`
 const ImageContainer = styled(Surface)`
   border-radius: 10px;
   padding-bottom: 10px;
+  margin: 0 10px;
 `;
 
-const PlayButton = styled.Pressable`
+const SoundButton = styled.Pressable`
   justify-content: center;
   align-items: center;
   padding: 10px;
   border-radius: 10px;
   width: 70px;
   height: 70px;
-  margin: 10px;
+  margin: 10px 10px 5px 10px;
 `;
 
 const SoundIcon = styled.View<{ willBeChanged: boolean }>``;
