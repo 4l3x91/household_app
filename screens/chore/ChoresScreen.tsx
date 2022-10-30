@@ -1,3 +1,5 @@
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Pressable, RefreshControl, ScrollView, View } from "react-native";
@@ -11,16 +13,23 @@ import DeleteChore from "../../components/chore/DeleteChore";
 import EditChore from "../../components/chore/EditChore";
 import HouseholdName from "../../components/household/HouseholdName";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
+import { RootStackParams } from "../../navigation/RootStackNavigator";
 import { Chore } from "../../store/chore/choreModel";
 import { selectChores } from "../../store/chore/choreSelectors";
 import { getChores } from "../../store/chore/choreThunks";
 import { getCompletedChoresPerHousehold } from "../../store/completedChore/completedChoreThunks";
-import { selectAllHouseholdMembers, selectCurrentProfile } from "../../store/profile/profileSelectors";
+import { getHouseholdById } from "../../store/household/householdThunks";
+import { selectAllHouseholdMembers, selectAllProfiles, selectCurrentProfile } from "../../store/profile/profileSelectors";
+import { getAllProfiles } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import { selectUser } from "../../store/user/userSelectors";
 
-type Props = NativeStackScreenProps<ChoreStackParams>;
+type ChoreScreenNavProps = CompositeScreenProps<
+  BottomTabScreenProps<ChoreStackParams, "ChoreDetailsScreen">,
+  NativeStackScreenProps<RootStackParams, "HouseholdOptions">
+>;
 
-const ChoresScreen = ({ navigation }: Props) => {
+const ChoresScreen = ({ navigation }: ChoreScreenNavProps) => {
   const [refresh, setRefresh] = useState(false);
   const [overlay, setOverlay] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -35,6 +44,9 @@ const ChoresScreen = ({ navigation }: Props) => {
   const profile = useAppSelector(selectCurrentProfile);
   const modalizeRef = useRef<Modalize>(null);
   const allMembers = useAppSelector(selectAllHouseholdMembers);
+  const user = useAppSelector(selectUser);
+  const { error } = useAppSelector((state) => state.profile);
+  const userProfiles = useAppSelector(selectAllProfiles);
 
   function toggleOverlay() {
     setOverlay((prev) => !prev);
@@ -48,6 +60,24 @@ const ChoresScreen = ({ navigation }: Props) => {
     setDeleteModalVisible(false);
     setArchiveModalVisible(false);
   };
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getAllProfiles(user));
+      if (error !== "") {
+        navigation.navigate("HouseholdOptions");
+      }
+    }
+  }, [user, error]);
+
+  useEffect(() => {
+    if (user && userProfiles.length === 1) {
+      console.log("userprofiles === 1");
+      dispatch(getHouseholdById(userProfiles[0].householdId));
+    } else {
+      navigation.navigate("HouseholdOptions");
+    }
+  }, [userProfiles]);
 
   useEffect(() => {
     if (household) {
@@ -77,7 +107,7 @@ const ChoresScreen = ({ navigation }: Props) => {
       >
         <HouseholdName householdName={household.name} role={profile?.role} />
 
-        {chores.chores.length !== 0 && (!profile?.isPaused && profile?.isApproved) ? (
+        {chores.chores.length !== 0 && !profile?.isPaused && profile?.isApproved ? (
           chores.chores.map(
             (chore) =>
               !chore.archived && (
