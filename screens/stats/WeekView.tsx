@@ -5,7 +5,7 @@ import ChorePieChart from "../../components/stats/ChorePieChart";
 import { selectChores } from "../../store/chore/choreSelectors";
 import { useAppSelector } from "../../store/store";
 
-const StatsScreen = () => {
+const WeekView = () => {
   const chores = useAppSelector(selectChores).chores;
   const width = Dimensions.get("screen").width;
 
@@ -36,4 +36,4 @@ const StatsScreen = () => {
   );
 };
 
-export default StatsScreen;
+export default WeekView;
