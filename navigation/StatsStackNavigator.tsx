@@ -1,5 +1,5 @@
 import React from "react";
-import StatsScreen from "../screens/stats/StatsScreen";
+import YearView from "../screens/stats/YearView";
 
 import { createMaterialTopTabNavigator, MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
 import { View } from "react-native";
@@ -16,7 +16,7 @@ export type StatsStackParams = {
 const StatsStackNavigator = () => {
   return (
     <Tab.Navigator tabBar={CustomTabBar}>
-      <Tab.Screen name="År" component={StatsScreen} />
+      <Tab.Screen name="År" component={YearView} />
       <Tab.Screen name="Månad" component={MonthView} />
       <Tab.Screen name="Vecka" component={WeekView} />
     </Tab.Navigator>
