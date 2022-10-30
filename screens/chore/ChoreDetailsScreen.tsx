@@ -5,7 +5,7 @@ import { Audio } from "expo-av";
 import Constants from "expo-constants";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Image, Pressable } from "react-native";
-import { Button, Surface, Text, useTheme } from "react-native-paper";
+import { Button, Divider, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
 import { selectChore } from "../../store/chore/choreSelectors";
@@ -60,23 +60,36 @@ const ChoreDetailsScreen = () => {
           <Ionicons name="arrow-back-circle-outline" size={50} color={colors.primary} />
         </Pressable>
         <Container>
-          <OuterSurface elevation={1} width={width}>
-            <TitleContainer>
-              <Surface elevation={0}>
-                <Text variant="headlineLarge">{chore.name}</Text>
-              </Surface>
-            </TitleContainer>
+          <TitleContainer>
+            <Text variant="bodySmall">Titel</Text>
 
+            <Text variant="headlineLarge">{chore.name}</Text>
+          </TitleContainer>
+
+          <DetailsContainer>
             <DescriptionContainer>
-              <Surface elevation={0}>
-                <Text variant="bodySmall">Beskrivning</Text>
-                <Text variant="headlineSmall">{chore.description}</Text>
-              </Surface>
+              <Text variant="bodySmall">Beskrivning</Text>
+              <Text variant="headlineSmall">{chore.description}</Text>
             </DescriptionContainer>
+            <Divider bold style={{ marginHorizontal: 5 }} />
 
-            <EnergyOuterContainer>
+            <IntervalContainer>
+              <Text variant="bodySmall">Intervall</Text>
+              <IntervalContent>
+                <Text variant="headlineSmall">Återkommer var</Text>
+
+                <Interval elevation={1}>
+                  <Text variant="headlineSmall">{chore.interval}</Text>
+                </Interval>
+
+                <Text variant="headlineSmall">dag</Text>
+              </IntervalContent>
+            </IntervalContainer>
+
+            <Divider bold style={{ marginHorizontal: 5 }} />
+            <EnergyContainer>
               <Text variant="bodySmall">Energinivå</Text>
-              <EnergyInnerContainer elevation={2}>
+              <EnergyContent>
                 {energyLevels.map((level) => (
                   <Text
                     key={level}
@@ -86,35 +99,37 @@ const ChoreDetailsScreen = () => {
                     {level}
                   </Text>
                 ))}
-              </EnergyInnerContainer>
-            </EnergyOuterContainer>
+              </EnergyContent>
+            </EnergyContainer>
+            <Divider bold style={{ marginHorizontal: 5 }} />
 
-            <IntervalOuterContainer>
-              <Text variant="bodySmall">Intervall</Text>
-              <IntervalInnerContainer>
-                <Text variant="headlineSmall">Återkommer var</Text>
+            {(chore.imgUrl || sound) && (
+              <AttachmentsContainer>
+                <Text variant="bodySmall">Bifogade filer</Text>
+                <AttachmentsContent>
+                  {chore.imgUrl && <Image source={{ uri: chore.imgUrl }} style={{ width: 100, height: 100, borderRadius: 10, margin: 10 }} />}
+                  {sound && (
+                    <>
+                      <PlayButton
+                        onPress={() => sound.replayAsync()}
+                        style={{ backgroundColor: colors.primary, justifyContent: "center", alignItems: "center", padding: 10, borderRadius: 10 }}
+                      >
+                        <FontAwesome5 name="volume-up" size={50} color={colors.surface} />
+                      </PlayButton>
+                    </>
+                  )}
+                </AttachmentsContent>
+              </AttachmentsContainer>
+            )}
+          </DetailsContainer>
 
-                <Interval elevation={2}>
-                  <Text variant="headlineSmall">{chore.interval}</Text>
-                </Interval>
-
-                <Text variant="headlineSmall">dag</Text>
-              </IntervalInnerContainer>
-            </IntervalOuterContainer>
-
-            {/* ------ Temp display of picture and playback button ------ */}
-            {chore.imgUrl && <Image source={{ uri: chore.imgUrl }} style={{ width: 200, height: 200 }} />}
-            {sound && <FontAwesome5 name="play" size={24} color={colors.primary} onPress={() => sound.replayAsync()} />}
-            {/* --------------------------------------------------------- */}
-
-            <ButtonContainer>
-              {!(completedChore && today === completedChore.date.getDate() && profile?.id === completedChore?.profileId) && (
-                <Button onPress={handlePress} style={{ marginHorizontal: 20 }} mode="contained">
-                  Markera som klar
-                </Button>
-              )}
-            </ButtonContainer>
-          </OuterSurface>
+          <ButtonContainer>
+            {!(completedChore && today === completedChore.date.getDate() && profile?.id === completedChore?.profileId) && (
+              <Button onPress={handlePress} style={{ marginHorizontal: 20 }} mode="contained">
+                Markera som klar
+              </Button>
+            )}
+          </ButtonContainer>
         </Container>
       </>
     );
@@ -126,51 +141,67 @@ const ChoreDetailsScreen = () => {
 export default ChoreDetailsScreen;
 
 const Container = styled.View`
-  align-items: center;
-  margin: 10px auto;
-`;
-const OuterSurface = styled(Surface)<{ width: number }>`
-  margin: 0 20px;
-  border-radius: 20px;
-  width: ${(props) => props.width}px;
+  flex: 1;
 `;
 
-const TitleContainer = styled.View`
-  margin: 20px 20px 0 20px;
-  align-items: center;
-`;
-const DescriptionContainer = styled.View`
-  margin: 20px;
-`;
-
-const EnergyOuterContainer = styled.View`
-  margin: 20px;
-`;
-const EnergyInnerContainer = styled(Surface)`
-  flex-direction: row;
-  margin-top: 10px;
+const TitleContainer = styled(Surface)`
+  margin: 10px;
+  border-radius: 10px;
   padding: 10px;
-  border-radius: 15px;
-  justify-content: space-between;
-  align-items: center;
 `;
+
+const DetailsContainer = styled(Surface)`
+  margin: 5px 10px;
+  border-radius: 10px;
+`;
+
+const DescriptionContainer = styled.View`
+  padding: 10px;
+`;
+
+const AttachmentsContainer = styled.View`
+  padding: 10px;
+`;
+
+const AttachmentsContent = styled.View`
+  flex-direction: row;
+  margin: 10px;
+  justify-content: center;
+`;
+
+const IntervalContainer = styled.View`
+  padding: 10px;
+`;
+
+const IntervalContent = styled.View`
+  flex-direction: row;
+`;
+
 const Interval = styled(Surface)`
   align-items: center;
   border-radius: 20px;
   padding: 0 10px;
-  margin: 0 5px;
-`;
-const IntervalOuterContainer = styled.View`
-  margin: 20px;
+  margin: 0 8px;
 `;
 
-const IntervalInnerContainer = styled.View`
+const EnergyContainer = styled.View`
+  padding: 10px;
+`;
+
+const EnergyContent = styled.View`
   flex-direction: row;
+  justify-content: space-around;
   align-items: center;
 `;
 
 const ButtonContainer = styled.View`
   justify-content: flex-end;
   margin-bottom: 20px;
-  margin: 100px 20px 20px 20px;
+  margin: 50px 20px 20px 20px;
+`;
+
+const PlayButton = styled.Pressable`
+  width: 100px;
+  height: 100px;
+  margin: 10px;
 `;

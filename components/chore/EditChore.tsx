@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { useYup } from "../../hooks/useYup";
 import { Chore } from "../../store/chore/choreModel";
 import { updateChore } from "../../store/chore/choreThunks";
 import { useAppDispatch } from "../../store/store";
-import { createOrEditChoreSchema } from "../../utils/yupSchemas";
 import Input from "../common/Input";
 import ValuePicker from "./ValuePicker";
 
@@ -22,6 +22,7 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
   const [energy, setEnergy] = useState(chore.energy);
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
+  const { choreSchema } = useYup();
 
   return (
     <Container overlay={overlay}>
@@ -30,7 +31,7 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
         <ModalContent elevation={0}>
           <Formik
             initialValues={{ name: chore.name, description: chore.description, energy: chore.energy, interval: chore.interval }}
-            validationSchema={createOrEditChoreSchema}
+            validationSchema={choreSchema}
             onSubmit={(values) => {
               dispatch(updateChore({ ...chore, name: values.name, description: values.description, energy: energy, interval: interval }));
             }}
