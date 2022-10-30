@@ -8,7 +8,6 @@ import RootStackNavigator from "./RootStackNavigator";
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer theme={getTheme(colorScheme)}>
-      <StatusBar />
       <RootStackNavigator />
     </NavigationContainer>
   );
