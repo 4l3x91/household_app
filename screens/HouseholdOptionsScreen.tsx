@@ -42,7 +42,6 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
   function handleSignOut() {
     signOut(auth).then(() => {
       {
-        navigation.popToTop();
         dispatch(logout());
 
         //denna resettar state men ska bytas ut mot en useEffect där alla state resettas
