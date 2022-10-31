@@ -76,7 +76,11 @@ export const deleteChore = createAsyncThunk<Chore, Chore, { rejectValue: string 
     const choreResult = await getDocs(q);
     const completedChoreResult = await getDocs(q2);
 
-    if (!choreResult.empty) {
+    if (completedChoreResult.empty && !choreResult.empty) {
+      const choreToDeleteId = choreResult.docs[0].id;
+      await deleteDoc(doc(db, "chores", choreToDeleteId));
+      return chore;
+    } else if (!choreResult.empty && !completedChoreResult.empty) {
       const choreToDeleteId = choreResult.docs[0].id;
       const completedChoreToDeletedId = completedChoreResult.docs[0].id;
       await deleteDoc(doc(db, "chores", choreToDeleteId));
