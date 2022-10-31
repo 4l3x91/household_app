@@ -27,7 +27,7 @@ const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleD
   const today = new Date();
   const { addDays } = useUtils();
   const profile = useAppSelector(selectCurrentProfile);
-  const completedForThisChore = completedChores.completedChores.filter((cc) => cc.choreId === chore.id).sort((a, b) => (a.date > b.date ? -1 : 1));
+  const completedForThisChore = completedChores.completedChores.filter((cc) => cc.choreId === chore.id).sort((a, b) => (a.date < b.date ? -1 : 1));
 
   if (completedForThisChore.length > 0) {
     completedForThisChore.find((cc) => {
@@ -62,14 +62,13 @@ const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleD
             Försenad {-timeLeft} {-timeLeft === 0 ? "dag" : "dagar "}
           </Text>
         ) : (
-          <Text variant="bodySmall">Ska göras {timeLeft === 1 ? "idag" : "inom " + timeLeft + " dagar"}</Text>
+          <Text variant="bodySmall">Behöver göras {timeLeft === 0 ? "idag" : timeLeft > 1 ? "inom " + timeLeft + " dagar" : "imorgon"}</Text>
         )}
       </View>
       <InnerContainer>
         {completedForThisChore[0]?.date.toLocaleDateString() === today.toLocaleDateString() ? (
           <DisplayCompletedAvatars choreId={chore.id} />
-        ) : dateToInterval.toLocaleDateString() < today.toLocaleDateString() ||
-          chore.dateCreated.toLocaleDateString() > today.toLocaleDateString() ? (
+        ) : dateToInterval.toLocaleDateString() < today.toLocaleDateString() ? (
           (!isOverdue && setIsOverdue(true),
           (
             <Badge size={30} style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>
