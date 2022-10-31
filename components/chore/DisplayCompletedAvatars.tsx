@@ -12,8 +12,12 @@ type Props = {
 const DisplayCompletedAvatars = ({ choreId }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const allMembers = useAppSelector(selectAllHouseholdMembers);
+  const today = new Date();
   const profilesCompleted = allMembers.filter(
-    (p) => p.id === completedChores.find((cc) => cc.profileId === p.id && cc.choreId === choreId)?.profileId
+    (p) =>
+      p.id ===
+      completedChores.find((cc) => cc.profileId === p.id && cc.choreId === choreId && cc.date.toLocaleDateString() === today.toLocaleDateString())
+        ?.profileId
   );
 
   return (

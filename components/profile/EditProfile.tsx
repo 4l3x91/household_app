@@ -34,7 +34,6 @@ const EditProfile = ({ closeModal }: Props) => {
   return (
     <Container>
       <Content>
-        <Text variant="headlineMedium">Redigera profil</Text>
         <ModalContent elevation={0}>
           <Formik
             initialValues={{ name: profile?.profileName }}
@@ -43,18 +42,17 @@ const EditProfile = ({ closeModal }: Props) => {
           >
             {({ handleChange, handleSubmit, values, errors }) => {
               return (
-                <View style={{ width: "100%" }}>
+                <View>
+                  <Text variant="headlineMedium" style={{textAlign: 'center', marginBottom: 10}}>Redigera profil</Text>
                   <Input label="Namn" value={values.name as string} handleChange={handleChange("name")} />
                   {errors.name && <Text>{errors.name}</Text>}
-                  <AvatarContainer>
                     <AvatarPicker
                       setAvatar={setAvatar}
                       selectedAvatar={selectedAvatar}
                       setSelectedAvatar={setSelectedAvatar}
                       profilesInHousehold={members}
                     />
-                  </AvatarContainer>
-                  <Button onPress={handleSubmit}>Spara</Button>
+                  <Button mode="contained-tonal" style={{borderRadius: 10}} onPress={handleSubmit}>Spara</Button>
                 </View>
               );
             }}
@@ -74,44 +72,17 @@ const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-`;
+  `;
 
 const Content = styled(Surface)`
-  margin: 20px;
-  padding: 20px 0;
-  border-radius: 20px;
+  border-radius: 10px;
+  justify-content: center;
   align-items: center;
-`;
+  margin-bottom: 20px;
+  `;
 
 const ModalContent = styled(Surface)`
-  flex-direction: row;
+  width: 100%;
   padding: 20px;
-  margin-top: 10px;
-`;
-
-const AvatarContainer = styled.View`
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-`;
-
-const AvatarContent = styled.View`
-  align-items: center;
-  justify-content: center;
   flex-direction: row;
-  flex-wrap: wrap;
-  border-radius: 10px;
-  padding: 20px 0;
-`;
-
-const AvatarText = styled.Text`
-  font-size: 35px;
-`;
-
-const AvatarCard = styled.Pressable<{ color: string; selected?: boolean }>`
-  padding: 14px;
-  background-color: ${(props) => props.color};
-  border-radius: 6px;
-  ${({ selected }) => !selected && "opacity: .5"};
-  margin: 4px;
 `;

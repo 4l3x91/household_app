@@ -7,7 +7,7 @@ interface Props {
   handleChange: (string: string) => void;
   secureTextEntry?: boolean;
   height?: number;
-  width?: number;
+  width?: number | string;
   marginHorizontal?: number;
   marginVertical?: number;
   multiline?: boolean;

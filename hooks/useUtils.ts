@@ -1,9 +1,12 @@
 import * as ImagePicker from "expo-image-picker";
-import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { Chore } from "../store/chore/choreModel";
+import { resetChoreState } from "../store/chore/choreSlice";
+import { resetCompletedChores } from "../store/completedChore/completedChoreSlice";
+import { resetHousehold } from "../store/household/householdSlice";
+import { resetProfileState } from "../store/profile/profileSlice";
+import { useAppDispatch } from "../store/store";
 
 export function useUtils() {
-  const storage = getStorage();
+  const dispatch = useAppDispatch();
 
   const generateHouseholdCode = () => {
     return Math.random().toString(36).slice(2, 8).toUpperCase();
@@ -45,59 +48,11 @@ export function useUtils() {
     }
   };
 
-  const uploadAttatchments = async (choreId: string, deviceImageUri: string, deviceRecordingUri: string) => {
-    const attatchments = { firebaseImgUrl: "", firebaseSoundUrl: "" };
-
-    if (deviceImageUri) {
-      const imageRef = ref(storage, `${choreId}/image.jpg`);
-      const img = await fetch(deviceImageUri);
-      const bytes = await img.blob();
-      await uploadBytes(imageRef, bytes);
-
-      attatchments.firebaseImgUrl = await getDownloadURL(imageRef);
-    }
-    if (deviceRecordingUri) {
-      const soundRef = ref(storage, `${choreId}/sound.m4a`);
-      const recording = await fetch(deviceRecordingUri);
-      const bytes = await recording.blob();
-      await uploadBytes(soundRef, bytes);
-
-      attatchments.firebaseSoundUrl = await getDownloadURL(soundRef);
-    }
-    return attatchments;
-  };
-
-  const deleteAttachments = (chore: Chore) => {
-    deleteImageAttachment(chore);
-    deleteSoundAttachment(chore);
-  };
-
-  const deleteImageAttachment = (chore: Chore) => {
-    if (chore.imgUrl) {
-      const imageRef = ref(storage, `${chore.id}/image.jpg`);
-
-      deleteObject(imageRef)
-        .then(() => {
-          console.log("Attachments deleted successfully");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
-
-  const deleteSoundAttachment = (chore: Chore) => {
-    if (chore.soundUrl) {
-      const imageRef = ref(storage, `${chore.id}/sound.m4a`);
-
-      deleteObject(imageRef)
-        .then(() => {
-          console.log("Attachments deleted successfully");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+  const resetStore = () => {
+    dispatch(resetProfileState());
+    dispatch(resetHousehold());
+    dispatch(resetChoreState());
+    dispatch(resetCompletedChores());
   };
 
   return {
@@ -105,9 +60,6 @@ export function useUtils() {
     convertToRGB,
     addDays,
     pickImage,
-    uploadAttatchments,
-    deleteAttachments,
-    deleteImageAttachment,
-    deleteSoundAttachment,
+    resetStore,
   };
 }

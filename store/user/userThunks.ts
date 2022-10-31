@@ -22,6 +22,8 @@ export const signInUser = createAsyncThunk<UserCredential, { email: string; pass
   "user/signInUser",
   async ({ email, password }, thunkAPI) => {
     try {
+      //TODO: return correct USER type, not userCredentials.
+
       return await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       if (error instanceof FirebaseError) {

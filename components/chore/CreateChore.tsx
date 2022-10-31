@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { Modal, View } from "react-native";
 import { Button, Divider, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
+import { useStorage } from "../../hooks/useStorage";
 import { useUtils } from "../../hooks/useUtils";
 import { useYup } from "../../hooks/useYup";
 import { Chore } from "../../store/chore/choreModel";
@@ -33,7 +34,8 @@ const CreateChore = ({ closeModal }: Props) => {
   const choreState = useAppSelector((state) => state.chores);
   const choreId = uuidv4();
   const { choreSchema } = useYup();
-  const { uploadAttatchments, pickImage } = useUtils();
+  const { pickImage } = useUtils();
+  const { uploadAttatchments } = useStorage();
 
   const setDeviceImage = async () => {
     const img = await pickImage();
