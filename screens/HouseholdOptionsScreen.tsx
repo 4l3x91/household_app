@@ -92,17 +92,6 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
         <Button dark mode={"outlined"} style={{ marginTop: 10, width: 300 }} onPress={openModalize}>
           Skapa hushåll
         </Button>
-
-        <Button
-          dark
-          mode={"outlined"}
-          style={{ marginTop: 10, width: 300 }}
-          onPress={() => {
-            navigation.navigate("TabStack");
-          }}
-        >
-          tillfällig choreScreen
-        </Button>
       </Container>
       <Button mode={"contained"} style={{ width: 200, alignSelf: "center", marginBottom: 50 }} onPress={handleSignOut}>
         Logga ut

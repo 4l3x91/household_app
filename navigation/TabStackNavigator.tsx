@@ -8,7 +8,7 @@ import { selectHouseholdName } from "../store/household/householdSelector";
 import { selectMemoizedCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
-import MenuStackNavigator, { MenuStackParams } from "./MenuStackNavigator";
+import { MenuStackParams } from "./MenuStackNavigator";
 import { RootStackParams } from "./RootStackNavigator";
 import StatsStackNavigator, { StatsStackParams } from "./StatsStackNavigator";
 import UserStackNavigator, { UserStackParams } from "./UserStackNavigator";
@@ -57,15 +57,6 @@ const TabStackNavigator = () => {
           tabBarIcon: ({ color, size }) => <MaterialIcons name="person" size={size} color={color} />,
           tabBarBadge: currentProfile?.role === "owner" ? (nrOfPendingProfiles > 0 ? nrOfPendingProfiles : undefined) : undefined,
           tabBarLabel: "Profil",
-        }}
-      />
-      <BottomStack.Screen
-        name="Menu"
-        component={MenuStackNavigator}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="cog" size={size} color={color} />,
-          tabBarLabel: "Inställningar",
         }}
       />
     </BottomStack.Navigator>
