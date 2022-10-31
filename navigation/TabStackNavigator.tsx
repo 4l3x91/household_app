@@ -6,7 +6,7 @@ import React from "react";
 import { selectHouseholdName } from "../store/household/householdSelector";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
-import MenuStackNavigator, { MenuStackParams } from "./MenuStackNavigator";
+import { MenuStackParams } from "./MenuStackNavigator";
 import { RootStackParams } from "./RootStackNavigator";
 import StatsStackNavigator, { StatsStackParams } from "./StatsStackNavigator";
 import UserStackNavigator, { UserStackParams } from "./UserStackNavigator";
@@ -48,11 +48,6 @@ const TabStackNavigator = () => {
         name="UserProfile"
         component={UserStackNavigator}
         options={{ headerShown: false, tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} /> }}
-      />
-      <BottomStack.Screen
-        name="Menu"
-        component={MenuStackNavigator}
-        options={{ headerShown: false, tabBarIcon: ({ color, size }) => <FontAwesome name="cog" size={size} color={color} /> }}
       />
     </BottomStack.Navigator>
   );
