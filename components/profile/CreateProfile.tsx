@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
-import { useYup } from "../../hooks/useYup";
+import { useYup } from "../../config/hooks/useYup";
 import { selectHouseholdId } from "../../store/household/householdSelector";
 import { Avatar, Profile } from "../../store/profile/profileModel";
 import { selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";

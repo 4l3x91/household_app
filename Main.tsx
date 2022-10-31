@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { ColorSchemeName } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
-import useColorScheme from "./hooks/useColorScheme";
+import useColorScheme from "./config/hooks/useColorScheme";
 
 import Navigation from "./navigation";
 import { useAppSelector } from "./store/store";

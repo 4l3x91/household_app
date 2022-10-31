@@ -5,7 +5,7 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import { auth } from "../config/firebase";
-import { useUtils } from "../hooks/useUtils";
+import { useUtils } from "../config/hooks/useUtils";
 import { MenuStackParams } from "../navigation/MenuStackNavigator";
 
 import { useAppDispatch } from "../store/store";

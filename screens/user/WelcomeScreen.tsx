@@ -4,13 +4,11 @@ import { Image } from "react-native";
 import { Button, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { RootStackParams } from "../../navigation/RootStackNavigator";
-import { getTheme } from "../../theme";
 
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const WelcomeScreen = ({ navigation }: Props) => {
   const theme = useTheme();
-  console.log(getTheme(theme).dark);
 
   return (
     <>

@@ -118,7 +118,8 @@ const ProfileScreen = ({ navigation }: Props) => {
         swipeDirection={"down"}
         isVisible={modalVisible}
         statusBarTranslucent
-        onBackButtonPress={() => setModalVisible(false)}>
+        onBackButtonPress={() => setModalVisible(false)}
+      >
         <EditProfile closeModal={closeModal} />
       </Modal>
 

@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { Modalize } from "react-native-modalize";
-import { Button, Divider, Portal, Text, Theme, useTheme } from "react-native-paper";
+import { Button, Divider, Portal, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import ArchiveChore from "../../components/chore/ArchiveChore";
 import ChoreItem from "../../components/chore/ChoreItem";
@@ -20,9 +20,10 @@ import { getChores } from "../../store/chore/choreThunks";
 import { getCompletedChoresPerHousehold } from "../../store/completedChore/completedChoreThunks";
 import { selectAllHouseholdMembers, selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import { Theme } from "../../theme";
 
 type ChoreScreenNavProps = CompositeScreenProps<
-  BottomTabScreenProps<ChoreStackParams, "ChoreDetailsScreen">,
+  BottomTabScreenProps<ChoreStackParams, keyof ChoreStackParams>,
   NativeStackScreenProps<RootStackParams, "HouseholdOptions">
 >;
 

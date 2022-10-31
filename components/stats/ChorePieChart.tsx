@@ -18,7 +18,7 @@ const ChorePieChart = ({ choosenChore, size, showAvatars }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const householdChores = useAppSelector(selectChores).chores;
 
-  const data: Data[] = householdMembers
+  const init: Data[] = householdMembers
     .map((member) => {
       const key = member.id;
       const completedChoresByMember: completedChoreModel[] = completedChores.filter((chore) => chore.profileId === member.id);
@@ -38,6 +38,8 @@ const ChorePieChart = ({ choosenChore, size, showAvatars }: Props) => {
         : { key: -1 };
     })
     .filter((x) => x.key !== -1);
+
+  const data = init.filter((x) => x.value !== 0);
 
   return (
     <View>

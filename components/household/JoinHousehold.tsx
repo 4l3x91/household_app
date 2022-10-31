@@ -6,7 +6,7 @@ import { Keyboard, Pressable, View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { db } from "../../config/firebase";
-import { useYup } from "../../hooks/useYup";
+import { useYup } from "../../config/hooks/useYup";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { setError } from "../../store/household/householdSlice";
 import { getHouseholdByCode } from "../../store/household/householdThunks";
@@ -121,7 +121,9 @@ const JoinHousehold = ({ closeModal }: Props) => {
                         <InfoBox style={{ borderColor: colors.primary }}>
                           <View style={{ flexDirection: "row" }}>
                             <Text variant="bodySmall">Välkommen till </Text>
-                            <Text variant="bodySmall" style={{ fontWeight: "bold" }}> {household.household.name}
+                            <Text variant="bodySmall" style={{ fontWeight: "bold" }}>
+                              {" "}
+                              {household.household.name}
                             </Text>
                           </View>
                           <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
@@ -191,11 +193,11 @@ const Container = styled.View`
   justify-content: center;
   background-color: transparent;
   align-items: center;
-  `;
+`;
 
 const FlexContainer = styled(Container)`
   flex: 1;
-  `;
+`;
 
 const Content = styled(Surface)`
   margin: 10px;
@@ -203,7 +205,7 @@ const Content = styled(Surface)`
   padding: 0px 20px;
   border-radius: 20px;
   align-items: center;
-  `;
+`;
 
 const ModalContent = styled(Surface)`
   padding: 0px 10px 0px 10px;

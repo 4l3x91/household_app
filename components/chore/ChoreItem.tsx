@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { Badge, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { useUtils } from "../../hooks/useUtils";
+import { useUtils } from "../../config/hooks/useUtils";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";

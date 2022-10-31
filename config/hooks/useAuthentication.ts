@@ -1,9 +1,9 @@
 import { onAuthStateChanged } from "firebase/auth/react-native";
 import { useEffect } from "react";
-import { auth } from "../config/firebase";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { selectUser } from "../store/user/userSelectors";
-import { login, logout } from "../store/user/userSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { selectUser } from "../../store/user/userSelectors";
+import { login, logout } from "../../store/user/userSlice";
+import { auth } from "../firebase";
 
 export function useAuthentication() {
   const user = useAppSelector(selectUser);

@@ -2,7 +2,7 @@ import { Formik } from "formik";
 import React, { useState } from "react";
 import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
-import { useYup } from "../../hooks/useYup";
+import { useYup } from "../../config/hooks/useYup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { postUser } from "../../store/user/userThunks";
 import BottomButtons from "../common/BottomButtons";
@@ -10,10 +10,10 @@ import ErrorTranslator from "../common/ErrorTranslator";
 import Input from "../common/Input";
 
 interface Props {
-  close: () => void;
+  close?: () => void;
 }
 
-const CreateUser = ({ close }: Props) => {
+const CreateUser = (props: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.userState);
@@ -69,7 +69,6 @@ const CreateUser = ({ close }: Props) => {
               <BottomButtons
                 pending={userState.pending}
                 handleSubmit={handleSubmit}
-                close={close}
                 leftTitle="Registrera"
                 rightTitle="Stäng"
                 leftIcon="account-plus"

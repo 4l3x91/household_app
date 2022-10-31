@@ -1,7 +1,7 @@
 import React from "react";
 import { Text as PaperText } from "react-native-paper";
 import { Text } from "react-native-svg";
-import { PieChart, PieChartData } from "react-native-svg-charts";
+import { AccessorFunctionProps, PieChart, PieChartData } from "react-native-svg-charts";
 
 type Props = {
   data: Data[];
@@ -10,8 +10,9 @@ type Props = {
 };
 
 export interface Data extends PieChartData {
-  avatar: string;
+  avatar?: string;
 }
+
 interface SliceProps {
   pieCentroid: number[];
   data: Data;
@@ -50,12 +51,12 @@ const Labels = ({ slices }: LabelProps) => {
 
 const PieChartComp = ({ data, size, showAvatars }: Props) => {
   if (data.length === 0) {
-    return <PaperText>There is no data</PaperText>;
+    return <PaperText>No data</PaperText>;
   } else {
     return (
       <PieChart
         style={{ height: size ? size : 270 }}
-        valueAccessor={(data) => data.index}
+        valueAccessor={({ item }: AccessorFunctionProps<Data>) => item.value || 0}
         data={data}
         innerRadius={0}
         outerRadius={"90%"}

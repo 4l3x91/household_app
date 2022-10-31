@@ -8,7 +8,6 @@ import { RootStackParams } from "../../navigation/RootStackNavigator";
 interface Props {
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
   pending: boolean;
-  onPress: () => void;
   leftTitle: string;
   rightTitle: string;
   leftIcon: string;
@@ -17,7 +16,7 @@ interface Props {
 
 type BottomButtonsNavProps = NativeStackNavigationProp<RootStackParams, "Welcome">;
 
-const BottomButtons = ({ handleSubmit, pending, onPress, leftTitle, rightTitle, leftIcon, rightIcon }: Props) => {
+const BottomButtons = ({ handleSubmit, pending, leftTitle, rightTitle, leftIcon, rightIcon }: Props) => {
   const navigation = useNavigation<BottomButtonsNavProps>();
 
   return (

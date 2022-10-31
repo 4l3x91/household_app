@@ -3,7 +3,7 @@ import React from "react";
 import { Pressable } from "react-native";
 import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { useStorage } from "../../hooks/useStorage";
+import { useStorage } from "../../config/hooks/useStorage";
 import { Chore } from "../../store/chore/choreModel";
 import { deleteChore, updateChore } from "../../store/chore/choreThunks";
 import { useAppDispatch } from "../../store/store";

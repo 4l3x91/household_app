@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Pressable, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { useYup } from "../../hooks/useYup";
+import { useYup } from "../../config/hooks/useYup";
 import { updateHouseholdName } from "../../store/household/householdThunks";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../../store/store";

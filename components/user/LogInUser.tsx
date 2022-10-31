@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import React, { useState } from "react";
 import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
-import { useYup } from "../../hooks/useYup";
+import { useYup } from "../../config/hooks/useYup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { signInUser } from "../../store/user/userThunks";
 import BottomButtons from "../common/BottomButtons";
@@ -71,7 +71,6 @@ const LoginUser = ({ close, register }: Props) => {
                 <BottomButtons
                   pending={pending}
                   handleSubmit={handleSubmit}
-                  close={close}
                   leftTitle="Logga in"
                   rightTitle="Stäng"
                   leftIcon="login"
