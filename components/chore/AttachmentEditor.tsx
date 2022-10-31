@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, View } from "react-native";
 import { Button, Surface, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { useUtils } from "../../config/hooks/useUtils";
+import { useUtils } from "../../hooks/useUtils";
 import { Chore } from "../../store/chore/choreModel";
 import AppModal from "../common/AppModal";
 import SoundRecorder from "./SoundRecorder";

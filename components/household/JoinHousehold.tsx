@@ -6,7 +6,7 @@ import { Keyboard, Pressable, View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { db } from "../../config/firebase";
-import { useYup } from "../../config/hooks/useYup";
+import { useYup } from "../../hooks/useYup";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { setError } from "../../store/household/householdSlice";
 import { getHouseholdByCode } from "../../store/household/householdThunks";

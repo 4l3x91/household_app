@@ -9,7 +9,7 @@ import CreateHousehold from "../components/household/CreateHousehold";
 import JoinHousehold from "../components/household/JoinHousehold";
 import MyHouseholds from "../components/household/MyHouseholds";
 import { auth } from "../config/firebase";
-import { useUtils } from "../config/hooks/useUtils";
+import { useUtils } from "../hooks/useUtils";
 import { RootStackParams } from "../navigation/RootStackNavigator";
 import { getHouseholdById } from "../store/household/householdThunks";
 import { selectMemoizedUserProfiles } from "../store/profile/profileSelectors";

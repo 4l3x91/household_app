@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import { View } from "react-native";
 import CreateUser from "../../components/user/CreateUser";
-import { useAuthentication } from "../../config/hooks/useAuthentication";
+import { useAuthentication } from "../../hooks/useAuthentication";
 import { RootStackParams } from "../../navigation/RootStackNavigator";
 import { useAppDispatch } from "../../store/store";
 import { clearErrors } from "../../store/user/userSlice";

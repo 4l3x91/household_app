@@ -3,7 +3,7 @@ import React from "react";
 import { IconButton, Text, useTheme } from "react-native-paper";
 import Tooltip from "rn-tooltip";
 import styled from "styled-components/native";
-import { useUtils } from "../../config/hooks/useUtils";
+import { useUtils } from "../../hooks/useUtils";
 
 interface Props {
   householdCode: string;

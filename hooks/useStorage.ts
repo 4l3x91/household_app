@@ -1,5 +1,5 @@
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { Chore } from "../../store/chore/choreModel";
+import { Chore } from "../store/chore/choreModel";
 
 export function useStorage() {
   const storage = getStorage();

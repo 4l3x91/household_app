@@ -4,7 +4,7 @@ import { default as React, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { useYup } from "../../config/hooks/useYup";
+import { useYup } from "../../hooks/useYup";
 import { Avatar } from "../../store/profile/profileModel";
 import { selectMemoizedCurrentProfile, selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";
 import { updateProfile } from "../../store/profile/profileThunks";

@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import React, { useState } from "react";
 import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
-import { useYup } from "../../config/hooks/useYup";
+import { useYup } from "../../hooks/useYup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { signInUser } from "../../store/user/userThunks";
 import BottomButtons from "../common/BottomButtons";
