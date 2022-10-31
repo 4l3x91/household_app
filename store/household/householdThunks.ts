@@ -72,16 +72,15 @@ export const getHouseholdByCode = createAsyncThunk<HouseholdModel, { code: strin
   "household/getHouseholdByCode",
   async ({ code, user }, thunkAPI) => {
     try {
+      const capitalizedCode = code.toUpperCase();
       const profilesRef = collection(db, "profiles");
       const householdRef = collection(db, "households");
-      const q = query(householdRef, where("code", "==", code));
+      const q = query(householdRef, where("code", "==", capitalizedCode));
       const q2 = query(profilesRef, where("userId", "==", user.id));
       const queryResult = await getDocs(q);
 
       if (!queryResult.empty) {
         const household = queryResult.docs[0].data() as HouseholdModel;
-
-        console.log(household.name);
 
         const queryResult2 = await getDocs(q2);
         queryResult2.forEach((doc) => {

@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import { Keyboard, Pressable, View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
 import { db } from "../../config/firebase";
+import { useYup } from "../../hooks/useYup";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { setError } from "../../store/household/householdSlice";
 import { getHouseholdByCode } from "../../store/household/householdThunks";
@@ -15,13 +15,6 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
 import ErrorTranslator from "../common/ErrorTranslator";
 import CreateProfile from "../profile/CreateProfile";
-
-const householdCodeSchema = Yup.object().shape({
-  householdCode: Yup.string()
-    .required("En hushållskod måste innehålla sex stycken tecken")
-    .min(6, "En hushållskod måste innehålla sex tecken")
-    .matches(/^\S*$/, "En hushållskod kan inte innehålla mellanslag"),
-});
 
 interface Props {
   closeModal: () => void;
@@ -34,6 +27,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
   const user = useAppSelector(selectUser);
   const [profilesInHousehold, setProfilesInHousehold] = useState<Profile[]>([]);
   const pinCodeLength = 6;
+  const { householdCodeSchema } = useYup();
   const { colors } = useTheme();
 
   async function getUnavalibleAvatars() {
@@ -109,7 +103,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
                           value={text}
                           onChangeText={(text: string) => {
                             values.householdCode = text.toUpperCase();
-                            setText(text.toUpperCase());
+                            setText(text);
 
                             if (text.length === 6) {
                               Keyboard.dismiss();

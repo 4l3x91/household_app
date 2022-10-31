@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import React, { useState } from "react";
 import { Text, TextInput } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
+import { useYup } from "../../hooks/useYup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { signInUser } from "../../store/user/userThunks";
 import BottomButtons from "../common/BottomButtons";
@@ -15,14 +15,10 @@ interface Props {
   register: () => void;
 }
 
-const validation = Yup.object().shape({
-  email: Yup.string().email("Ange en giltlig Email").required("Email kan inte vara tomt"),
-  password: Yup.string().required("Lösenord kan inte vara tomt"),
-});
-
 const LoginUser = ({ close, register }: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const dispatch = useAppDispatch();
+  const { loginSchema } = useYup();
   const { error } = useAppSelector((state) => state.userState);
   const userPending = useAppSelector((state) => state.userState).pending;
   const profilePending = useAppSelector((state) => state.profile).pending;
@@ -35,7 +31,7 @@ const LoginUser = ({ close, register }: Props) => {
       <Main>
         <Formik
           initialValues={{ email: "", password: "" }}
-          validationSchema={validation}
+          validationSchema={loginSchema}
           onSubmit={(values) => {
             dispatch(
               signInUser({

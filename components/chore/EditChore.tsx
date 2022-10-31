@@ -2,13 +2,15 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
-import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
+import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { useStorage } from "../../hooks/useStorage";
+import { useYup } from "../../hooks/useYup";
 import { Chore } from "../../store/chore/choreModel";
 import { updateChore } from "../../store/chore/choreThunks";
 import { useAppDispatch } from "../../store/store";
-import { createOrEditChoreSchema } from "../../utils/yupSchemas";
 import Input from "../common/Input";
+import AttachmentEditor from "./AttachmentEditor";
 import ValuePicker from "./ValuePicker";
 
 interface Props {
@@ -18,21 +20,45 @@ interface Props {
 }
 
 const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
+  const [deviceImageUri, setDeviceImageUri] = useState<string>("");
+  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string>("");
+  const [editImage, setEditImage] = useState<"add" | "update" | "delete" | "">("");
+  const [editSound, setEditSound] = useState<"add" | "update" | "delete" | "">("");
   const [interval, setInterval] = useState(chore.interval);
   const [energy, setEnergy] = useState(chore.energy);
   const { colors } = useTheme();
+  const { choreSchema } = useYup();
+  const { checkAttachments } = useStorage();
   const dispatch = useAppDispatch();
 
   return (
-    <Container overlay={overlay}>
+    <Container>
       <Content>
         <Text style={{ fontSize: 30 }}>Redigera syssla</Text>
         <ModalContent elevation={0}>
           <Formik
             initialValues={{ name: chore.name, description: chore.description, energy: chore.energy, interval: chore.interval }}
-            validationSchema={createOrEditChoreSchema}
-            onSubmit={(values) => {
-              dispatch(updateChore({ ...chore, name: values.name, description: values.description, energy: energy, interval: interval }));
+            validationSchema={choreSchema}
+            onSubmit={async (values) => {
+              const attachments: { firebaseImgUrl: string; firebaseSoundUrl: string } = await checkAttachments(
+                chore,
+                editImage,
+                deviceImageUri,
+                editSound,
+                deviceRecordingUri
+              );
+
+              dispatch(
+                updateChore({
+                  ...chore,
+                  name: values.name,
+                  description: values.description,
+                  energy: energy,
+                  interval: interval,
+                  imgUrl: attachments.firebaseImgUrl,
+                  soundUrl: attachments.firebaseSoundUrl,
+                })
+              );
             }}
           >
             {({ handleSubmit, values, handleChange, errors }) => {
@@ -63,6 +89,16 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
                       value={energy}
                     />
                   </ComponentContainer>
+                  <AttachmentEditor
+                    chore={chore}
+                    editImage={editImage}
+                    editSound={editSound}
+                    deviceRecordingUri={deviceRecordingUri}
+                    setEditImage={setEditImage}
+                    setDeviceImageUri={setDeviceImageUri}
+                    setEditSound={setEditSound}
+                    setDeviceRecordingUri={setDeviceRecordingUri}
+                  />
                   <ComponentContainer>
                     <Button
                       onPress={() => {
@@ -95,10 +131,9 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
 
 export default EditChore;
 
-const Container = styled.View<{ overlay: boolean }>`
+const Container = styled.View`
   flex: 1;
   justify-content: center;
-  background-color: ${(props) => (props.overlay ? "rgba(0,0,0,0.5)" : undefined)};
   align-items: center;
 `;
 

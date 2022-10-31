@@ -5,14 +5,14 @@ import { Pressable, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
+import { useUtils } from "../../hooks/useUtils";
+import { useYup } from "../../hooks/useYup";
 import { HouseholdModel } from "../../store/household/householdModel";
 import { postHousehold } from "../../store/household/householdThunks";
 import { Avatar, Profile } from "../../store/profile/profileModel";
 import { postProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
-import { generateHouseholdCode } from "../../utils/utils";
-import { createHouseholdSchema } from "../../utils/yupSchemas";
 import Input from "../common/Input";
 import AvatarPicker from "../profile/AvatarPicker";
 import HouseholdCode from "./HouseholdCode";
@@ -23,11 +23,13 @@ interface Props {
 
 const CreateHousehold = ({ closeModal }: Props) => {
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
+  const { generateHouseholdCode } = useUtils();
   const [householdCode, setHouseholdCode] = useState(generateHouseholdCode());
   const [selectedAvatar, setSelectedAvatar] = useState(-1);
   const householdPending = useAppSelector((state) => state.household).pending;
   const profilePending = useAppSelector((state) => state.profile).pending;
   const user = useAppSelector(selectUser);
+  const { newHouseholdSchema } = useYup();
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
 
@@ -60,7 +62,7 @@ const CreateHousehold = ({ closeModal }: Props) => {
   return (
     <FlexContainer>
       <Formik
-        validationSchema={createHouseholdSchema}
+        validationSchema={newHouseholdSchema}
         initialValues={{
           householdName: "",
           profileName: "",
@@ -79,7 +81,6 @@ const CreateHousehold = ({ closeModal }: Props) => {
               <ModalContent elevation={0}>
                 <View>
                   <HeaderText variant="headlineMedium">Skapa hushåll</HeaderText>
-
                   <InputContainer>
                     <Input
                       width="100%"

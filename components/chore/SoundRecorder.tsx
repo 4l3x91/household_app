@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 
 interface Props {
-  setDeviceRecordingUri: React.Dispatch<React.SetStateAction<string | null>>;
+  setDeviceRecordingUri: React.Dispatch<React.SetStateAction<string>>;
   recording: Audio.Recording | undefined;
   setRecording: React.Dispatch<React.SetStateAction<Audio.Recording | undefined>>;
   closeModal: () => void;
@@ -41,7 +41,7 @@ export default function SoundRecorder({ setDeviceRecordingUri, recording, setRec
       }
 
       const uri = recording.getURI();
-      setDeviceRecordingUri(uri);
+      setDeviceRecordingUri(uri || "");
     }
   }
 

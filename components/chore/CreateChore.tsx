@@ -1,17 +1,17 @@
 import { uuidv4 } from "@firebase/util";
 import { Audio } from "expo-av";
-import * as ImagePicker from "expo-image-picker";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { Modal, View } from "react-native";
 import { Button, Divider, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
+import { useStorage } from "../../hooks/useStorage";
+import { useUtils } from "../../hooks/useUtils";
+import { useYup } from "../../hooks/useYup";
 import { Chore } from "../../store/chore/choreModel";
 import { postChore } from "../../store/chore/choreThunks";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { newChoreValidation } from "../../utils/yupSchemas";
 import AppModal from "../common/AppModal";
 import Input from "../common/Input";
 import SoundRecorder from "./SoundRecorder";
@@ -22,9 +22,9 @@ interface Props {
 }
 
 const CreateChore = ({ closeModal }: Props) => {
-  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string | null>(null);
+  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string>("");
   const [recording, setRecording] = React.useState<Audio.Recording>();
-  const [deviceImageUri, setDeviceImageUri] = useState("");
+  const [deviceImageUri, setDeviceImageUri] = useState<string>("");
   const [interval, setInterval] = useState(1);
   const [energy, setEnergy] = useState(2);
   const [overlay, setOverlay] = useState(false);
@@ -32,45 +32,18 @@ const CreateChore = ({ closeModal }: Props) => {
   const { household } = useAppSelector(selectHousehold);
   const dispatch = useAppDispatch();
   const choreState = useAppSelector((state) => state.chores);
-  const storage = getStorage();
   const choreId = uuidv4();
+  const { choreSchema } = useYup();
+  const { pickImage } = useUtils();
+  const { uploadAttatchments } = useStorage();
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.cancelled) {
-      setDeviceImageUri(result.uri);
-    }
-  };
-
-  const uploadAttatchments = async () => {
-    let attatchments = { firebaseImgUrl: "", firebaseSoundUrl: "" };
-
-    if (deviceImageUri) {
-      const imageRef = ref(storage, `${choreId}/image.jpg`);
-      const img = await fetch(deviceImageUri);
-      const bytes = await img.blob();
-      await uploadBytes(imageRef, bytes);
-
-      attatchments.firebaseImgUrl = await getDownloadURL(imageRef);
-    }
-    if (deviceRecordingUri) {
-      const soundRef = ref(storage, `${choreId}/sound.m4a`);
-      const recording = await fetch(deviceRecordingUri);
-      const bytes = await recording.blob();
-      await uploadBytes(soundRef, bytes);
-
-      attatchments.firebaseSoundUrl = await getDownloadURL(soundRef);
-    }
-    return attatchments;
+  const setDeviceImage = async () => {
+    const img = await pickImage();
+    setDeviceImageUri(img || "");
   };
 
   const handleSubmit = async (values: { name: string; description: string }) => {
-    const attatchments = await uploadAttatchments();
+    const attatchments = await uploadAttatchments(choreId, deviceImageUri, deviceRecordingUri);
 
     const newChore: Chore = {
       id: choreId,
@@ -83,7 +56,6 @@ const CreateChore = ({ closeModal }: Props) => {
       dateCreated: new Date(),
       imgUrl: attatchments.firebaseImgUrl,
       soundUrl: attatchments.firebaseSoundUrl,
-
     };
 
     dispatch(postChore(newChore));
@@ -92,7 +64,7 @@ const CreateChore = ({ closeModal }: Props) => {
 
   return (
     <View>
-      <Formik initialValues={{ name: "", description: "" }} validationSchema={newChoreValidation} onSubmit={(values) => handleSubmit(values)}>
+      <Formik initialValues={{ name: "", description: "" }} validationSchema={choreSchema} onSubmit={(values) => handleSubmit(values)}>
         {({ handleChange, handleSubmit, values, errors }) => {
           return (
             <View>
@@ -127,7 +99,7 @@ const CreateChore = ({ closeModal }: Props) => {
                   />
                 </Container>
                 <AttatchmentContainer>
-                  <Button onPress={pickImage} icon={deviceImageUri === "" ? "image" : "check-bold"}>
+                  <Button onPress={setDeviceImage} icon={deviceImageUri ? "check-bold" : "image"}>
                     Lägg till bild
                   </Button>
                   <Button onPress={() => setSoundModalOpen(true)} icon={deviceRecordingUri ? "check-bold" : "volume-high"}>
@@ -158,7 +130,7 @@ const CreateChore = ({ closeModal }: Props) => {
           title="Lägg till ljud"
           closeModal={() => {
             setSoundModalOpen(false);
-            setDeviceRecordingUri(null);
+            setDeviceRecordingUri("");
           }}
           toggleOverlay={() => setOverlay((prev) => !prev)}
         >

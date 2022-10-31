@@ -4,18 +4,11 @@ import React, { useState } from "react";
 import { Pressable, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
+import { useYup } from "../../hooks/useYup";
 import { updateHouseholdName } from "../../store/household/householdThunks";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import Input from "../common/Input";
-
-const validation = Yup.object().shape({
-  householdName: Yup.string()
-    .min(2, "Titel måste vara minst två tecken")
-    .max(20, "Titel kan inte vara längre än 20 tecken")
-    .required("Titel kan inte vara tom"),
-});
 
 interface Props {
   setShowTooltip: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,6 +21,7 @@ const ChangeHouseholdName = ({ setShowTooltip, showTooltip }: Props) => {
   const dispatch = useAppDispatch();
   const profile = useAppSelector(selectCurrentProfile);
   const { colors } = useTheme();
+  const { householdSchema } = useYup();
 
   return (
     <>
@@ -42,7 +36,7 @@ const ChangeHouseholdName = ({ setShowTooltip, showTooltip }: Props) => {
       {toggleForm && (
         <Formik
           initialValues={{ householdName: household.name }}
-          validationSchema={validation}
+          validationSchema={householdSchema}
           onSubmit={(values) => {
             if (values.householdName && profile) {
               dispatch(updateHouseholdName({ newName: values.householdName, profile: profile }));
