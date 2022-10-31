@@ -1,9 +1,11 @@
-import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
+import { useTheme } from "react-native-paper";
 import { selectHouseholdName } from "../store/household/householdSelector";
+import { selectMemoizedCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
 import { MenuStackParams } from "./MenuStackNavigator";
@@ -27,6 +29,9 @@ const BottomStack = createBottomTabNavigator<BottomTabStackParams>();
 
 const TabStackNavigator = () => {
   const household = useAppSelector(selectHouseholdName);
+  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const nrOfPendingProfiles = useAppSelector(selectPendingProfiles).length;
+  const { colors } = useTheme();
 
   return (
     <BottomStack.Navigator initialRouteName="Chores">
@@ -35,7 +40,7 @@ const TabStackNavigator = () => {
         component={ChoreStackNavigator}
         options={{
           headerShown: false,
-          tabBarLabel: household,
+          tabBarLabel: "Sysslor",
           tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="broom" size={size} color={color} />,
         }}
       />
@@ -47,7 +52,12 @@ const TabStackNavigator = () => {
       <BottomStack.Screen
         name="UserProfile"
         component={UserStackNavigator}
-        options={{ headerShown: false, tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} /> }}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="person" size={size} color={color} />,
+          tabBarBadge: currentProfile?.role === "owner" ? (nrOfPendingProfiles > 0 ? nrOfPendingProfiles : undefined) : undefined,
+          tabBarLabel: "Profil",
+        }}
       />
     </BottomStack.Navigator>
   );
