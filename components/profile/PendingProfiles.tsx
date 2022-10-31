@@ -18,7 +18,7 @@ const PendingProfiles = () => {
     <View>
       {currentProfile?.role === "owner" && pendingProfiles.length > 0 && (
         <>
-      <Text variant="headlineSmall">Väntande profiler</Text>
+          <Text variant="headlineSmall">Väntande profiler</Text>
           {pendingProfiles.map(
             (profile) =>
               profile.isApproved === false && (

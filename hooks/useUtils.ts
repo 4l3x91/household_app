@@ -34,7 +34,7 @@ export function useUtils() {
   };
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
@@ -46,7 +46,7 @@ export function useUtils() {
   };
 
   const uploadAttatchments = async (choreId: string, deviceImageUri: string, deviceRecordingUri: string) => {
-    let attatchments = { firebaseImgUrl: "", firebaseSoundUrl: "" };
+    const attatchments = { firebaseImgUrl: "", firebaseSoundUrl: "" };
 
     if (deviceImageUri) {
       const imageRef = ref(storage, `${choreId}/image.jpg`);

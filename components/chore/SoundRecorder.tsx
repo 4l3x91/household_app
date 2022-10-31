@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 
 interface Props {
-  setDeviceRecordingUri: React.Dispatch<React.SetStateAction<string | null>>;
+  setDeviceRecordingUri: React.Dispatch<React.SetStateAction<string>>;
   recording: Audio.Recording | undefined;
   setRecording: React.Dispatch<React.SetStateAction<Audio.Recording | undefined>>;
   closeModal: () => void;
@@ -41,17 +41,20 @@ export default function SoundRecorder({ setDeviceRecordingUri, recording, setRec
       }
 
       const uri = recording.getURI();
-      setDeviceRecordingUri(uri);
+      setDeviceRecordingUri(uri ? uri : "");
     }
   }
 
-  function getDurationFormatted(millis: any) {
-    const minutes = millis / 1000 / 60;
-    const minutesDisplay = Math.floor(minutes);
-    const seconds = Math.round((minutes - minutesDisplay) * 60);
-    const secondsDisplay = seconds < 10 ? `0${seconds}` : seconds;
+  function getDurationFormatted(millis?: number) {
+    if (millis) {
+      const minutes = millis / 1000 / 60;
+      const minutesDisplay = Math.floor(minutes);
+      const seconds = Math.round((minutes - minutesDisplay) * 60);
+      const secondsDisplay = seconds < 10 ? `0${seconds}` : seconds;
 
-    return `${minutesDisplay}:${secondsDisplay}`;
+      return `${minutesDisplay}:${secondsDisplay}`;
+    }
+    return "00:00";
   }
 
   return (

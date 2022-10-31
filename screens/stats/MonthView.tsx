@@ -10,7 +10,7 @@ const MonthView = () => {
   const width = Dimensions.get("screen").width;
 
   return (
-    <ScrollView style={{ flex: 1}}>
+    <ScrollView style={{ flex: 1 }}>
       <View style={{ flex: 0.5 }}>
         <ChorePieChart showAvatars={true} key={"all"} />
         <Text variant="bodyLarge" style={{ textAlign: "center", flexWrap: "wrap", width: "100%" }}>

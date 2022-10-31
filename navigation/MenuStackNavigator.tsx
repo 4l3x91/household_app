@@ -14,7 +14,7 @@ const MenuStackNavigator = () => {
   return (
     <MenuStack.Navigator initialRouteName="MenuScreen">
       <MenuStack.Screen name="MenuScreen" component={MenuScreen} />
-      <MenuStack.Screen name="SelectThemeScreen" component={SelectThemeScreen} options={{title: "Mörkt läge"}} />
+      <MenuStack.Screen name="SelectThemeScreen" component={SelectThemeScreen} options={{ title: "Mörkt läge" }} />
     </MenuStack.Navigator>
   );
 };

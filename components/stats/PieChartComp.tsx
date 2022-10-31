@@ -10,7 +10,7 @@ type Props = {
 };
 
 export interface Data extends PieChartData {
-  avatar?: string;
+  avatar: string;
 }
 interface SliceProps {
   pieCentroid: number[];
@@ -18,29 +18,33 @@ interface SliceProps {
 }
 
 interface LabelProps {
-  slices: SliceProps[];
+  slices?: SliceProps[];
 }
 
 const Labels = ({ slices }: LabelProps) => {
   {
-    return slices.map((slice: SliceProps, index: number) => {
-      const { pieCentroid, data }: SliceProps = slice;
-      return (
-        <Text
-          key={index}
-          x={pieCentroid[0]}
-          y={pieCentroid[1]}
-          fill={"white"}
-          textAnchor={"middle"}
-          alignmentBaseline={"central"}
-          fontSize={24}
-          stroke={"black"}
-          strokeWidth={0.2}
-        >
-          {data.avatar}
-        </Text>
-      );
-    });
+    return (
+      <>
+        {slices?.map((slice: SliceProps, index: number) => {
+          const { pieCentroid, data }: SliceProps = slice;
+          return (
+            <Text
+              key={index}
+              x={pieCentroid[0]}
+              y={pieCentroid[1]}
+              fill={"white"}
+              textAnchor={"middle"}
+              alignmentBaseline={"central"}
+              fontSize={24}
+              stroke={"black"}
+              strokeWidth={0.2}
+            >
+              {data.avatar}
+            </Text>
+          );
+        })}
+      </>
+    );
   }
 };
 
@@ -51,13 +55,13 @@ const PieChartComp = ({ data, size, showAvatars }: Props) => {
     return (
       <PieChart
         style={{ height: size ? size : 270 }}
-        valueAccessor={({ item }) => item.value}
+        valueAccessor={(data) => data.index}
         data={data}
         innerRadius={0}
         outerRadius={"90%"}
         padAngle={0}
       >
-        {showAvatars && <Labels />}
+        {showAvatars ? <Labels /> : <></>}
       </PieChart>
     );
   }
