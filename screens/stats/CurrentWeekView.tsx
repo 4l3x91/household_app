@@ -33,7 +33,6 @@ const CurrentWeekView = () => {
           Totalt
         </Text>
       </View>
-      <View></View>
       <View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", justifyContent: "center", alignItems: "center" }}>
         {chores.map((x) => {
           return (
