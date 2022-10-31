@@ -18,11 +18,8 @@ import { Chore } from "../../store/chore/choreModel";
 import { selectChores } from "../../store/chore/choreSelectors";
 import { getChores } from "../../store/chore/choreThunks";
 import { getCompletedChoresPerHousehold } from "../../store/completedChore/completedChoreThunks";
-import { getHouseholdById } from "../../store/household/householdThunks";
-import { selectAllHouseholdMembers, selectAllProfiles, selectCurrentProfile } from "../../store/profile/profileSelectors";
-import { getAllProfiles } from "../../store/profile/profileThunks";
+import { selectAllHouseholdMembers, selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { selectUser } from "../../store/user/userSelectors";
 
 type ChoreScreenNavProps = CompositeScreenProps<
   BottomTabScreenProps<ChoreStackParams, "ChoreDetailsScreen">,
@@ -37,16 +34,14 @@ const ChoresScreen = ({ navigation }: ChoreScreenNavProps) => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [archiveModalVisible, setArchiveModalVisible] = useState(false);
+  const modalizeRef = useRef<Modalize>(null);
   const theme: Theme = useTheme();
+
   const dispatch = useAppDispatch();
   const household = useAppSelector((state) => state.household.household);
   const chores = useAppSelector(selectChores);
   const profile = useAppSelector(selectCurrentProfile);
-  const modalizeRef = useRef<Modalize>(null);
   const allMembers = useAppSelector(selectAllHouseholdMembers);
-  const user = useAppSelector(selectUser);
-  const { error } = useAppSelector((state) => state.profile);
-  const userProfiles = useAppSelector(selectAllProfiles);
 
   function toggleOverlay() {
     setOverlay((prev) => !prev);
@@ -55,29 +50,12 @@ const ChoresScreen = ({ navigation }: ChoreScreenNavProps) => {
   const openModalize = () => {
     modalizeRef.current?.open();
   };
+
   const closeModal = () => {
     setEditModalVisible(false);
     setDeleteModalVisible(false);
     setArchiveModalVisible(false);
   };
-
-  useEffect(() => {
-    if (user) {
-      dispatch(getAllProfiles(user));
-      if (error !== "") {
-        navigation.navigate("HouseholdOptions");
-      }
-    }
-  }, [user, error]);
-
-  useEffect(() => {
-    if (user && userProfiles.length === 1) {
-      console.log("userprofiles === 1");
-      dispatch(getHouseholdById(userProfiles[0].householdId));
-    } else {
-      navigation.navigate("HouseholdOptions");
-    }
-  }, [userProfiles]);
 
   useEffect(() => {
     if (household) {
