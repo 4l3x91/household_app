@@ -66,7 +66,7 @@ const ProfileScreen = ({ navigation }: Props) => {
             {profile?.avatar.avatar} {profile?.profileName}
           </Text>
         </Button>
-        <Button onPress={() => console.log("Open settings")}>
+        <Button onPress={() => navigation.navigate("SettingsScreen")}>
           <FontAwesome size={20} name="cog" />
         </Button>
       </View>
@@ -86,7 +86,7 @@ const ProfileScreen = ({ navigation }: Props) => {
           />
         }
       >
-        <Surface elevation={0} style={{ margin: 10, padding: 10, borderRadius: 10 }}>
+        <Surface elevation={0} style={{ marginHorizontal: 10, marginTop: 10, paddingHorizontal: 10, paddingTop: 10, borderRadius: 10 }}>
           <View style={{ marginBottom: 5 }}>
             <Surface style={{ padding: 10, borderRadius: 10 }}>
               <Text variant="bodySmall">Hushållsnamn</Text>
@@ -105,11 +105,10 @@ const ProfileScreen = ({ navigation }: Props) => {
           </View>
         </Surface>
 
-        <Surface elevation={0} style={{ margin: 10, padding: 10, borderRadius: 10 }}>
+        <Surface elevation={0} style={{ margin: 10, paddingHorizontal: 10, borderRadius: 10 }}>
           <HouseholdMembers />
           <PendingProfiles />
         </Surface>
-        <View style={{ height: 70 }}></View>
       </ScrollView>
 
       <Modal
