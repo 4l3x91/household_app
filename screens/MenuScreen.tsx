@@ -20,7 +20,6 @@ const MenuScreen = ({ navigation }: Props) => {
   function handleSignOut() {
     signOut(auth).then(() => {
       {
-        navigation.popToTop();
         dispatch(logout());
 
         resetStore();
