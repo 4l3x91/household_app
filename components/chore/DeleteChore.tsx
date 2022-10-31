@@ -3,7 +3,7 @@ import React from "react";
 import { Pressable } from "react-native";
 import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { useUtils } from "../../hooks/useUtils";
+import { useStorage } from "../../hooks/useStorage";
 import { Chore } from "../../store/chore/choreModel";
 import { deleteChore, updateChore } from "../../store/chore/choreThunks";
 import { useAppDispatch } from "../../store/store";
@@ -17,7 +17,7 @@ interface Props {
 const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
-  const { deleteAttachments } = useUtils();
+  const { deleteAttachments } = useStorage();
 
   return (
     <Container overlay={overlay}>
