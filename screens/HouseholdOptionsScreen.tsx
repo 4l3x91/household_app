@@ -9,11 +9,10 @@ import CreateHousehold from "../components/household/CreateHousehold";
 import JoinHousehold from "../components/household/JoinHousehold";
 import MyHouseholds from "../components/household/MyHouseholds";
 import { auth } from "../config/firebase";
+import { useUtils } from "../hooks/useUtils";
 import { RootStackParams } from "../navigation/RootStackNavigator";
-import { resetHousehold } from "../store/household/householdSlice";
 import { getHouseholdById } from "../store/household/householdThunks";
 import { selectMemoizedUserProfiles } from "../store/profile/profileSelectors";
-import { resetProfileState } from "../store/profile/profileSlice";
 import { getAllProfiles } from "../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { selectUser } from "../store/user/userSelectors";
@@ -26,6 +25,8 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
   const user = useAppSelector(selectUser);
   const modalizeRef = useRef<Modalize>(null);
   const householdModalRef = useRef<Modalize>(null);
+  const { resetStore } = useUtils();
+
   const joinHouseholdRef = useRef<Modalize>(null);
   const dispatch = useAppDispatch();
   const theme = useTheme();
@@ -65,9 +66,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
       {
         dispatch(logout());
 
-        //denna resettar state men ska bytas ut mot en useEffect där alla state resettas
-        dispatch(resetProfileState());
-        dispatch(resetHousehold());
+        resetStore();
       }
     });
   }

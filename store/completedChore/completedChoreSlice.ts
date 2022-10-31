@@ -7,6 +7,9 @@ const completedChoresSlice = createSlice({
   initialState,
   reducers: {
     setCompletedChores: (state, action: PayloadAction<CompletedChoresState>) => (state = action.payload),
+    resetCompletedChores(state) {
+      state.completedChores = [];
+    },
   },
 
   extraReducers: (builder) => {
@@ -40,4 +43,4 @@ const completedChoresSlice = createSlice({
 
 export const completedChoresReducer = completedChoresSlice.reducer;
 
-export const { setCompletedChores } = completedChoresSlice.actions;
+export const { setCompletedChores, resetCompletedChores } = completedChoresSlice.actions;

@@ -1,6 +1,13 @@
 import * as ImagePicker from "expo-image-picker";
+import { resetChoreState } from "../store/chore/choreSlice";
+import { resetCompletedChores } from "../store/completedChore/completedChoreSlice";
+import { resetHousehold } from "../store/household/householdSlice";
+import { resetProfileState } from "../store/profile/profileSlice";
+import { useAppDispatch } from "../store/store";
 
 export function useUtils() {
+  const dispatch = useAppDispatch();
+
   const generateHouseholdCode = () => {
     return Math.random().toString(36).slice(2, 8).toUpperCase();
   };
@@ -41,10 +48,18 @@ export function useUtils() {
     }
   };
 
+  const resetStore = () => {
+    dispatch(resetProfileState());
+    dispatch(resetHousehold());
+    dispatch(resetChoreState());
+    dispatch(resetCompletedChores());
+  };
+
   return {
     generateHouseholdCode,
     convertToRGB,
     addDays,
     pickImage,
+    resetStore,
   };
 }
