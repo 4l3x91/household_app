@@ -2,7 +2,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
 import React, { useEffect, useRef, useState } from "react";
-import { Modal, RefreshControl, ScrollView, View } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
+import Modal from "react-native-modal";
 import { Modalize } from "react-native-modalize";
 import { Button, Portal, Surface, Text, useTheme } from "react-native-paper";
 import AvatarCard from "../../components/household/AvatarCard";
@@ -58,7 +59,7 @@ const ProfileScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View style={{ opacity: modalVisible || joinModalVisible || createModalVisible ? 0.5 : 1 }}>
+    <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: Constants.statusBarHeight }}>
         <Button onPress={() => openMyHouseholds()}>
           <Text variant="titleLarge">
@@ -111,20 +112,24 @@ const ProfileScreen = ({ navigation }: Props) => {
         <View style={{ height: 70 }}></View>
       </ScrollView>
 
-      <Portal>
-        <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
-          <EditProfile closeModal={closeModal} />
-        </Modal>
-      </Portal>
+      <Modal
+        onSwipeComplete={() => setModalVisible(false)}
+        avoidKeyboard
+        swipeDirection={"down"}
+        isVisible={modalVisible}
+        statusBarTranslucent
+        onBackButtonPress={() => setModalVisible(false)}>
+        <EditProfile closeModal={closeModal} />
+      </Modal>
 
       <Portal>
-        <Modal animationType="slide" transparent={true} visible={joinModalVisible} statusBarTranslucent>
+        <Modal avoidKeyboard isVisible={joinModalVisible} statusBarTranslucent>
           <JoinHousehold closeModal={closeJoinModal} />
         </Modal>
       </Portal>
 
       <Portal>
-        <Modal animationType="slide" transparent={true} visible={createModalVisible} statusBarTranslucent>
+        <Modal avoidKeyboard isVisible={createModalVisible} statusBarTranslucent>
           <CreateHousehold closeModal={closeCreateModal} />
         </Modal>
       </Portal>

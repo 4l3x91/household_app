@@ -76,37 +76,40 @@ const CreateHousehold = ({ closeModal }: Props) => {
             values.profileName.length >= 2;
           return (
             <Content>
-            <ModalContent elevation={0}>
-                <Container>
-                  
-              <HeaderText variant="headlineMedium">Skapa hushåll</HeaderText>
-                  
-                  <InputContainer>
-                  <Input
-                  width={200}
-                  label="Namn på hushåll"
-                  value={values.householdName}
-                  handleChange={handleChange("householdName")}
-                  activeOutlineColor={colors.primary}
-                      />
-                      </InputContainer>
-                {errors.householdName && <Text>{errors.householdName}</Text>}
-               
-                <HouseholdCode householdCode={householdCode} setHouseholdCode={setHouseholdCode} />
-                <InputContainer>
-                  <Input width={200} label="Profilnamn" value={values.profileName} handleChange={handleChange("profileName")} />
-                </InputContainer>
-                  {errors.profileName && <Text>{errors.profileName}</Text>}
-                  <View style={{padding: 10}}>
-              <AvatarPicker setAvatar={setAvatar} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
-              </View>
+              <ModalContent elevation={0}>
+                <View>
+                  <HeaderText variant="headlineMedium">Skapa hushåll</HeaderText>
 
-              <Button disabled={!inputsOk} mode="contained" onPress={() => handleSubmit()} loading={pending}>
-                Skapa
-              </Button>
-                </Container>
+                  <InputContainer>
+                    <Input
+                      width="100%"
+                      label="Namn på hushåll"
+                      value={values.householdName}
+                      handleChange={handleChange("householdName")}
+                      activeOutlineColor={colors.primary}
+                    />
+                  </InputContainer>
+                  {errors.householdName && <Text>{errors.householdName}</Text>}
+
+                  <HouseholdCode householdCode={householdCode} setHouseholdCode={setHouseholdCode} />
+                  <InputContainer>
+                    <Input
+                      width="100%"
+                      label="Profilnamn"
+                      value={values.profileName}
+                      handleChange={handleChange("profileName")}
+                      activeOutlineColor={colors.primary}
+                    />
+                  </InputContainer>
+                  {errors.profileName && <Text>{errors.profileName}</Text>}
+                  <AvatarPicker setAvatar={setAvatar} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
+
+                  <Button disabled={!inputsOk} mode="contained-tonal" style={{ borderRadius: 10 }} onPress={() => handleSubmit()} loading={pending}>
+                    Skapa
+                  </Button>
+                </View>
               </ModalContent>
-                </Content>
+            </Content>
           );
         }}
       </Formik>
@@ -118,7 +121,6 @@ const CreateHousehold = ({ closeModal }: Props) => {
 };
 
 export default CreateHousehold;
-
 
 const Container = styled.View`
   justify-content: center;
@@ -134,6 +136,7 @@ const Content = styled(Surface)`
   margin: 20px;
   border-radius: 20px;
   align-items: center;
+  padding: 10px;
 `;
 
 const HeaderText = styled(Text)`
@@ -146,9 +149,7 @@ const ModalContent = styled(Surface)`
   margin-top: 10px;
 `;
 
-const InputContainer = styled(Surface)`
+const InputContainer = styled.View`
   background-color: transparent;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
 `;
