@@ -6,6 +6,7 @@ import { Button, Text } from "react-native-paper";
 import CurrentWeekView from "../screens/stats/CurrentWeekView";
 import MonthView from "../screens/stats/MonthView";
 import PreviousWeekView from "../screens/stats/PreviousWeekView";
+import YearView from "../screens/stats/YearView";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -19,7 +20,7 @@ const StatsStackNavigator = () => {
       <Tab.Screen name="Denna veckan" component={CurrentWeekView} />
       <Tab.Screen name="Förra veckan" component={PreviousWeekView} />
       <Tab.Screen name="Månad" component={MonthView} />
-      {/* <Tab.Screen name="År" component={YearView} /> */}
+      <Tab.Screen name="År" component={YearView} />
     </Tab.Navigator>
   );
 };

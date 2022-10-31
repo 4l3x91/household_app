@@ -39,10 +39,6 @@ const PreviousWeekView = () => {
     }
     return LastWeeksSundayDate;
   }
-
-  // console.log(getLastWeeksMondayDate().toLocaleDateString());
-  // console.log(getLastWeeksSundayDate().toLocaleDateString());
-  completedChores.forEach((x) => console.log(x.date));
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={{ flex: 0.5 }}>
