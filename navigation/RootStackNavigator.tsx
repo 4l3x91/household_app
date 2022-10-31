@@ -20,6 +20,7 @@ const RootStack = createNativeStackNavigator<RootStackParams>();
 
 const RootNavigator = () => {
   const user = useAppSelector(selectUser);
+
   return (
     <RootStack.Navigator>
       {!user && (
@@ -31,8 +32,8 @@ const RootNavigator = () => {
       )}
       {user && (
         <>
-          <RootStack.Screen name="TabStack" component={TabStackNavigator} options={{ headerShown: false }} />
           <RootStack.Screen name="HouseholdOptions" component={HouseholdOptionsScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <RootStack.Screen name="TabStack" component={TabStackNavigator} options={{ headerShown: false }} />
         </>
       )}
     </RootStack.Navigator>
