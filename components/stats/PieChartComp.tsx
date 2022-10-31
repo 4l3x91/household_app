@@ -1,4 +1,3 @@
-import React from "react";
 import { Text as PaperText } from "react-native-paper";
 import { Text } from "react-native-svg";
 import { AccessorFunctionProps, PieChart, PieChartData } from "react-native-svg-charts";
@@ -29,6 +28,8 @@ const Labels = ({ slices }: LabelProps) => {
         {slices?.map((slice: SliceProps, index: number) => {
           const { pieCentroid, data }: SliceProps = slice;
           return (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             <Text
               key={index}
               x={pieCentroid[0]}
