@@ -68,8 +68,8 @@ const CreateUser = ({ close }: Props) => {
               </InputContainer>
               <BottomButtons
                 pending={userState.pending}
-                handleSubmit={handleSubmit}
-                close={close}
+                leftOnPress={handleSubmit}
+                rightOnPress={close}
                 leftTitle="Registrera"
                 rightTitle="Stäng"
                 leftIcon="account-plus"
