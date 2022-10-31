@@ -10,10 +10,10 @@ import ErrorTranslator from "../common/ErrorTranslator";
 import Input from "../common/Input";
 
 interface Props {
-  close: () => void;
+  close?: () => void;
 }
 
-const CreateUser = ({ close }: Props) => {
+const CreateUser = (props: Props) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.userState);
@@ -68,8 +68,8 @@ const CreateUser = ({ close }: Props) => {
               </InputContainer>
               <BottomButtons
                 pending={userState.pending}
-                handleSubmit={handleSubmit}
-                close={close}
+                leftOnPress={handleSubmit}
+                rightOnPress={close}
                 leftTitle="Registrera"
                 rightTitle="Stäng"
                 leftIcon="account-plus"

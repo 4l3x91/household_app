@@ -5,7 +5,7 @@ export function useStorage() {
   const storage = getStorage();
 
   const uploadAttatchments = async (choreId: string, deviceImageUri: string, deviceRecordingUri: string) => {
-    let attatchments = { firebaseImgUrl: "", firebaseSoundUrl: "" };
+    const attatchments = { firebaseImgUrl: "", firebaseSoundUrl: "" };
 
     if (deviceImageUri) {
       const imageRef = ref(storage, `${choreId}/image.jpg`);
