@@ -9,7 +9,9 @@
     "web": "expo start --web",
     "format": "prettier ./ --check",
     "prettier": "npm run format -- --write",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "types": "tsc --noEmit",
+    "check": "npm run lint && npm run format && npm run types"
   },
   "dependencies": {
     "@firebase/firestore": "^3.7.1",
@@ -54,7 +56,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@types/react": "~18.0.14",
-    "@types/react-native": "~0.69.1",
+    "@types/react-native": "^0.70.6",
     "@types/react-native-svg-charts": "^5.0.12",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
