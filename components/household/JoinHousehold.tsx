@@ -52,7 +52,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
   }, [text]);
 
   useEffect(() => {
-    if (text === household.household.code) {
+    if (text?.toUpperCase() === household.household.code) {
       setProfilesInHousehold([]);
 
       getUnavalibleAvatars();
