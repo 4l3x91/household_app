@@ -70,8 +70,8 @@ const LoginUser = ({ close, register }: Props) => {
                 </InputContainer>
                 <BottomButtons
                   pending={pending}
-                  handleSubmit={handleSubmit}
-                  close={close}
+                  leftOnPress={handleSubmit}
+                  rightOnPress={close}
                   leftTitle="Logga in"
                   rightTitle="Stäng"
                   leftIcon="login"

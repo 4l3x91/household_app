@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <>
-      <LoginUser close={() => navigation.goBack()} register={() => navigation.navigate("CreateUser")} />
+      <LoginUser close={() => navigation.popToTop()} register={() => navigation.navigate("CreateUser")} />
     </>
   );
 };
