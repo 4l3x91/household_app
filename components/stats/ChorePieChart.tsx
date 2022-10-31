@@ -3,7 +3,6 @@ import { View } from "react-native";
 import PieChartComp, { Data } from "../../components/stats/PieChartComp";
 import { selectChores } from "../../store/chore/choreSelectors";
 import { completedChoreModel } from "../../store/completedChore/completedChoreModel";
-import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { selectAllHouseholdMembers } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
 
@@ -11,11 +10,11 @@ type Props = {
   choosenChore?: string;
   size?: number;
   showAvatars: boolean;
+  completedChores: completedChoreModel[];
 };
 
-const ChorePieChart = ({ choosenChore, size, showAvatars }: Props) => {
+const ChorePieChart = ({ choosenChore, size, showAvatars, completedChores }: Props) => {
   const householdMembers = useAppSelector(selectAllHouseholdMembers);
-  const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const householdChores = useAppSelector(selectChores).chores;
 
   const data: Data[] = householdMembers
