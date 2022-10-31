@@ -42,7 +42,7 @@ const TabStackNavigator = () => {
       <BottomStack.Screen
         name="Stats"
         component={StatsStackNavigator}
-        options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} /> }}
+        options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} />, headerShown: false }}
       />
       <BottomStack.Screen
         name="UserProfile"
