@@ -43,16 +43,20 @@ const EditProfile = ({ closeModal }: Props) => {
             {({ handleChange, handleSubmit, values, errors }) => {
               return (
                 <View>
-                  <Text variant="headlineMedium" style={{textAlign: 'center', marginBottom: 10}}>Redigera profil</Text>
+                  <Text variant="headlineMedium" style={{ textAlign: "center", marginBottom: 10 }}>
+                    Redigera profil
+                  </Text>
                   <Input label="Namn" value={values.name as string} handleChange={handleChange("name")} />
                   {errors.name && <Text>{errors.name}</Text>}
-                    <AvatarPicker
-                      setAvatar={setAvatar}
-                      selectedAvatar={selectedAvatar}
-                      setSelectedAvatar={setSelectedAvatar}
-                      profilesInHousehold={members}
-                    />
-                  <Button mode="contained-tonal" style={{borderRadius: 10}} onPress={handleSubmit}>Spara</Button>
+                  <AvatarPicker
+                    setAvatar={setAvatar}
+                    selectedAvatar={selectedAvatar}
+                    setSelectedAvatar={setSelectedAvatar}
+                    profilesInHousehold={members}
+                  />
+                  <Button mode="contained-tonal" style={{ borderRadius: 10 }} onPress={handleSubmit}>
+                    Spara
+                  </Button>
                 </View>
               );
             }}
@@ -72,14 +76,14 @@ const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  `;
+`;
 
 const Content = styled(Surface)`
   border-radius: 10px;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  `;
+`;
 
 const ModalContent = styled(Surface)`
   width: 100%;
