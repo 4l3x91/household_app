@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -47,7 +47,7 @@ const TabStackNavigator = () => {
       <BottomStack.Screen
         name="Stats"
         component={StatsStackNavigator}
-        options={{ tabBarIcon: ({ color, size }) => <MaterialIcons name="pie-chart" size={size} color={color} />, tabBarLabel: "Statistik" }}
+        options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} />, headerShown: false }}
       />
       <BottomStack.Screen
         name="UserProfile"
