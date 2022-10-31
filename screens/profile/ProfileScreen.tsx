@@ -66,7 +66,7 @@ const ProfileScreen = ({ navigation }: Props) => {
             {profile?.avatar.avatar} {profile?.profileName}
           </Text>
         </Button>
-        <Button onPress={() => console.log("Open settings")}>
+        <Button onPress={() => navigation.navigate("SettingsScreen")}>
           <FontAwesome size={20} name="cog" />
         </Button>
       </View>
@@ -118,7 +118,8 @@ const ProfileScreen = ({ navigation }: Props) => {
         swipeDirection={"down"}
         isVisible={modalVisible}
         statusBarTranslucent
-        onBackButtonPress={() => setModalVisible(false)}>
+        onBackButtonPress={() => setModalVisible(false)}
+      >
         <EditProfile closeModal={closeModal} />
       </Modal>
 
