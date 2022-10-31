@@ -16,13 +16,15 @@ const CurrentWeekView = () => {
     const date = new Date();
     const day = date.getDay();
     const prevMonday = new Date();
-    if (date.getDay() == 0) {
-      prevMonday.setDate(date.getDate() - 7);
+    if (date.getDay() == 1) {
+      prevMonday.setDate(date.getDate());
     } else {
       prevMonday.setDate(date.getDate() - (day - 1));
     }
     return prevMonday;
   }
+
+  console.log(getPreviousMonday().toLocaleDateString());
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={{ flex: 0.5 }}>
