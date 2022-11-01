@@ -37,13 +37,7 @@ const MyHouseholds = ({ goToChores, closeModal }: Props) => {
     <>
       {households.length === profiles.length &&
         profiles.map((profile, index) => (
-          <HouseholdCard
-            key={profile.id}
-            closeModal={closeModal}
-            profile={profile}
-            household={households[index]}
-            goToChores={goToChores}
-          />
+          <HouseholdCard key={profile.id} closeModal={closeModal} profile={profile} household={households[index]} goToChores={goToChores} />
         ))}
     </>
   );

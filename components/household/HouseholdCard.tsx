@@ -26,8 +26,7 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <>
-      <Pressable
-        onPress={() => optionsModal.current?.open()}>
+      <Pressable onPress={() => optionsModal.current?.open()}>
         <ProfilesContainer background={colors.primaryContainer}>
           <Text variant="titleMedium"> {household.name}</Text>
           <ProfileContainer>
