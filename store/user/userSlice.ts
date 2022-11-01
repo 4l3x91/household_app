@@ -38,7 +38,7 @@ const userSlice = createSlice({
     });
     builder.addCase(signInUser.fulfilled, (state, action) => {
       state.pending = false;
-      state.user = { id: action.payload.user.uid, email: action.payload.user.email };
+      state.user = { id: action.payload.uid, email: action.payload.email };
     });
     builder.addCase(signInUser.rejected, (state, action) => {
       state.pending = false;

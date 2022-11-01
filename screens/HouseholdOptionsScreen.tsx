@@ -48,7 +48,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
     if (user) {
       dispatch(getAllProfiles(user));
       if (error !== "") {
-        console.log("error?");
+        console.log(error);
         navigation.navigate("HouseholdOptions");
       }
     }
