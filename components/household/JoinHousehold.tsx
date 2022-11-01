@@ -37,8 +37,6 @@ const JoinHousehold = ({ closeModal }: Props) => {
 
     const result = await getDocs(q);
 
-    console.log(result);
-
     if (!result.empty) {
       result.forEach((doc) => setProfilesInHousehold((prev) => [...prev, doc.data() as Profile]));
     }
