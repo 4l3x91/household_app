@@ -27,7 +27,7 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
   return (
     <>
       <Pressable onPress={() => optionsModal.current?.open()}>
-        <ProfilesContainer background={colors.primaryContainer}>
+        <ProfilesContainer>
           <Text variant="titleMedium"> {household.name}</Text>
           <ProfileContainer>
             <Text variant="titleSmall"> {profile.profileName}</Text>
@@ -95,8 +95,7 @@ const ProfileContainer = styled.View`
   align-items: center;
 `;
 
-const ProfilesContainer = styled.View<{ background: string }>`
-  background-color: ${({ background }) => background};
+const ProfilesContainer = styled(Surface)`
   border-radius: 10px;
   flex-direction: row;
   margin: 5px 5px 0px 0px;
