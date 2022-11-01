@@ -1,15 +1,15 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { View } from "react-native";
-import { Surface, Text, useTheme } from "react-native-paper";
+import { Divider, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { selectMemoizedCurrentProfile, selectPendingProfiles } from "../../store/profile/profileSelectors";
+import { selectCurrentProfile, selectPendingProfiles } from "../../store/profile/profileSelectors";
 import { deleteProfile, updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import AvatarCard from "../household/AvatarCard";
 
 const PendingProfiles = () => {
-  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const currentProfile = useAppSelector(selectCurrentProfile);
   const pendingProfiles = useAppSelector(selectPendingProfiles);
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
@@ -17,18 +17,18 @@ const PendingProfiles = () => {
   return (
     <View>
       {currentProfile?.role === "owner" && pendingProfiles.length > 0 && (
-        <>
-      <Text variant="headlineSmall">Väntande profiler</Text>
+        <Surface style={{ padding: 10, borderRadius: 10 }}>
+          <Text variant="bodySmall">Väntande profiler</Text>
           {pendingProfiles.map(
-            (profile) =>
+            (profile, index) =>
               profile.isApproved === false && (
                 <View key={profile.id}>
                   <Container>
                     <ProfileContainer>
                       <AvatarContainer>
-                        <AvatarCard profile={profile} size={32} />
+                        <AvatarCard profile={profile} size={20} />
                       </AvatarContainer>
-                      <Text variant="titleMedium">{profile.profileName}</Text>
+                      <Text variant="bodyLarge">{profile.profileName}</Text>
                     </ProfileContainer>
                     <IconContainer>
                       <IconButton onPress={() => dispatch(updateProfile({ ...profile, isApproved: true }))}>
@@ -40,10 +40,11 @@ const PendingProfiles = () => {
                       </IconButton>
                     </IconContainer>
                   </Container>
+                  {index !== pendingProfiles.filter((profile) => !profile.isApproved).length - 1 && <Divider bold style={{ marginHorizontal: 5 }} />}
                 </View>
               )
           )}
-        </>
+        </Surface>
       )}
     </View>
   );
@@ -51,11 +52,9 @@ const PendingProfiles = () => {
 
 export default PendingProfiles;
 
-const Container = styled(Surface)`
+const Container = styled.View`
   flex-direction: row;
   align-items: center;
-  border-radius: 10px;
-  margin: 5px 0;
 `;
 
 const ProfileContainer = styled.View`
@@ -65,8 +64,8 @@ const ProfileContainer = styled.View`
 `;
 
 const AvatarContainer = styled.View`
-  padding: 10px;
-  margin-right: 10px;
+  padding: 10px 5px;
+  margin-right: 5px;
   border-radius: 10px;
 `;
 

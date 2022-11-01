@@ -126,8 +126,4 @@ const OwnerButton = styled.Pressable`
   padding: 10px 10px 10px 0;
 `;
 
-const TrashButton = styled.Pressable`
-  padding: 10px 10px 10px 0;
-`;
-
 export default ChoreItem;

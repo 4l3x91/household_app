@@ -68,8 +68,8 @@ const CreateUser = ({ close }: Props) => {
               </InputContainer>
               <BottomButtons
                 pending={userState.pending}
-                handleSubmit={handleSubmit}
-                close={close}
+                leftOnPress={handleSubmit}
+                rightOnPress={close}
                 leftTitle="Registrera"
                 rightTitle="Stäng"
                 leftIcon="account-plus"
@@ -87,11 +87,6 @@ export default CreateUser;
 
 const Container = styled.View`
   height: 100%;
-`;
-
-const ButtonContainer = styled.View`
-  margin-bottom: 30px;
-  flex-direction: row;
 `;
 
 const InputContainer = styled.View`

@@ -1,12 +1,14 @@
-import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
+import { useTheme } from "react-native-paper";
 import { selectHouseholdName } from "../store/household/householdSelector";
+import { selectCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
-import MenuStackNavigator, { MenuStackParams } from "./MenuStackNavigator";
+import { MenuStackParams } from "./MenuStackNavigator";
 import { RootStackParams } from "./RootStackNavigator";
 import StatsStackNavigator, { StatsStackParams } from "./StatsStackNavigator";
 import UserStackNavigator, { UserStackParams } from "./UserStackNavigator";
@@ -27,6 +29,9 @@ const BottomStack = createBottomTabNavigator<BottomTabStackParams>();
 
 const TabStackNavigator = () => {
   const household = useAppSelector(selectHouseholdName);
+  const currentProfile = useAppSelector(selectCurrentProfile);
+  const nrOfPendingProfiles = useAppSelector(selectPendingProfiles).length;
+  const { colors } = useTheme();
 
   return (
     <BottomStack.Navigator initialRouteName="Chores">
@@ -35,24 +40,24 @@ const TabStackNavigator = () => {
         component={ChoreStackNavigator}
         options={{
           headerShown: false,
-          tabBarLabel: household,
+          tabBarLabel: "Sysslor",
           tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="broom" size={size} color={color} />,
         }}
       />
       <BottomStack.Screen
         name="Stats"
         component={StatsStackNavigator}
-        options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} /> }}
+        options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} />, headerShown: false }}
       />
       <BottomStack.Screen
         name="UserProfile"
         component={UserStackNavigator}
-        options={{ headerShown: false, tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} /> }}
-      />
-      <BottomStack.Screen
-        name="Menu"
-        component={MenuStackNavigator}
-        options={{ headerShown: false, tabBarIcon: ({ color, size }) => <FontAwesome name="cog" size={size} color={color} /> }}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="person" size={size} color={color} />,
+          tabBarBadge: currentProfile?.role === "owner" ? (nrOfPendingProfiles > 0 ? nrOfPendingProfiles : undefined) : undefined,
+          tabBarLabel: "Profil",
+        }}
       />
     </BottomStack.Navigator>
   );
