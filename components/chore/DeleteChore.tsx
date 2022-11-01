@@ -1,7 +1,7 @@
 import { SimpleLineIcons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable } from "react-native";
-import { Button, overlay, Surface, Text, useTheme } from "react-native-paper";
+import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { useStorage } from "../../hooks/useStorage";
 import { Chore } from "../../store/chore/choreModel";
@@ -11,16 +11,15 @@ import { useAppDispatch } from "../../store/store";
 interface Props {
   closeModal: () => void;
   chore: Chore;
-  toggleOverlay: () => void;
 }
 
-const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
+const DeleteChore = ({ closeModal, chore }: Props) => {
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
   const { deleteAttachments } = useStorage();
 
   return (
-    <Container overlay={overlay}>
+    <Container>
       <Content>
         <Text variant="headlineMedium">Ta bort syssla</Text>
         <ModalContent elevation={0}>
@@ -38,7 +37,6 @@ const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
               dispatch(deleteChore(chore));
               deleteAttachments(chore);
               closeModal();
-              toggleOverlay();
             }}
             mode="contained"
             buttonColor={colors.errorContainer}
@@ -51,7 +49,6 @@ const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
               onPress={() => {
                 dispatch(updateChore({ ...chore, archived: true }));
                 closeModal();
-                toggleOverlay();
               }}
               mode="outlined"
             >
@@ -62,7 +59,6 @@ const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
       </Content>
       <Pressable
         onPress={() => {
-          toggleOverlay();
           closeModal();
         }}
       >
@@ -74,10 +70,9 @@ const DeleteChore = ({ closeModal, chore, toggleOverlay }: Props) => {
 
 export default DeleteChore;
 
-const Container = styled.View<{ overlay: boolean }>`
+const Container = styled.View`
   flex: 1;
   justify-content: center;
-  background-color: ${(props) => (props.overlay ? "rgba(0,0,0,0.5)" : undefined)};
   align-items: center;
 `;
 

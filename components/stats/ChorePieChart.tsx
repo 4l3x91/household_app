@@ -3,7 +3,6 @@ import { View } from "react-native";
 import PieChartComp, { Data } from "../../components/stats/PieChartComp";
 import { selectChores } from "../../store/chore/choreSelectors";
 import { completedChoreModel } from "../../store/completedChore/completedChoreModel";
-import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
 import { selectAllHouseholdMembers } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
 
@@ -11,14 +10,14 @@ type Props = {
   choosenChore?: string;
   size?: number;
   showAvatars: boolean;
+  completedChores: completedChoreModel[];
 };
 
-const ChorePieChart = ({ choosenChore, size, showAvatars }: Props) => {
+const ChorePieChart = ({ choosenChore, size, showAvatars, completedChores }: Props) => {
   const householdMembers = useAppSelector(selectAllHouseholdMembers);
-  const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const householdChores = useAppSelector(selectChores).chores;
 
-  const data: Data[] = householdMembers
+  const init: Data[] = householdMembers
     .map((member) => {
       const key = member.id;
       const completedChoresByMember: completedChoreModel[] = completedChores.filter((chore) => chore.profileId === member.id);
@@ -38,6 +37,8 @@ const ChorePieChart = ({ choosenChore, size, showAvatars }: Props) => {
         : { key: -1 };
     })
     .filter((x) => x.key !== -1);
+
+  const data = init.filter((x) => x.value !== 0);
 
   return (
     <View>

@@ -16,10 +16,9 @@ import ValuePicker from "./ValuePicker";
 interface Props {
   closeModal: () => void;
   chore: Chore;
-  toggleOverlay: () => void;
 }
 
-const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
+const EditChore = ({ closeModal, chore }: Props) => {
   const [deviceImageUri, setDeviceImageUri] = useState<string>("");
   const [deviceRecordingUri, setDeviceRecordingUri] = useState<string>("");
   const [editImage, setEditImage] = useState<"add" | "update" | "delete" | "">("");
@@ -104,7 +103,6 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
                       onPress={() => {
                         handleSubmit();
                         closeModal();
-                        toggleOverlay();
                       }}
                       mode="outlined"
                     >
@@ -117,12 +115,7 @@ const EditChore = ({ closeModal, chore, toggleOverlay }: Props) => {
           </Formik>
         </ModalContent>
       </Content>
-      <Pressable
-        onPress={() => {
-          toggleOverlay();
-          closeModal();
-        }}
-      >
+      <Pressable onPress={() => closeModal()}>
         <SimpleLineIcons name="close" size={42} color={colors.primary} />
       </Pressable>
     </Container>

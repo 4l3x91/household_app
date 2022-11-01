@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
-import { Badge, Surface, Text, Theme, useTheme } from "react-native-paper";
+import { Badge, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { Theme } from "../../theme";
 
 type Props = {
   value: number;

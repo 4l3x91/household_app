@@ -72,18 +72,18 @@ const AvatarCard = styled.Pressable<{ color: string; selected?: boolean }>`
   border-radius: 6px;
   ${({ selected }) => !selected && "opacity: .5"};
   margin: 4px;
-  `;
+`;
 
 const AvatarText = styled(Text)`
   margin: 0 10px;
   align-self: center;
-  `;
+`;
 
 const AvatarContainer = styled.View`
   justify-content: center;
   align-items: center;
   margin-top: 20px;
-  `;
+`;
 
 const AvatarContent = styled.View`
   margin-bottom: 10px;

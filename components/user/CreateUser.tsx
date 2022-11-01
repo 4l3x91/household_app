@@ -89,11 +89,6 @@ const Container = styled.View`
   height: 100%;
 `;
 
-const ButtonContainer = styled.View`
-  margin-bottom: 30px;
-  flex-direction: row;
-`;
-
 const InputContainer = styled.View`
   flex: 1;
   justify-content: center;

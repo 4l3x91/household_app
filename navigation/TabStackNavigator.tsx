@@ -1,11 +1,11 @@
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { useTheme } from "react-native-paper";
 import { selectHouseholdName } from "../store/household/householdSelector";
-import { selectMemoizedCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
+import { selectCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
 import { MenuStackParams } from "./MenuStackNavigator";
@@ -29,7 +29,7 @@ const BottomStack = createBottomTabNavigator<BottomTabStackParams>();
 
 const TabStackNavigator = () => {
   const household = useAppSelector(selectHouseholdName);
-  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const currentProfile = useAppSelector(selectCurrentProfile);
   const nrOfPendingProfiles = useAppSelector(selectPendingProfiles).length;
   const { colors } = useTheme();
 
@@ -47,7 +47,7 @@ const TabStackNavigator = () => {
       <BottomStack.Screen
         name="Stats"
         component={StatsStackNavigator}
-        options={{ tabBarIcon: ({ color, size }) => <MaterialIcons name="pie-chart" size={size} color={color} />, tabBarLabel: "Statistik" }}
+        options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} />, headerShown: false }}
       />
       <BottomStack.Screen
         name="UserProfile"

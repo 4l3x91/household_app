@@ -1,5 +1,5 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 import { Badge, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
@@ -23,19 +23,17 @@ const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleD
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
   let dateToInterval: Date = new Date();
-  const [isOverdue, setIsOverdue] = useState(false);
   const today = new Date();
   const { addDays } = useUtils();
   const profile = useAppSelector(selectCurrentProfile);
-  const completedForThisChore = completedChores.completedChores.filter((cc) => cc.choreId === chore.id).sort((a, b) => (a.date < b.date ? -1 : 1));
+  const completedForThisChore = completedChores.completedChores.filter((cc) => cc.choreId === chore.id).sort((a, b) => (a.date > b.date ? -1 : 1));
 
   if (completedForThisChore.length > 0) {
-    completedForThisChore.find((cc) => {
-      dateToInterval = addDays(cc.date, chore.interval);
-    });
+    dateToInterval = addDays(completedForThisChore[0].date, chore.interval);
   } else {
     dateToInterval = addDays(chore.dateCreated, chore.interval);
   }
+
   const timeLeft = Math.round((dateToInterval.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
 
   function handleEditPress() {
@@ -57,32 +55,23 @@ const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleD
     <ChoreItemContainer archived={chore.archived}>
       <View>
         <Text variant="headlineSmall">{chore.name}</Text>
-        {isOverdue ? (
-          <Text variant="bodySmall">
-            Försenad {-timeLeft} {-timeLeft === 0 ? "dag" : "dagar "}
-          </Text>
-        ) : (
-          <Text variant="bodySmall">Behöver göras {timeLeft === 0 ? "idag" : timeLeft > 1 ? "inom " + timeLeft + " dagar" : "imorgon"}</Text>
-        )}
+        <Text variant="bodySmall">
+          Behöver göras {chore.interval === 1 ? "varje" : `var ${chore.interval === 2 ? "annan" : `${chore.interval}:e`}`} dag
+        </Text>
       </View>
       <InnerContainer>
         {completedForThisChore[0]?.date.toLocaleDateString() === today.toLocaleDateString() ? (
           <DisplayCompletedAvatars choreId={chore.id} />
-        ) : dateToInterval.toLocaleDateString() < today.toLocaleDateString() ? (
-          (!isOverdue && setIsOverdue(true),
-          (
-            <Badge size={30} style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>
-              {chore.interval}
-            </Badge>
-          ))
+        ) : timeLeft < 0 ? (
+          <Badge size={30} style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>
+            {-timeLeft}
+          </Badge>
         ) : (
-          chore.dateCreated.toLocaleDateString() <= today.toLocaleDateString() &&
-          (isOverdue && setIsOverdue(false),
-          (
+          timeLeft >= 0 && (
             <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
-              {chore.interval}
+              {timeLeft}
             </Badge>
-          ))
+          )
         )}
         {editMode && profile?.role === "owner" && (
           <OwnerButtons>
@@ -123,10 +112,6 @@ const InnerContainer = styled.View`
 `;
 
 const OwnerButton = styled.Pressable`
-  padding: 10px 10px 10px 0;
-`;
-
-const TrashButton = styled.Pressable`
   padding: 10px 10px 10px 0;
 `;
 

@@ -1,9 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
-import { Button, Surface, Text, Theme, useTheme } from "react-native-paper";
+import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { RootStackParams } from "../../navigation/RootStackNavigator";
+import { Theme } from "../../theme";
 
 interface Props {
   error: string;
