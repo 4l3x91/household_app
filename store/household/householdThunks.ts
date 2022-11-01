@@ -68,39 +68,6 @@ export const updateHouseholdName = createAsyncThunk<string, { newName: string; p
   }
 );
 
-export const getHouseholdByCode = createAsyncThunk<HouseholdModel, { code: string; user: User }, { rejectValue: string }>(
-  "household/getHouseholdByCode",
-  async ({ code, user }, thunkAPI) => {
-    try {
-      const capitalizedCode = code.toUpperCase();
-      const profilesRef = collection(db, "profiles");
-      const householdRef = collection(db, "households");
-      const q = query(householdRef, where("code", "==", capitalizedCode));
-      const q2 = query(profilesRef, where("userId", "==", user.id));
-      const queryResult = await getDocs(q);
-
-      if (!queryResult.empty) {
-        const household = queryResult.docs[0].data() as HouseholdModel;
-
-        const queryResult2 = await getDocs(q2);
-        queryResult2.forEach((doc) => {
-          if (doc.get("householdId") === household.id) {
-            throw new Error("Du har redan en profil i detta hushåll");
-          }
-        });
-        return household;
-      } else {
-        return thunkAPI.rejectWithValue("Det här hushållet existerar inte");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
-      return thunkAPI.rejectWithValue("error");
-    }
-  }
-);
-
 export const getHouseholdById = createAsyncThunk<HouseholdModel, string, { rejectValue: string }>(
   "household/getHouseholdById",
   async (id, thunkAPI) => {
