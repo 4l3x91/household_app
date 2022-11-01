@@ -5,9 +5,7 @@ import { Button, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
 import { useYup } from "../../hooks/useYup";
-import { selectHouseholdId } from "../../store/household/householdSelector";
 import { Avatar, Profile } from "../../store/profile/profileModel";
-import { selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";
 import { postProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
@@ -17,16 +15,15 @@ import AvatarPicker from "./AvatarPicker";
 interface Props {
   closeModal: () => void;
   profilesInHousehold?: Profile[];
+  householdId: string;
 }
 
-const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
+const CreateProfile = ({ closeModal, profilesInHousehold, householdId }: Props) => {
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
   const [selectedAvatar, setSelectedAvatar] = useState(-1);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
-  const members = useAppSelector(selectMemoizedHouseholdMembers);
-  const householdId = useAppSelector(selectHouseholdId);
   const pending = useAppSelector((state) => state.profile).pending;
   const { profileSchema } = useYup();
 
