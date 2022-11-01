@@ -1,55 +1,70 @@
 import { uuidv4 } from "@firebase/util";
+import { Audio } from "expo-av";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { View } from "react-native";
+import Modal from "react-native-modal";
 import { Button, Divider, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
+import { useStorage } from "../../hooks/useStorage";
+import { useUtils } from "../../hooks/useUtils";
+import { useYup } from "../../hooks/useYup";
 import { Chore } from "../../store/chore/choreModel";
 import { postChore } from "../../store/chore/choreThunks";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { useAppDispatch, useAppSelector } from "../../store/store";
+import AppModal from "../common/AppModal";
 import Input from "../common/Input";
+import SoundRecorder from "./SoundRecorder";
 import ValuePicker from "./ValuePicker";
-const validation = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Titel måste vara minst två tecken")
-    .max(20, "Titel kan inte vara längre än 20 tecken")
-    .required("Titel kan inte vara tom"),
-  description: Yup.string()
-    .min(10, "Beskrivning måste vara minst 10 tecken")
-    .max(100, "Beskrivning kan inte vara längre än 100 tecken")
-    .required("Beskrivning kan inte vara tom"),
-});
 
 interface Props {
   closeModal: () => void;
 }
 
 const CreateChore = ({ closeModal }: Props) => {
+  const [deviceRecordingUri, setDeviceRecordingUri] = useState<string>("");
+  const [recording, setRecording] = React.useState<Audio.Recording>();
+  const [deviceImageUri, setDeviceImageUri] = useState<string>("");
   const [interval, setInterval] = useState(1);
   const [energy, setEnergy] = useState(2);
+  const [soundModalOpen, setSoundModalOpen] = useState(false);
   const { household } = useAppSelector(selectHousehold);
   const dispatch = useAppDispatch();
   const choreState = useAppSelector((state) => state.chores);
+  const choreId = uuidv4();
+  const { choreSchema } = useYup();
+  const { pickImage } = useUtils();
+  const { uploadAttatchments } = useStorage();
 
-  const handleSubmit = (values: { name: string; description: string }) => {
+  const setDeviceImage = async () => {
+    const img = await pickImage();
+    setDeviceImageUri(img || "");
+  };
+
+  const handleSubmit = async (values: { name: string; description: string }) => {
+    const attatchments = await uploadAttatchments(choreId, deviceImageUri, deviceRecordingUri);
+
     const newChore: Chore = {
-      id: uuidv4(),
+      id: choreId,
       name: values.name,
       description: values.description,
       householdId: household.id,
       interval: interval,
       energy: energy,
       archived: false,
+      dateCreated: new Date(),
+      imgUrl: attatchments.firebaseImgUrl,
+      soundUrl: attatchments.firebaseSoundUrl,
     };
+
     dispatch(postChore(newChore));
     closeModal();
   };
 
   return (
     <View>
-      <Formik initialValues={{ name: "", description: "" }} validationSchema={validation} onSubmit={(values) => handleSubmit(values)}>
+      <Formik initialValues={{ name: "", description: "" }} validationSchema={choreSchema} onSubmit={(values) => handleSubmit(values)}>
         {({ handleChange, handleSubmit, values, errors }) => {
           return (
             <View>
@@ -83,6 +98,14 @@ const CreateChore = ({ closeModal }: Props) => {
                     value={energy}
                   />
                 </Container>
+                <AttatchmentContainer>
+                  <Button onPress={setDeviceImage} icon={deviceImageUri ? "check-bold" : "image"}>
+                    Lägg till bild
+                  </Button>
+                  <Button onPress={() => setSoundModalOpen(true)} icon={deviceRecordingUri ? "check-bold" : "volume-high"}>
+                    Lägg till ljud
+                  </Button>
+                </AttatchmentContainer>
               </ContentContainer>
               <Divider style={{ height: 1, width: "100%" }} />
               <ButtonContainer>
@@ -102,11 +125,33 @@ const CreateChore = ({ closeModal }: Props) => {
           );
         }}
       </Formik>
+      <Modal isVisible={soundModalOpen} statusBarTranslucent>
+        <AppModal
+          title="Lägg till ljud"
+          closeModal={() => {
+            setSoundModalOpen(false);
+            setDeviceRecordingUri("");
+          }}
+        >
+          <SoundRecorder
+            setDeviceRecordingUri={setDeviceRecordingUri}
+            recording={recording}
+            setRecording={setRecording}
+            closeModal={() => setSoundModalOpen(false)}
+          />
+        </AppModal>
+      </Modal>
     </View>
   );
 };
 
 export default CreateChore;
+
+const AttatchmentContainer = styled.View`
+  margin-top: 20px;
+  flex-direction: row;
+  justify-content: space-around;
+`;
 
 const ButtonWrapper = styled.View`
   flex: 1;
@@ -119,7 +164,7 @@ const ButtonContainer = styled(ButtonWrapper)`
 const ContentContainer = styled(Surface)`
   padding: 10px 20px;
   background-color: transparent;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
 `;
 
 const Container = styled.View`

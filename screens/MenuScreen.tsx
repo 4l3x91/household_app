@@ -5,9 +5,9 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import { auth } from "../config/firebase";
+import { useUtils } from "../hooks/useUtils";
 import { MenuStackParams } from "../navigation/MenuStackNavigator";
-import { resetHousehold } from "../store/household/householdSlice";
-import { resetProfileState } from "../store/profile/profileSlice";
+
 import { useAppDispatch } from "../store/store";
 import { logout } from "../store/user/userSlice";
 
@@ -15,16 +15,14 @@ type Props = NativeStackScreenProps<MenuStackParams>;
 
 const MenuScreen = ({ navigation }: Props) => {
   const { colors } = useTheme();
+  const { resetStore } = useUtils();
   const dispatch = useAppDispatch();
   function handleSignOut() {
     signOut(auth).then(() => {
       {
-        navigation.popToTop();
         dispatch(logout());
 
-        //denna resettar state men ska bytas ut mot en useEffect där alla state resettas
-        dispatch(resetProfileState());
-        dispatch(resetHousehold());
+        resetStore();
       }
     });
   }

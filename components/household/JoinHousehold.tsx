@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import { Keyboard, Pressable, View } from "react-native";
 import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
 import { db } from "../../config/firebase";
+import { useYup } from "../../hooks/useYup";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { setError } from "../../store/household/householdSlice";
 import { getHouseholdByCode } from "../../store/household/householdThunks";
@@ -15,13 +15,6 @@ import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
 import ErrorTranslator from "../common/ErrorTranslator";
 import CreateProfile from "../profile/CreateProfile";
-
-const householdCodeSchema = Yup.object().shape({
-  householdCode: Yup.string()
-    .required("En hushållskod måste innehålla sex stycken tecken")
-    .min(6, "En hushållskod måste innehålla sex tecken")
-    .matches(/^\S*$/, "En hushållskod kan inte innehålla mellanslag"),
-});
 
 interface Props {
   closeModal: () => void;
@@ -32,9 +25,9 @@ const JoinHousehold = ({ closeModal }: Props) => {
   const dispatch = useAppDispatch();
   const household = useAppSelector(selectHousehold);
   const user = useAppSelector(selectUser);
-  const error = useAppSelector(selectHousehold).error;
   const [profilesInHousehold, setProfilesInHousehold] = useState<Profile[]>([]);
   const pinCodeLength = 6;
+  const { householdCodeSchema } = useYup();
   const { colors } = useTheme();
 
   async function getUnavalibleAvatars() {
@@ -43,8 +36,6 @@ const JoinHousehold = ({ closeModal }: Props) => {
     const q = query(profilesRef, where("householdId", "==", household.household.id));
 
     const result = await getDocs(q);
-
-    console.log(result);
 
     if (!result.empty) {
       result.forEach((doc) => setProfilesInHousehold((prev) => [...prev, doc.data() as Profile]));
@@ -59,7 +50,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
   }, [text]);
 
   useEffect(() => {
-    if (text === household.household.code) {
+    if (text?.toUpperCase() === household.household.code) {
       setProfilesInHousehold([]);
 
       getUnavalibleAvatars();
@@ -97,7 +88,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
             <Content>
               <ModalContent elevation={0}>
                 <Container>
-                  {household.household.code !== "" && household.household.code !== values.householdCode ? (
+                  {household.household.code !== values.householdCode || household.error ? (
                     <>
                       <Text variant="headlineMedium">Ange hushållskod</Text>
                       <Text variant="bodySmall" style={{ textAlign: "left", margin: 4 }}>
@@ -110,7 +101,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
                           value={text}
                           onChangeText={(text: string) => {
                             values.householdCode = text.toUpperCase();
-                            setText(text.toUpperCase());
+                            setText(text);
 
                             if (text.length === 6) {
                               Keyboard.dismiss();
@@ -122,22 +113,24 @@ const JoinHousehold = ({ closeModal }: Props) => {
                       </InputContainer>
                     </>
                   ) : (
-                    <>
-                      <Text variant="headlineMedium">Skapa din profil</Text>
-                      <InfoBox style={{ borderColor: colors.primary }}>
-                        <View style={{ flexDirection: "row" }}>
-                          <Text variant="bodySmall">Välkommen till</Text>
-                          <Text variant="bodySmall" style={{ fontWeight: "bold" }}>
-                            {" "}
-                            {household.household.name}
-                          </Text>
-                        </View>
-                        <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
-                      </InfoBox>
-                      <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={closeModal} />
-                    </>
+                    !household.error && (
+                      <>
+                        <Text variant="headlineMedium">Skapa din profil</Text>
+                        <InfoBox style={{ borderColor: colors.primary }}>
+                          <View style={{ flexDirection: "row" }}>
+                            <Text variant="bodySmall">Välkommen till </Text>
+                            <Text variant="bodySmall" style={{ fontWeight: "bold" }}>
+                              {" "}
+                              {household.household.name}
+                            </Text>
+                          </View>
+                          <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
+                        </InfoBox>
+                        <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={closeModal} />
+                      </>
+                    )
                   )}
-                  <ErrorBox>{error && <ErrorTranslator error={error as string} />}</ErrorBox>
+                  <ErrorBox>{household.error && <ErrorTranslator error={household.error as string} />}</ErrorBox>
                 </Container>
               </ModalContent>
             </Content>
@@ -167,9 +160,9 @@ const ErrorBox = styled.View`
 const InputBox = styled(Surface)<{ filled: boolean }>`
   border-width: 2px;
   min-width: 50px;
+  margin: 6px;
   min-height: 70px;
   border-radius: 5px;
-  margin: 4px;
   justify-content: center;
   align-items: center;
   opacity: ${({ filled }) => (filled ? 1 : 0.69)};
@@ -180,6 +173,7 @@ const InputContainer = styled(Surface)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `;
 
 const Input = styled.TextInput`
@@ -204,12 +198,14 @@ const FlexContainer = styled(Container)`
 `;
 
 const Content = styled(Surface)`
-  margin: 20px;
+  margin: 10px;
+  justify-content: center;
+  padding: 0px 20px;
   border-radius: 20px;
   align-items: center;
 `;
 
 const ModalContent = styled(Surface)`
-  padding: 0px 10px 20px 10px;
+  padding: 0px 10px 0px 10px;
   margin-top: 10px;
 `;

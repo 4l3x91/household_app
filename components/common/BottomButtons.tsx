@@ -1,39 +1,36 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
 import { View } from "react-native";
 import { Button, Divider } from "react-native-paper";
-import { RootStackParams } from "../../navigation/RootStackNavigator";
 
 interface Props {
-  handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
-  pending: boolean;
-  onPress: () => void;
+  leftOnPress: () => void;
+  pending?: boolean;
+  rightOnPress: () => void;
   leftTitle: string;
   rightTitle: string;
   leftIcon: string;
   rightIcon: string;
+  topDivider?: boolean;
 }
 
-type BottomButtonsNavProps = NativeStackNavigationProp<RootStackParams, "Welcome">;
-
-const BottomButtons = ({ handleSubmit, pending, onPress, leftTitle, rightTitle, leftIcon, rightIcon }: Props) => {
-  const navigation = useNavigation<BottomButtonsNavProps>();
-
+const BottomButtons = ({ leftOnPress, pending, rightOnPress, leftTitle, rightTitle, leftIcon, rightIcon, topDivider }: Props) => {
   return (
-    <View style={{ flexDirection: "row", marginBottom: 30 }}>
-      <View style={{ flex: 1 }}>
-        <Button labelStyle={{ fontSize: 16 }} mode={"text"} style={{ borderRadius: 0 }} onPress={handleSubmit} loading={pending} icon={leftIcon}>
-          {leftTitle}
-        </Button>
+    <>
+      {topDivider && <Divider style={{ height: 1 }} />}
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ flex: 1 }}>
+          <Button mode={"text"} style={{ borderRadius: 0, padding: 15 }} onPress={leftOnPress} loading={pending} icon={leftIcon}>
+            {leftTitle}
+          </Button>
+        </View>
+        <Divider style={{ width: 1, height: "100%" }} />
+        <View style={{ flex: 1 }}>
+          <Button mode={"text"} style={{ borderRadius: 0, padding: 15 }} onPress={rightOnPress} icon={rightIcon}>
+            {rightTitle}
+          </Button>
+        </View>
       </View>
-      <Divider style={{ width: 1, height: "100%" }} />
-      <View style={{ flex: 1 }}>
-        <Button labelStyle={{ fontSize: 16 }} mode={"text"} style={{ borderRadius: 0 }} onPress={() => navigation.goBack()} icon={rightIcon}>
-          {rightTitle}
-        </Button>
-      </View>
-    </View>
+    </>
   );
 };
 

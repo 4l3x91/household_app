@@ -4,63 +4,59 @@ import { default as React, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Button, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import * as Yup from "yup";
+import { useYup } from "../../hooks/useYup";
+import { avatarData } from "../../store/profile/profileData";
 import { Avatar } from "../../store/profile/profileModel";
-import { selectMemoizedCurrentProfile, selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";
+import { selectCurrentProfile, selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";
 import { updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import Input from "../common/Input";
 import AvatarPicker from "./AvatarPicker";
-
-const validation = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Profilnamnet måste vara minst två tecken")
-    .max(20, "Profilnamnet kan inte vara längre än 20 tecken")
-    .required("Profilnamn kan inte vara tomt"),
-});
 
 interface Props {
   closeModal: () => void;
 }
 
 const EditProfile = ({ closeModal }: Props) => {
-  const profile = useAppSelector(selectMemoizedCurrentProfile);
+  const profile = useAppSelector(selectCurrentProfile);
   const [avatar, setAvatar] = useState<Avatar>(profile?.avatar as Avatar);
-  const [selectedAvatar, setSelectedAvatar] = useState(3);
+  const [selectedAvatar, setSelectedAvatar] = useState(avatarData.findIndex((x) => x.avatar === profile?.avatar.avatar));
   const members = useAppSelector(selectMemoizedHouseholdMembers);
   const { colors } = useTheme();
-
+  const { profileSchema } = useYup();
   const dispatch = useAppDispatch();
-
-  const handleSubmit = (values: { name: string; avatar: string; avatarColor: string }) => {
-    if (profile) dispatch(updateProfile({ ...profile, profileName: values.name, avatar: { avatar: values.avatar, color: values.avatarColor } }));
-    closeModal();
-  };
 
   return (
     <Container>
       <Content>
-        <Text variant="headlineMedium">Redigera profil</Text>
         <ModalContent elevation={0}>
           <Formik
-            initialValues={{ name: profile?.profileName }}
-            validationSchema={validation}
-            onSubmit={(values) => values && handleSubmit({ name: values.name as string, avatar: avatar.avatar, avatarColor: avatar.color })}
+            initialValues={{ profileName: profile?.profileName }}
+            validationSchema={profileSchema}
+            onSubmit={(values) => {
+              if (profile && values.profileName) {
+                dispatch(updateProfile({ ...profile, profileName: values.profileName, avatar: { avatar: avatar.avatar, color: avatar.color } }));
+                closeModal();
+              }
+            }}
           >
             {({ handleChange, handleSubmit, values, errors }) => {
               return (
-                <View style={{ width: "100%" }}>
-                  <Input label="Namn" value={values.name as string} handleChange={handleChange("name")} />
-                  {errors.name && <Text>{errors.name}</Text>}
-                  <AvatarContainer>
-                    <AvatarPicker
-                      setAvatar={setAvatar}
-                      selectedAvatar={selectedAvatar}
-                      setSelectedAvatar={setSelectedAvatar}
-                      profilesInHousehold={members}
-                    />
-                  </AvatarContainer>
-                  <Button onPress={handleSubmit}>Spara</Button>
+                <View>
+                  <Text variant="headlineMedium" style={{ textAlign: "center", marginBottom: 10 }}>
+                    Redigera profil
+                  </Text>
+                  <Input label="Namn" value={values.profileName as string} handleChange={handleChange("profileName")} />
+                  {errors.profileName && <Text>{errors.profileName}</Text>}
+                  <AvatarPicker
+                    setAvatar={setAvatar}
+                    selectedAvatar={selectedAvatar}
+                    setSelectedAvatar={setSelectedAvatar}
+                    profilesInHousehold={members}
+                  />
+                  <Button mode="contained-tonal" style={{ borderRadius: 10 }} onPress={handleSubmit}>
+                    Spara
+                  </Button>
                 </View>
               );
             }}
@@ -83,41 +79,14 @@ const Container = styled.View`
 `;
 
 const Content = styled(Surface)`
-  margin: 20px;
-  padding: 20px 0;
-  border-radius: 20px;
+  border-radius: 10px;
+  justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 `;
 
 const ModalContent = styled(Surface)`
-  flex-direction: row;
+  width: 100%;
   padding: 20px;
-  margin-top: 10px;
-`;
-
-const AvatarContainer = styled.View`
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-`;
-
-const AvatarContent = styled.View`
-  align-items: center;
-  justify-content: center;
   flex-direction: row;
-  flex-wrap: wrap;
-  border-radius: 10px;
-  padding: 20px 0;
-`;
-
-const AvatarText = styled.Text`
-  font-size: 35px;
-`;
-
-const AvatarCard = styled.Pressable<{ color: string; selected?: boolean }>`
-  padding: 14px;
-  background-color: ${(props) => props.color};
-  border-radius: 6px;
-  ${({ selected }) => !selected && "opacity: .5"};
-  margin: 4px;
 `;

@@ -1,84 +1,75 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Button, Surface, Text, useTheme } from "react-native-paper";
+import { Image } from "react-native";
+import { Button, useTheme } from "react-native-paper";
+import styled from "styled-components/native";
 import { RootStackParams } from "../../navigation/RootStackNavigator";
-import { getTheme } from "../../theme";
 
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const WelcomeScreen = ({ navigation }: Props) => {
   const theme = useTheme();
-  console.log(getTheme(theme).dark);
-
-  //TEST FUNCTION TO ADD DOCUMENT TO A COLLECTION WITH FIREBASE
-  // async function postData() {
-  //   await addDoc(collection(db, "testCollection"), { test: "test" });
-  // }
 
   return (
-    <View style={styles.container}>
-      <Surface elevation={0} style={styles.surface}>
-        {/* <Button onPress={() => postData()}>Test Firebase</Button> BUTTON TO TEST postDataFUNCTION! */}
-        <Button
-          contentStyle={styles.button}
-          labelStyle={styles.buttonText}
-          icon="login"
-          mode="contained"
-          onPress={() => navigation.navigate("Login")}
-        >
-          Logga in
-        </Button>
-        <Surface style={[styles.dividerContainer, styles.surface]}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>eller</Text>
-          <View style={styles.dividerLine} />
-        </Surface>
-        <Button
-          contentStyle={styles.button}
-          labelStyle={styles.buttonText}
-          icon="account-plus"
-          mode="outlined"
-          onPress={() => navigation.navigate("CreateUser")}
-        >
-          Registrera konto
-        </Button>
-      </Surface>
-    </View>
+    <>
+      <Container>
+        <Image source={require("../../assets/catbroomSplash.png")} style={{ flex: 1, resizeMode: "contain" }} />
+        <InnerContainer>
+          <Button
+            contentStyle={{ flexDirection: "row-reverse", paddingHorizontal: 15, paddingVertical: 5 }}
+            labelStyle={{ fontSize: 15 }}
+            icon="login"
+            mode="contained"
+            onPress={() => navigation.navigate("Login")}
+          >
+            Logga in
+          </Button>
+          <DividerContainer>
+            <DividerLine />
+            <DividerText color={theme.colors.onSurface}>eller</DividerText>
+            <DividerLine />
+          </DividerContainer>
+          <Button
+            contentStyle={{ flexDirection: "row-reverse", paddingHorizontal: 15, paddingVertical: 5 }}
+            labelStyle={{ fontSize: 15 }}
+            icon="account-plus"
+            mode="outlined"
+            onPress={() => navigation.navigate("CreateUser")}
+          >
+            Registrera konto
+          </Button>
+        </InnerContainer>
+      </Container>
+    </>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  },
-  surface: {
-    backgroundColor: "transparent",
-  },
-  dividerContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 10,
-  },
-  dividerText: {
-    paddingVertical: 15,
-    paddingHorizontal: 5,
-  },
-  dividerLine: {
-    backgroundColor: "#6d6d6def",
-    height: 1,
-    flex: 1,
-    alignSelf: "center",
-  },
-  button: {
-    flexDirection: "row-reverse",
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-  },
-  buttonText: {
-    fontSize: 15,
-  },
-});
-
 export default WelcomeScreen;
+
+const Container = styled.View`
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+`;
+const DividerContainer = styled.View`
+  flex-direction: row;
+  padding: 0 10px;
+`;
+
+const DividerText = styled.Text<{ color: string }>`
+  padding: 15px 5px;
+  color: ${(props) => props.color};
+`;
+
+const DividerLine = styled.View`
+  height: 1px;
+  flex: 1;
+  background-color: #6d6d6def;
+  align-self: center;
+`;
+
+const InnerContainer = styled.View`
+  position: absolute;
+  top: 60%;
+`;

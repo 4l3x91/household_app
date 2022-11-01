@@ -4,13 +4,13 @@ import { View } from "react-native";
 import { Button, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { v4 as uuidv4 } from "uuid";
+import { useYup } from "../../hooks/useYup";
 import { selectHouseholdId } from "../../store/household/householdSelector";
 import { Avatar, Profile } from "../../store/profile/profileModel";
 import { selectMemoizedHouseholdMembers } from "../../store/profile/profileSelectors";
 import { postProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
-import { profileSchema } from "../../utils/yupSchemas";
 import Input from "../common/Input";
 import AvatarPicker from "./AvatarPicker";
 
@@ -28,6 +28,7 @@ const CreateProfile = ({ closeModal, profilesInHousehold }: Props) => {
   const members = useAppSelector(selectMemoizedHouseholdMembers);
   const householdId = useAppSelector(selectHouseholdId);
   const pending = useAppSelector((state) => state.profile).pending;
+  const { profileSchema } = useYup();
 
   return (
     <Container>
@@ -99,34 +100,4 @@ export default CreateProfile;
 const Container = styled.View`
   justify-content: center;
   width: 100%;
-  padding: 10px;
-`;
-
-const AvatarContainer = styled.View`
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-`;
-
-const AvatarContent = styled.View`
-  margin: 20px;
-  width: 85%;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  background-color: lightgray;
-  border-radius: 10px;
-  padding: 20px;
-`;
-
-const AvatarText = styled.Text`
-  font-size: 40px;
-`;
-
-const AvatarCard = styled.Pressable<{ color: string; selected?: boolean }>`
-  padding: 5px;
-  background-color: ${(props) => props.color};
-  border-radius: 6px;
-  ${({ selected }) => !selected && "opacity: .5"};
-  margin: 4px;
 `;

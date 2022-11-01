@@ -1,4 +1,16 @@
-import { addDoc, collection, deleteDoc, doc, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  DocumentData,
+  DocumentReference,
+  getDocs,
+  query,
+  Timestamp,
+  updateDoc,
+  where,
+} from "@firebase/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { Chore } from "./choreModel";
@@ -20,7 +32,7 @@ export const getChores = createAsyncThunk<Chore[], string, { rejectValue: string
     const documentsFromQuery = await getDocs(q);
     if (!documentsFromQuery.empty) {
       const chores: Chore[] = [];
-      documentsFromQuery.docs.forEach((doc) => chores.push(doc.data() as Chore));
+      documentsFromQuery.docs.forEach((doc) => chores.push({ ...doc.data(), dateCreated: (doc.get("dateCreated") as Timestamp)?.toDate() } as Chore));
       return chores;
     } else {
       return thunkAPI.rejectWithValue("Cannot find any chores with that household id");
@@ -53,15 +65,24 @@ export const updateChore = createAsyncThunk<Chore, Chore, { rejectValue: string 
 
 export const deleteChore = createAsyncThunk<Chore, Chore, { rejectValue: string }>("profile/deleteProfile", async (chore, thunkAPI) => {
   try {
-    const collectionRef = collection(db, "chores");
+    const choreRef = collection(db, "chores");
+    const completedChoreRef = collection(db, "completedChores");
 
-    const q = query(collectionRef, where("id", "==", chore.id));
+    const q = query(choreRef, where("id", "==", chore.id));
+    const q2 = query(completedChoreRef, where("choreId", "==", chore.id));
 
-    const result = await getDocs(q);
+    const choreResult = await getDocs(q);
+    const completedChoreResult = await getDocs(q2);
 
-    if (!result.empty) {
-      const choreToDeleteId = result.docs[0].id;
+    if (completedChoreResult.empty && !choreResult.empty) {
+      const choreToDeleteId = choreResult.docs[0].id;
       await deleteDoc(doc(db, "chores", choreToDeleteId));
+      return chore;
+    } else if (!choreResult.empty && !completedChoreResult.empty) {
+      const choreToDeleteId = choreResult.docs[0].id;
+      const completedChoreToDeletedId = completedChoreResult.docs[0].id;
+      await deleteDoc(doc(db, "chores", choreToDeleteId));
+      await deleteDoc(doc(db, "completedChores", completedChoreToDeletedId));
       return chore;
     } else {
       return thunkAPI.rejectWithValue("cant find chore to delete");

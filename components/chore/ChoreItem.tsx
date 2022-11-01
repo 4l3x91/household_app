@@ -3,8 +3,10 @@ import React from "react";
 import { View } from "react-native";
 import { Badge, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { useUtils } from "../../hooks/useUtils";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
+import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
 import DisplayCompletedAvatars from "./DisplayCompletedAvatars";
 
@@ -17,9 +19,22 @@ type Props = {
   toggleArchiveModal: () => void;
 };
 
-const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedChore, toggleDeleteModal, toggleArchiveModal }: Props) => {
+const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleDeleteModal, toggleArchiveModal }: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
+  let dateToInterval: Date = new Date();
+  const today = new Date();
+  const { addDays } = useUtils();
+  const profile = useAppSelector(selectCurrentProfile);
+  const completedForThisChore = completedChores.completedChores.filter((cc) => cc.choreId === chore.id).sort((a, b) => (a.date > b.date ? -1 : 1));
+
+  if (completedForThisChore.length > 0) {
+    dateToInterval = addDays(completedForThisChore[0].date, chore.interval);
+  } else {
+    dateToInterval = addDays(chore.dateCreated, chore.interval);
+  }
+
+  const timeLeft = Math.round((dateToInterval.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24));
 
   function handleEditPress() {
     toggleEditModal();
@@ -40,20 +55,25 @@ const ChoreItem = ({ chore, editMode: editPressed, toggleEditModal, setSelectedC
     <ChoreItemContainer archived={chore.archived}>
       <View>
         <Text variant="headlineSmall">{chore.name}</Text>
+        <Text variant="bodySmall">
+          Behöver göras {chore.interval === 1 ? "varje" : `var ${chore.interval === 2 ? "annan" : `${chore.interval}:e`}`} dag
+        </Text>
       </View>
       <InnerContainer>
-        {completedChores.completedChores.find((cc) => cc.choreId === chore.id) ? (
+        {completedForThisChore[0]?.date.toLocaleDateString() === today.toLocaleDateString() ? (
           <DisplayCompletedAvatars choreId={chore.id} />
-        ) : completedChores.completedChores.find(
-            (cc) => cc.choreId === chore.id && cc.date.setDate(cc.date.getDate() + chore.interval) > Date.now()
-          ) ? (
-          <Badge style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>{chore.interval}</Badge>
-        ) : (
-          <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
-            {chore.interval}
+        ) : timeLeft < 0 ? (
+          <Badge size={30} style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>
+            {-timeLeft}
           </Badge>
+        ) : (
+          timeLeft >= 0 && (
+            <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
+              {timeLeft}
+            </Badge>
+          )
         )}
-        {editPressed && (
+        {editMode && profile?.role === "owner" && (
           <OwnerButtons>
             <OwnerButton onPress={handleEditPress}>
               <FontAwesome style={{ marginLeft: 10 }} name="cog" size={20} color={theme.colors.primary} />
@@ -92,10 +112,6 @@ const InnerContainer = styled.View`
 `;
 
 const OwnerButton = styled.Pressable`
-  padding: 10px 10px 10px 0;
-`;
-
-const TrashButton = styled.Pressable`
   padding: 10px 10px 10px 0;
 `;
 

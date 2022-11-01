@@ -5,7 +5,11 @@ import { deleteChore, getChores, postChore, updateChore } from "./choreThunks";
 const choreSlice = createSlice({
   name: "chores",
   initialState,
-  reducers: {},
+  reducers: {
+    resetChoreState(state) {
+      state.chores = [];
+    },
+  },
   extraReducers: (builder) => {
     //create chore cases
     builder.addCase(postChore.pending, (state) => {
@@ -67,3 +71,4 @@ const choreSlice = createSlice({
 });
 
 export const choreReducer = choreSlice.reducer;
+export const { resetChoreState } = choreSlice.actions;

@@ -67,7 +67,7 @@ const AvatarPicker = ({ setAvatar, selectedAvatar, setSelectedAvatar, profilesIn
 export default AvatarPicker;
 
 const AvatarCard = styled.Pressable<{ color: string; selected?: boolean }>`
-  padding: 5px;
+  padding: 7px;
   background-color: ${(props) => props.color};
   border-radius: 6px;
   ${({ selected }) => !selected && "opacity: .5"};
@@ -82,19 +82,16 @@ const AvatarText = styled(Text)`
 const AvatarContainer = styled.View`
   justify-content: center;
   align-items: center;
-  width: 100%;
   margin-top: 20px;
 `;
 
 const AvatarContent = styled.View`
   margin-bottom: 10px;
-  width: 100%;
   align-items: center;
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
   border-radius: 10px;
-  padding: 10px;
 `;
 
 const AvatarEmoji = styled.Text`
