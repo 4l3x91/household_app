@@ -1,6 +1,5 @@
 import { collection, getDocs, query, where } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
-import {} from "react-native-gesture-handler";
 import { db } from "../../config/firebase";
 import { HouseholdModel } from "../../store/household/householdModel";
 import { selectUserProfiles } from "../../store/profile/profileSelectors";
