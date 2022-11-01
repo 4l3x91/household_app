@@ -40,7 +40,7 @@ export const getCompletedChoresPerHousehold = createAsyncThunk<completedChoreMod
           } as completedChoreModel)
         );
         return completedChores;
-      } else return thunkApi.rejectWithValue("cannot find any completed chores on this profile");
+      } else return [];
     } catch (error) {
       if (error instanceof Error) {
         return thunkApi.rejectWithValue(error.message);
