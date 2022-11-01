@@ -13,6 +13,7 @@ import { postChore } from "../../store/chore/choreThunks";
 import { selectHousehold } from "../../store/household/householdSelector";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import AppModal from "../common/AppModal";
+import BottomButtons from "../common/BottomButtons";
 import Input from "../common/Input";
 import SoundRecorder from "./SoundRecorder";
 import ValuePicker from "./ValuePicker";
@@ -107,20 +108,15 @@ const CreateChore = ({ closeModal }: Props) => {
                   </Button>
                 </AttatchmentContainer>
               </ContentContainer>
-              <Divider style={{ height: 1, width: "100%" }} />
-              <ButtonContainer>
-                <ButtonWrapper>
-                  <Button style={{ padding: 15 }} mode={"text"} onPress={handleSubmit} loading={choreState.pending} icon="plus-circle-outline">
-                    Spara
-                  </Button>
-                </ButtonWrapper>
-                <Divider style={{ width: 1, height: "100%" }} />
-                <ButtonWrapper>
-                  <Button style={{ padding: 15 }} mode={"text"} onPress={closeModal} icon="close-circle-outline">
-                    Stäng
-                  </Button>
-                </ButtonWrapper>
-              </ButtonContainer>
+              <BottomButtons
+                leftTitle="Spara"
+                leftIcon="plus-circle-outline"
+                leftOnPress={handleSubmit}
+                rightTitle="Stäng"
+                rightIcon="close-circle-outline"
+                rightOnPress={closeModal}
+                topDivider
+              />
             </View>
           );
         }}
@@ -152,14 +148,6 @@ const AttatchmentContainer = styled.View`
   margin-top: 20px;
   flex-direction: row;
   justify-content: space-around;
-`;
-
-const ButtonWrapper = styled.View`
-  flex: 1;
-`;
-
-const ButtonContainer = styled(ButtonWrapper)`
-  flex-direction: row;
 `;
 
 const ContentContainer = styled(Surface)`
