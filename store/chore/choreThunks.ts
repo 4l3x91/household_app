@@ -32,9 +32,7 @@ export const getChores = createAsyncThunk<Chore[], string, { rejectValue: string
     const documentsFromQuery = await getDocs(q);
     if (!documentsFromQuery.empty) {
       const chores: Chore[] = [];
-      documentsFromQuery.docs.forEach((doc) =>
-        chores.push({ ...doc.data(), dateCreated: (doc.get("createdDate") as Timestamp)?.toDate() || new Date() } as Chore)
-      );
+      documentsFromQuery.docs.forEach((doc) => chores.push({ ...doc.data(), dateCreated: (doc.get("dateCreated") as Timestamp)?.toDate() } as Chore));
       return chores;
     } else {
       return thunkAPI.rejectWithValue("Cannot find any chores with that household id");
