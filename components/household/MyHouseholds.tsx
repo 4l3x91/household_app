@@ -1,6 +1,5 @@
 import { collection, getDocs, query, where } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
-import {} from "react-native-gesture-handler";
 import { db } from "../../config/firebase";
 import { HouseholdModel } from "../../store/household/householdModel";
 import { selectUserProfiles } from "../../store/profile/profileSelectors";
@@ -38,7 +37,13 @@ const MyHouseholds = ({ goToChores, closeModal }: Props) => {
     <>
       {households.length === profiles.length &&
         profiles.map((profile, index) => (
-          <HouseholdCard key={profile.id} closeModal={closeModal} profile={profile} household={households[index]} goToChores={goToChores} />
+          <HouseholdCard
+            key={profile.id}
+            closeModal={closeModal}
+            profile={profile}
+            household={households[index]}
+            goToChores={goToChores}
+          />
         ))}
     </>
   );
