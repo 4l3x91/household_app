@@ -16,7 +16,6 @@ const store = configureStore({
     completedChores: completedChoresReducer,
     themeState: themeReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type AppState = ReturnType<typeof store.getState>;
