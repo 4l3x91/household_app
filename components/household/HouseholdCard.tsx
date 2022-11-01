@@ -1,14 +1,15 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Pressable, TouchableOpacity, View } from "react-native";
+import Modal from "react-native-modal";
 import { Modalize } from "react-native-modalize";
 import { Portal, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { HouseholdModel } from "../../store/household/householdModel";
 import { setHousehold } from "../../store/household/householdSlice";
 import { Profile } from "../../store/profile/profileModel";
-import { deleteProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch } from "../../store/store";
+import DeleteProfile from "../profile/DeleteProfile";
 import AvatarCard from "./AvatarCard";
 
 interface Props {
@@ -22,13 +23,11 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
   const optionsModal = useRef<Modalize>(null);
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <>
       <Pressable
-        onPress={() => {
-          optionsModal.current?.open();
-        }}
-      >
+        onPress={() => optionsModal.current?.open()}>
         <ProfilesContainer background={colors.primaryContainer}>
           <Text variant="titleMedium"> {household.name}</Text>
           <ProfileContainer>
@@ -66,10 +65,13 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
               <Text>Dela hushåll</Text>
             </TouchableOpacity>
             <View style={{ height: 1, backgroundColor: colors.onPrimaryContainer }} />
-            <TouchableOpacity onPress={() => {
-              dispatch(deleteProfile(profile))
-              closeModal && closeModal();
-            }} style={{ alignItems: "center", flexDirection: "row", paddingVertical: 15 }}>
+            <TouchableOpacity
+              onPress={() => {
+                optionsModal.current?.close();
+                setModalVisible(true);
+              }}
+              style={{ alignItems: "center", flexDirection: "row", paddingVertical: 15 }}
+            >
               <View style={{ padding: 4, backgroundColor: colors.onPrimaryContainer, borderRadius: 10, marginRight: 10 }}>
                 <MaterialIcons name="delete" size={34} color={colors.onPrimary} />
               </View>
@@ -77,6 +79,11 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
             </TouchableOpacity>
           </Surface>
         </Modalize>
+      </Portal>
+      <Portal>
+        <Modal avoidKeyboard isVisible={modalVisible} statusBarTranslucent>
+          <DeleteProfile household={household} profile={profile} closeModal={closeModal} />
+        </Modal>
       </Portal>
     </>
   );
