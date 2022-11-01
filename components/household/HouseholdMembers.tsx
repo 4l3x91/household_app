@@ -1,6 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Modal, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
+import Modal from "react-native-modal";
 import { Divider, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { Profile } from "../../store/profile/profileModel";
@@ -16,14 +17,10 @@ const HouseholdMembers = () => {
   const user = useAppSelector(selectUser);
   const { colors } = useTheme();
   const [selectedMember, setSelectedMember] = useState<Profile>();
-  const [overlay, setOverlay] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const closeModal = () => {
     setModalVisible(false);
-  };
-  const toggleOverlay = () => {
-    setOverlay(false);
   };
 
   return (
@@ -48,7 +45,6 @@ const HouseholdMembers = () => {
                           onPress={() => {
                             setModalVisible(true);
                             setSelectedMember(member);
-                            setOverlay(true);
                           }}
                         >
                           <FontAwesome5 name="cog" size={20} color={colors.onSurface} />
@@ -63,8 +59,8 @@ const HouseholdMembers = () => {
               )
           )}
           {selectedMember && (
-            <Modal animationType="slide" transparent={true} visible={modalVisible} statusBarTranslucent>
-              <HouseholdMember member={selectedMember} closeModal={closeModal} toggleOverlay={toggleOverlay} overlay={overlay} />
+            <Modal isVisible={modalVisible} statusBarTranslucent>
+              <HouseholdMember member={selectedMember} closeModal={closeModal} />
             </Modal>
           )}
         </Surface>
