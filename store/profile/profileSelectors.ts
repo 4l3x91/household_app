@@ -30,8 +30,12 @@ export const selectCurrentProfile = (state: AppState) => {
   return selectUserProfiles(state).find((x) => x.householdId === state.household.household.id);
 };
 
+// export const selectPendingProfiles = (state: AppState) => {
+//   return selectMemoizedHouseholdMembers(state).filter((x) => x.isApproved === false);
+// };
+
 export const selectPendingProfiles = (state: AppState) => {
-  return selectMemoizedHouseholdMembers(state).filter((x) => x.isApproved === false);
+  return state.profile.profiles.filter((x) => x.isApproved === false && x.householdId === state.household.household.id);
 };
 
 export const selectMemoizedCurrentProfile = createSelector(

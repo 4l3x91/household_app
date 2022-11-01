@@ -5,7 +5,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { useTheme } from "react-native-paper";
 import { selectHouseholdName } from "../store/household/householdSelector";
-import { selectMemoizedCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
+import { selectCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
 import { MenuStackParams } from "./MenuStackNavigator";
@@ -29,7 +29,7 @@ const BottomStack = createBottomTabNavigator<BottomTabStackParams>();
 
 const TabStackNavigator = () => {
   const household = useAppSelector(selectHouseholdName);
-  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const currentProfile = useAppSelector(selectCurrentProfile);
   const nrOfPendingProfiles = useAppSelector(selectPendingProfiles).length;
   const { colors } = useTheme();
 

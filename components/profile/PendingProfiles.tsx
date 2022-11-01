@@ -3,13 +3,13 @@ import React from "react";
 import { View } from "react-native";
 import { Divider, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { selectMemoizedCurrentProfile, selectPendingProfiles } from "../../store/profile/profileSelectors";
+import { selectCurrentProfile, selectPendingProfiles } from "../../store/profile/profileSelectors";
 import { deleteProfile, updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import AvatarCard from "../household/AvatarCard";
 
 const PendingProfiles = () => {
-  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const currentProfile = useAppSelector(selectCurrentProfile);
   const pendingProfiles = useAppSelector(selectPendingProfiles);
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
