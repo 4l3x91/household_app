@@ -38,8 +38,7 @@ const ChoreDetailsScreen = () => {
             }}
             variant="headlineMedium"
           >
-            {/* Byt gärna till en bättre titel! */}
-            {chore.name} - detaljer
+            Detaljer
           </Text>
         </HeaderContainer>
         <ChoreDetails chore={chore} />
