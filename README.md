@@ -41,7 +41,7 @@ Profil (6)
 - [x] En användare ska kunna ange sitt namn. \*
 - [x] En användare ska kunna välja en avatar (emoji-djur + färg) från en fördefinierad lista. \*
 - [x] Valda avatarer ska inte kunna väljas av andra användare i hushållet. \*
-- [] Avataren ska användas i appen för att visa vad användaren har gjort. \*
+- [x] Avataren ska användas i appen för att visa vad användaren har gjort. \*
 - [x] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
 - [x] Om en användare tillhör två eller fler hushåll ska denne kunna välja att byta mellan de
       olika hushållen.
@@ -63,7 +63,7 @@ Sysslor (6)
   Dagsvyn (3)
 
 - [x] Alla sysslor ska listas i en dagsvy och ge en översikt kring vad som behöver göras.
-- [] Utöver sysslans namn ska även vem/vilka som har gjort sysslan visas, hur många dagar sedan sysslan gjordes senast samt om den är försenad. \*
+- [x] Utöver sysslans namn ska även vem/vilka som har gjort sysslan visas, hur många dagar sedan sysslan gjordes senast samt om den är försenad. \*
 - [x] När en användare väljer en syssla ska beskrivningen av sysslan visas och det ska även med ett enkelt tryck gå att markera sysslan som gjord. \*
 
 Statistik (6)
@@ -72,9 +72,9 @@ Statistik (6)
       hushåll. \*
 - [x] Varje statistikvy ska visa den totala fördelningen (inräknat vikterna för sysslorna) samt
       fördelning av varje enskild syssla. \*
-- [] Det ska finnas en statistikvy över ”nuvarande vecka”. \*
-- [] Det ska finnas en statistikvy över ”förra vecka”.
-- [] Det ska finnas en statistikvy över ”förra månaden”.
+- [x] Det ska finnas en statistikvy över ”nuvarande vecka”. \*
+- [x] Det ska finnas en statistikvy över ”förra vecka”.
+- [x] Det ska finnas en statistikvy över ”förra månaden”.
 - [] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
 
 Schemaläggning (3)
