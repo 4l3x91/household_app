@@ -2,7 +2,8 @@ import { uuidv4 } from "@firebase/util";
 import { Audio } from "expo-av";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Modal, View } from "react-native";
+import { View } from "react-native";
+import Modal from "react-native-modal";
 import { Button, Divider, Surface, Text } from "react-native-paper";
 import styled from "styled-components/native";
 import { useStorage } from "../../hooks/useStorage";
@@ -27,7 +28,6 @@ const CreateChore = ({ closeModal }: Props) => {
   const [deviceImageUri, setDeviceImageUri] = useState<string>("");
   const [interval, setInterval] = useState(1);
   const [energy, setEnergy] = useState(2);
-  const [overlay, setOverlay] = useState(false);
   const [soundModalOpen, setSoundModalOpen] = useState(false);
   const { household } = useAppSelector(selectHousehold);
   const dispatch = useAppDispatch();
@@ -125,14 +125,13 @@ const CreateChore = ({ closeModal }: Props) => {
           );
         }}
       </Formik>
-      <Modal animationType="slide" transparent={true} visible={soundModalOpen} statusBarTranslucent>
+      <Modal isVisible={soundModalOpen} statusBarTranslucent>
         <AppModal
           title="Lägg till ljud"
           closeModal={() => {
             setSoundModalOpen(false);
             setDeviceRecordingUri("");
           }}
-          toggleOverlay={() => setOverlay((prev) => !prev)}
         >
           <SoundRecorder
             setDeviceRecordingUri={setDeviceRecordingUri}

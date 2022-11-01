@@ -11,15 +11,13 @@ import AvatarCard from "./AvatarCard";
 interface Props {
   member: Profile;
   closeModal: () => void;
-  toggleOverlay: () => void;
-  overlay: boolean;
 }
 
-const HouseholdMember = ({ member, closeModal, toggleOverlay, overlay }: Props) => {
+const HouseholdMember = ({ member, closeModal }: Props) => {
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
   return (
-    <Container background={"black"} overlay={overlay}>
+    <Container background={"black"}>
       <ModalContainer background={colors.background}>
         <ProfileContent>
           <ProfileName variant={"displayLarge"}>{member.profileName}</ProfileName>
@@ -74,7 +72,6 @@ const HouseholdMember = ({ member, closeModal, toggleOverlay, overlay }: Props) 
       </ModalContainer>
       <Pressable
         onPress={() => {
-          toggleOverlay();
           setTimeout(() => {
             closeModal();
           }, 300);
@@ -88,8 +85,7 @@ const HouseholdMember = ({ member, closeModal, toggleOverlay, overlay }: Props) 
 
 export default HouseholdMember;
 
-const Container = styled.View<{ overlay: boolean; background: string }>`
-  background-color: ${(props) => (props.overlay ? "#000000c3" : undefined)};
+const Container = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;

@@ -35,7 +35,6 @@ const AttachmentEditor = ({
   const [sound, setSound] = useState<Audio.Sound>();
   const { colors } = useTheme();
   const [soundModalOpen, setSoundModalOpen] = useState(false);
-  const [overlay, setOverlay] = useState(false);
 
   const { pickImage } = useUtils();
 
@@ -132,7 +131,6 @@ const AttachmentEditor = ({
             setSoundModalOpen(false);
             setDeviceRecordingUri("");
           }}
-          toggleOverlay={() => setOverlay((prev) => !prev)}
         >
           <SoundRecorder
             setDeviceRecordingUri={setDeviceRecordingUri}

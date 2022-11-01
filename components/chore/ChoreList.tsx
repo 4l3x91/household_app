@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
-import { Modal, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
+import Modal from "react-native-modal";
 import { Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
@@ -30,17 +31,12 @@ const ChoreList = ({ editMode, archived }: Props) => {
   const [selectedChore, setSelectedChore] = useState<Chore>();
   const profile = useAppSelector(selectCurrentProfile);
   const { colors } = useTheme();
-  const [overlay, setOverlay] = useState(false);
 
   const closeModal = () => {
     setEditModalVisible(false);
     setDeleteModalVisible(false);
     setArchiveModalVisible(false);
   };
-
-  function toggleOverlay() {
-    setOverlay((prev) => !prev);
-  }
 
   return (
     <View>
@@ -94,16 +90,16 @@ const ChoreList = ({ editMode, archived }: Props) => {
         </CenteredContainer>
       )}
 
-      <Modal animationType="slide" transparent={true} visible={editModalVisible} statusBarTranslucent>
-        {selectedChore && <EditChore toggleOverlay={toggleOverlay} chore={selectedChore} closeModal={closeModal} />}
+      <Modal isVisible={editModalVisible} statusBarTranslucent>
+        {selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}
       </Modal>
 
-      <Modal animationType="slide" transparent={true} visible={deleteModalVisible} statusBarTranslucent>
-        {selectedChore && <DeleteChore toggleOverlay={toggleOverlay} chore={selectedChore} closeModal={closeModal} />}
+      <Modal isVisible={deleteModalVisible} statusBarTranslucent>
+        {selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}
       </Modal>
 
-      <Modal animationType="slide" transparent={true} visible={archiveModalVisible} statusBarTranslucent>
-        {selectedChore && <ArchiveChore toggleOverlay={toggleOverlay} chore={selectedChore} closeModal={closeModal} />}
+      <Modal isVisible={archiveModalVisible} statusBarTranslucent>
+        {selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}
       </Modal>
     </View>
   );
