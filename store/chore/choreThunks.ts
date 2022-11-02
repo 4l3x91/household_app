@@ -15,11 +15,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../config/firebase";
 import { Chore } from "./choreModel";
 
-export const postChore = createAsyncThunk<Chore, Chore, { rejectValue: string }>("chore/createChore", async (chore, thunkAPI) => {
+//THIS THUNK NOW RETURNS VOID AND ONLY POST TO DB, FOR PRESENTATION PURPOSES WITH LIVE UPDATES, WILL LOOK OVER THIS AFTER PRESENTATION.
+export const postChore = createAsyncThunk<void, Chore, { rejectValue: string }>("chore/createChore", async (chore, thunkAPI) => {
   try {
     const collectionRef = collection(db, "chores");
     await addDoc(collectionRef, chore);
-    return chore;
   } catch (error) {
     return thunkAPI.rejectWithValue("something went wrong");
   }
