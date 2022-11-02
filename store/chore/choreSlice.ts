@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./choreState";
-import { deleteChore, getChores, postChore, updateChore } from "./choreThunks";
+import { deleteChore, getChores, updateChore } from "./choreThunks";
 
 const choreSlice = createSlice({
   name: "chores",
@@ -12,17 +12,20 @@ const choreSlice = createSlice({
   },
   extraReducers: (builder) => {
     //create chore cases
-    builder.addCase(postChore.pending, (state) => {
-      state.pending = true;
-    });
-    builder.addCase(postChore.fulfilled, (state, action) => {
-      state.pending = false;
-      state.chores.push(action.payload);
-    });
-    builder.addCase(postChore.rejected, (state) => {
-      state.pending = false;
-      state.error = "Error: could not add chore";
-    });
+    //_________________________________________________________________________________________
+    // Commented out to use listeners to set state for presentation.. have to look at this after
+    //__________________________________________________________________________________________
+    // builder.addCase(postChore.pending, (state) => {
+    //   state.pending = true;
+    // });
+    // builder.addCase(postChore.fulfilled, (state, action) => {
+    //   state.pending = false;
+    //   // state.chores.push(action.payload);
+    // });
+    // builder.addCase(postChore.rejected, (state) => {
+    //   state.pending = false;
+    //   state.error = "Error: could not add chore";
+    // });
 
     //set chore cases
     builder.addCase(getChores.pending, (state) => {

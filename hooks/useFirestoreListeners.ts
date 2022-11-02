@@ -32,7 +32,7 @@ export const useFirestoreListeners = () => {
   }, [household]);
 
   useEffect(() => {
-    if (household) {
+    if (currentProfile && household) {
       const choresCollection = collection(db, "chores");
       const q = query(choresCollection, where("householdId", "==", household.household.id));
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { Portal, useTheme } from "react-native-paper";
@@ -26,14 +26,15 @@ const ChoresScreen = () => {
     modalizeRef.current?.open();
   };
 
-  useEffect(() => {
-    if (household) {
-      if (household.id) {
-        dispatch(getChores(household.id));
-        dispatch(getCompletedChoresPerHousehold(allMembers));
-      }
-    }
-  }, [household]);
+  //COMMENT OUT BECAUSE NOW USING LISTENERS TO DB
+  // useEffect(() => {
+  //   if (household) {
+  //     if (household.id) {
+  //       dispatch(getChores(household.id));
+  //       dispatch(getCompletedChoresPerHousehold(allMembers));
+  //     }
+  //   }
+  // }, [household]);
 
   return (
     <ChoreScreenContainer>
