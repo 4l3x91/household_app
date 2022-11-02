@@ -123,7 +123,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
           isVisible={joinModalVisible}
           statusBarTranslucent
         >
-          <JoinHousehold closeModal={() => setJoinModalVisible(false)} />
+          <JoinHousehold setSnackbarVisible={setSnackbarVisible} closeModal={() => setJoinModalVisible(false)} />
         </Modal>
       </Portal>
 
