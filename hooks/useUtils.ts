@@ -51,7 +51,7 @@ export function useUtils() {
     }
   };
 
-  const shareData = async (household: HouseholdModel, profile: Profile) => {
+  const shareHousehold = async (household: HouseholdModel, profile: Profile) => {
     try {
       await Share.share({
         message: `Här kommer en inbjudan till mitt hushåll ${household.name}!\nAnge denna kod för att gå med i mitt hushåll: ${household.code}\nMVH ${profile?.profileName}`,
@@ -75,6 +75,6 @@ export function useUtils() {
     addDays,
     pickImage,
     resetStore,
-    shareData
+    shareHousehold
   };
 }

@@ -23,7 +23,7 @@ interface Props {
 const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) => {
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
-  const { shareData } = useUtils();
+  const { shareHousehold } = useUtils();
   const optionsModal = useRef<Modalize>(null);
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -63,7 +63,7 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
               <TouchableOpacity
                 onPress={() => {
                   closeModal && closeModal();
-                  shareData(household, profile);
+                  shareHousehold(household, profile);
                 }}
                 style={{ alignItems: "center", flexDirection: "row", paddingVertical: 15 }}
               >
