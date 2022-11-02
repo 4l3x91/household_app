@@ -75,11 +75,11 @@ Statistik (6)
 - [x] Det ska finnas en statistikvy över ”nuvarande vecka”. \*
 - [x] Det ska finnas en statistikvy över ”förra vecka”.
 - [x] Det ska finnas en statistikvy över ”förra månaden”.
-- [] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
+- [x] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
 
 Schemaläggning (3)
 
-- [] En ägare ska kunna tilldela och ta bort sysslor från användare i hushållet.
-- [] Användare ska kunna se de tilldelade sysslorna i sitt gränssnitt.
+- [x] En ägare ska kunna tilldela och ta bort sysslor från användare i hushållet.
+- [x] Användare ska kunna se de tilldelade sysslorna i sitt gränssnitt.
 - [] En ägare ska kunna skapa grupper av sysslor som automatiskt tilldelas användarna i
   hushållet och roteras baserat på ett intervall i dagar.
