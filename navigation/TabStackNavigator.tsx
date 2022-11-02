@@ -3,12 +3,6 @@ import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigatio
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import {
-  selectCompletedChoresLastMonth,
-  selectCompletedChoresPreviousWeek,
-  selectCompletedChoresSinceLastMonday,
-  selectCompletedChoresThisYear,
-} from "../store/completedChore/completedChoreSelector";
 import { selectCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
@@ -35,17 +29,6 @@ const TabStackNavigator = () => {
   const currentProfile = useAppSelector(selectCurrentProfile);
   const nrOfPendingProfiles = useAppSelector(selectPendingProfiles).length;
 
-  const completedChoresSinceLastMonday = useAppSelector(selectCompletedChoresSinceLastMonday);
-  const completedChoresPreviousWeek = useAppSelector(selectCompletedChoresPreviousWeek);
-  const completedChoresLastMonth = useAppSelector(selectCompletedChoresLastMonth);
-  const completedChoresThisYear = useAppSelector(selectCompletedChoresThisYear);
-
-  const hasDate =
-    completedChoresLastMonth.length > 0 ||
-    completedChoresPreviousWeek.length > 0 ||
-    completedChoresSinceLastMonday.length > 0 ||
-    completedChoresThisYear.length > 0;
-
   return (
     <BottomStack.Navigator initialRouteName="Chores">
       <BottomStack.Screen
@@ -57,13 +40,13 @@ const TabStackNavigator = () => {
           tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="broom" size={size} color={color} />,
         }}
       />
-      {hasDate && (
-        <BottomStack.Screen
-          name="Stats"
-          component={StatsStackNavigator}
-          options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} />, headerShown: false }}
-        />
-      )}
+
+      <BottomStack.Screen
+        name="Stats"
+        component={StatsStackNavigator}
+        options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} />, headerShown: false }}
+      />
+
       <BottomStack.Screen
         name="UserProfile"
         component={UserStackNavigator}
