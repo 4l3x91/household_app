@@ -3,7 +3,9 @@ import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigatio
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { selectCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
+import { useTheme } from "react-native-paper";
+import { useFirestoreListeners } from "../hooks/useFirestoreListeners";
+import { selectMemoizedCurrentProfile, selectMemoizedPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
 import { MenuStackParams } from "./MenuStackNavigator";
@@ -26,11 +28,19 @@ export type HomeScreenNavigationProps = CompositeScreenProps<
 const BottomStack = createBottomTabNavigator<BottomTabStackParams>();
 
 const TabStackNavigator = () => {
-  const currentProfile = useAppSelector(selectCurrentProfile);
-  const nrOfPendingProfiles = useAppSelector(selectPendingProfiles).length;
+  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const nrOfPendingProfiles = useAppSelector(selectMemoizedPendingProfiles).length;
+  const { colors } = useTheme();
+  useFirestoreListeners();
 
   return (
-    <BottomStack.Navigator initialRouteName="Chores">
+    <BottomStack.Navigator
+      initialRouteName="Chores"
+      screenOptions={{
+        tabBarActiveBackgroundColor: colors.primaryContainer,
+        tabBarActiveTintColor: colors.primary,
+      }}
+    >
       <BottomStack.Screen
         name="Chores"
         component={ChoreStackNavigator}
