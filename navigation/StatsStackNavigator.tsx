@@ -8,6 +8,14 @@ import CurrentWeekView from "../screens/stats/CurrentWeekView";
 import MonthView from "../screens/stats/MonthView";
 import PreviousWeekView from "../screens/stats/PreviousWeekView";
 import YearView from "../screens/stats/YearView";
+import {
+  selectCompletedChoresLastMonth,
+  selectCompletedChoresPreviousWeek,
+  selectCompletedChoresSinceLastMonday,
+  selectCompletedChoresThisYear,
+} from "../store/completedChore/completedChoreSelector";
+import { useAppSelector } from "../store/store";
+import { firstDayOfTheYear } from "../utils/utils";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -16,12 +24,19 @@ export type StatsStackParams = {
 };
 
 const StatsStackNavigator = () => {
+  const completedChoresSinceLastMonday = useAppSelector(selectCompletedChoresSinceLastMonday);
+  const completedChoresPreviousWeek = useAppSelector(selectCompletedChoresPreviousWeek);
+  const completedChoresLastMonth = useAppSelector(selectCompletedChoresLastMonth);
+  const completedChoresThisYear = useAppSelector(selectCompletedChoresThisYear);
+  const getLastMonth = new Date().getMonth() - 1;
+  const monthNames = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
+
   return (
     <Tab.Navigator tabBar={CustomTabBar}>
-      <Tab.Screen name="Denna veckan" component={CurrentWeekView} />
-      <Tab.Screen name="Förra veckan" component={PreviousWeekView} />
-      <Tab.Screen name="Månad" component={MonthView} />
-      <Tab.Screen name="År" component={YearView} />
+      {completedChoresSinceLastMonday.length > 0 && <Tab.Screen name="Denna veckan" component={CurrentWeekView} />}
+      {completedChoresPreviousWeek.length > 0 && <Tab.Screen name="Förra veckan" component={PreviousWeekView} />}
+      {completedChoresLastMonth.length > 0 && <Tab.Screen name={monthNames[getLastMonth].toString()} component={MonthView} />}
+      {completedChoresThisYear.length > 0 && <Tab.Screen name={firstDayOfTheYear.getFullYear().toLocaleString()} component={YearView} />}
     </Tab.Navigator>
   );
 };
@@ -49,5 +64,6 @@ const TopBarContainer = styled.View`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin: 75px 10px 0px 10px;
+  padding: 0 5px;
+  margin-top: 75px;
 `;
