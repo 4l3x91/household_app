@@ -16,9 +16,10 @@ import CreateProfile from "../profile/CreateProfile";
 
 interface Props {
   closeModal: () => void;
+  setSnackbarVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const JoinHousehold = ({ closeModal }: Props) => {
+const JoinHousehold = ({ closeModal, setSnackbarVisible }: Props) => {
   const [text, setText] = useState<string>();
   const user = useAppSelector(selectUser);
   const [profilesInHousehold, setProfilesInHousehold] = useState<Profile[]>([]);
@@ -157,7 +158,12 @@ const JoinHousehold = ({ closeModal }: Props) => {
                           </View>
                           <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
                         </InfoBox>
-                        <CreateProfile profilesInHousehold={profilesInHousehold} householdId={householdToJoin.id} closeModal={closeModal} />
+                        <CreateProfile
+                          setSnackbarVisible={setSnackbarVisible}
+                          profilesInHousehold={profilesInHousehold}
+                          householdId={householdToJoin.id}
+                          closeModal={closeModal}
+                        />
                       </>
                     )
                   )}

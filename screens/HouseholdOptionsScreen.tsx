@@ -1,9 +1,9 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { signOut } from "firebase/auth";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { Modalize } from "react-native-modalize";
-import { Button, useTheme } from "react-native-paper";
+import { Button, Snackbar, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import CreateHousehold from "../components/household/CreateHousehold";
 import JoinHousehold from "../components/household/JoinHousehold";
@@ -26,7 +26,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
   const modalizeRef = useRef<Modalize>(null);
   const householdModalRef = useRef<Modalize>(null);
   const { resetStore } = useUtils();
-
+  const [snackBarVisible, setSnackbarVisible] = useState(false);
   const joinHouseholdRef = useRef<Modalize>(null);
   const dispatch = useAppDispatch();
   const theme = useTheme();
@@ -110,8 +110,21 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
         modalStyle={{ backgroundColor: theme.colors.surface, paddingVertical: 100 }}
         modalTopOffset={50}
       >
-        <JoinHousehold closeModal={() => joinHouseholdRef.current?.close()} />
+        <JoinHousehold setSnackbarVisible={setSnackbarVisible} closeModal={() => joinHouseholdRef.current?.close()} />
       </Modalize>
+      <Snackbar
+        visible={snackBarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        action={{
+          label: "Ok",
+          onPress: () => {
+            () => setSnackbarVisible(false);
+          },
+        }}
+        style={{ padding: 10 }}
+      >
+        En ansökan om att gå med i hushållet har skickats till ägaren! 🥳
+      </Snackbar>
     </>
   );
 };
