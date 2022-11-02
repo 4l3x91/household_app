@@ -1,7 +1,10 @@
 import * as ImagePicker from "expo-image-picker";
+import { Share } from "react-native";
 import { resetChoreState } from "../store/chore/choreSlice";
 import { resetCompletedChores } from "../store/completedChore/completedChoreSlice";
+import { HouseholdModel } from "../store/household/householdModel";
 import { resetHousehold } from "../store/household/householdSlice";
+import { Profile } from "../store/profile/profileModel";
 import { resetProfileState } from "../store/profile/profileSlice";
 import { useAppDispatch } from "../store/store";
 
@@ -48,6 +51,17 @@ export function useUtils() {
     }
   };
 
+  const shareData = async (household: HouseholdModel, profile: Profile) => {
+    try {
+      await Share.share({
+        message: `Här kommer en inbjudan till mitt hushåll ${household.name}!\nAnge denna kod för att gå med i mitt hushåll: ${household.code}\nMVH ${profile?.profileName}`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   const resetStore = () => {
     dispatch(resetProfileState());
     dispatch(resetHousehold());
@@ -61,5 +75,6 @@ export function useUtils() {
     addDays,
     pickImage,
     resetStore,
+    shareData
   };
 }
