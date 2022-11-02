@@ -1,8 +1,8 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Audio } from "expo-av";
-
 import React, { useEffect, useState } from "react";
-import { Modal, View } from "react-native";
+import { View } from "react-native";
+import Modal from "react-native-modal";
 import { Button, Surface, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { useUtils } from "../../hooks/useUtils";
@@ -124,7 +124,7 @@ const AttachmentEditor = ({
           Lägg till ljud
         </Button>
       )}
-      <Modal animationType="slide" transparent={true} visible={soundModalOpen} statusBarTranslucent>
+      <Modal onSwipeComplete={() => setSoundModalOpen(false)} swipeDirection={"down"} isVisible={soundModalOpen} statusBarTranslucent>
         <AppModal
           title="Lägg till ljud"
           closeModal={() => {

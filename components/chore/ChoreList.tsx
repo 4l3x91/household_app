@@ -69,19 +69,19 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
               </View>
             )
         )}
-        <Modal isVisible={editModalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setEditModalVisible(false)} swipeDirection={"down"} isVisible={editModalVisible} statusBarTranslucent>
           <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
-        <Modal isVisible={deleteModalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setDeleteModalVisible(false)} swipeDirection={"down"} isVisible={deleteModalVisible} statusBarTranslucent>
           <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
-        <Modal isVisible={archiveModalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setArchiveModalVisible(false)} swipeDirection={"down"} isVisible={archiveModalVisible} statusBarTranslucent>
           <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
-        <Modal isVisible={assignModalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setAssignModalVisible(false)} swipeDirection={"down"} isVisible={assignModalVisible} statusBarTranslucent>
           <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
       </View>
@@ -114,19 +114,19 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
               </View>
             )
         )}
-        <Modal isVisible={editModalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setEditModalVisible(false)} swipeDirection={"down"} isVisible={editModalVisible} statusBarTranslucent>
           <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
-        <Modal isVisible={deleteModalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setDeleteModalVisible(false)} swipeDirection={"down"} isVisible={deleteModalVisible} statusBarTranslucent>
           <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
-        <Modal isVisible={archiveModalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setArchiveModalVisible(false)} swipeDirection={"down"} isVisible={archiveModalVisible} statusBarTranslucent>
           <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
-        <Modal isVisible={assignModalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setAssignModalVisible(false)} swipeDirection={"down"} isVisible={assignModalVisible} statusBarTranslucent>
           <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
       </View>
@@ -189,19 +189,19 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
         </CenteredContainer>
       )}
 
-      <Modal isVisible={editModalVisible} statusBarTranslucent>
+      <Modal onSwipeComplete={() => setEditModalVisible(false)} swipeDirection={"down"} isVisible={editModalVisible} statusBarTranslucent>
         <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
       </Modal>
 
-      <Modal isVisible={deleteModalVisible} statusBarTranslucent>
+      <Modal onSwipeComplete={() => setDeleteModalVisible(false)} swipeDirection={"down"} isVisible={deleteModalVisible} statusBarTranslucent>
         <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
       </Modal>
 
-      <Modal isVisible={archiveModalVisible} statusBarTranslucent>
+      <Modal onSwipeComplete={() => setArchiveModalVisible(false)} swipeDirection={"down"} isVisible={archiveModalVisible} statusBarTranslucent>
         <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
       </Modal>
 
-      <Modal isVisible={assignModalVisible} statusBarTranslucent>
+      <Modal onSwipeComplete={() => setAssignModalVisible(false)} swipeDirection={"down"} isVisible={assignModalVisible} statusBarTranslucent>
         <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
       </Modal>
     </View>
