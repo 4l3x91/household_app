@@ -1,12 +1,12 @@
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { View } from "react-native";
-import { Badge, Surface, Text, useTheme } from "react-native-paper";
+import { Badge, MD3Theme, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { useUtils } from "../../hooks/useUtils";
 import { Chore } from "../../store/chore/choreModel";
 import { selectCompletedChores } from "../../store/completedChore/completedChoreSelector";
-import { selectCurrentProfile } from "../../store/profile/profileSelectors";
+import { selectAllHouseholdMembers, selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
 import DisplayCompletedAvatars from "./DisplayCompletedAvatars";
 
@@ -17,12 +17,24 @@ type Props = {
   setSelectedChore: React.Dispatch<React.SetStateAction<Chore | undefined>>;
   toggleDeleteModal: () => void;
   toggleArchiveModal: () => void;
+  toggleAssignModal: () => void;
+  assigned?: boolean;
 };
 
-const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleDeleteModal, toggleArchiveModal }: Props) => {
+const ChoreItem = ({
+  chore,
+  editMode,
+  toggleEditModal,
+  setSelectedChore,
+  toggleDeleteModal,
+  toggleArchiveModal,
+  toggleAssignModal,
+  assigned,
+}: Props) => {
   const completedChores = useAppSelector(selectCompletedChores);
   const theme = useTheme();
   let dateToInterval: Date = new Date();
+  const householdMembers = useAppSelector(selectAllHouseholdMembers);
   const today = new Date();
   const { addDays } = useUtils();
   const profile = useAppSelector(selectCurrentProfile);
@@ -51,10 +63,20 @@ const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleD
     setSelectedChore(chore);
   }
 
+  function handleAssignPress() {
+    toggleAssignModal();
+    setSelectedChore(chore);
+  }
+
   return (
-    <ChoreItemContainer archived={chore.archived}>
+    <ChoreItemContainer archived={chore.archived} assigned={assigned} theme={theme}>
       <View>
-        <Text variant="headlineSmall">{chore.name}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text variant="headlineSmall">{chore.name} </Text>
+          {chore.assignedToId !== "" && (
+            <Text variant="bodyLarge">({householdMembers.find((member) => member.id === chore.assignedToId)?.avatar.avatar})</Text>
+          )}
+        </View>
         <Text variant="bodySmall">
           Behöver göras {chore.interval === 1 ? "varje" : `var ${chore.interval === 2 ? "annan" : `${chore.interval}:e`}`} dag
         </Text>
@@ -84,6 +106,10 @@ const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleD
             <OwnerButton onPress={handleArchivePress}>
               <FontAwesome5 name="archive" size={20} color={theme.colors.primary} />
             </OwnerButton>
+
+            <OwnerButton onPress={handleAssignPress}>
+              <FontAwesome5 name="clipboard-list" size={20} color={theme.colors.primary} />
+            </OwnerButton>
           </OwnerButtons>
         )}
       </InnerContainer>
@@ -94,15 +120,17 @@ const ChoreItem = ({ chore, editMode, toggleEditModal, setSelectedChore, toggleD
 const OwnerButtons = styled.View`
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 `;
 
-const ChoreItemContainer = styled(Surface)<{ archived: boolean }>`
+const ChoreItemContainer = styled(Surface)<{ archived: boolean; assigned?: boolean; theme?: MD3Theme }>`
   flex-direction: row;
   border-radius: 10px;
   margin: 5px;
   justify-content: space-between;
   padding: 15px;
-  ${({ archived }) => archived && "opacity: .6;"}
+  ${({ assigned, theme }) => assigned && `background-color: ${theme.colors.surfaceVariant}`}
+  ${({ archived, theme }) => archived && `background-color: ${theme.colors.surfaceVariant}`}
 `;
 
 const InnerContainer = styled.View`
