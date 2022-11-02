@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import Modal from "react-native-modal";
 import { Modalize } from "react-native-modalize";
-import { Button, Portal, Surface, Text, useTheme } from "react-native-paper";
+import { Button, Portal, Snackbar, Surface, Text, useTheme } from "react-native-paper";
 import CreateHousehold from "../../components/household/CreateHousehold";
 import HouseholdMembers from "../../components/household/HouseholdMembers";
 import JoinHousehold from "../../components/household/JoinHousehold";
@@ -35,6 +35,7 @@ const ProfileScreen = ({ navigation }: Props) => {
   const { shareHousehold } = useUtils();
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
+  const [snackBarVisible, setSnackbarVisible] = useState(false);
 
   const openMyHouseholds = () => {
     householdModalRef.current?.open();
@@ -49,7 +50,7 @@ const ProfileScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <ProfileHeader goToSettings={() => navigation.navigate("SettingsScreen")} openMyHouseholds={openMyHouseholds} />
       <ScrollView
         refreshControl={
@@ -82,7 +83,7 @@ const ProfileScreen = ({ navigation }: Props) => {
           isVisible={joinModalVisible}
           statusBarTranslucent
         >
-          <JoinHousehold closeModal={closeJoinModal} />
+          <JoinHousehold setSnackbarVisible={setSnackbarVisible} closeModal={closeJoinModal} />
         </Modal>
       </Portal>
 
@@ -144,6 +145,20 @@ const ProfileScreen = ({ navigation }: Props) => {
           </Surface>
         </Modalize>
       </Portal>
+      <Snackbar
+        visible={snackBarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        action={{
+          label: "Ok",
+          onPress: () => {
+            () => setSnackbarVisible(false);
+          },
+        }}
+        style={{ padding: 10 }}
+        wrapperStyle={{ backgroundColor: colors.surface }}
+      >
+        En ansökan om att gå med i hushållet har skickats till ägaren! 🥳
+      </Snackbar>
     </View>
   );
 };
