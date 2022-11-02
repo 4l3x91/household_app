@@ -2,7 +2,6 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
-import Modal from "react-native-modal";
 import { Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { ChoreStackParams } from "../../navigation/ChoreStackNavigator";
@@ -10,11 +9,8 @@ import { Chore } from "../../store/chore/choreModel";
 import { selectChores } from "../../store/chore/choreSelectors";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
-import ArchiveChore from "./ArchiveChore";
-import AssignChore from "./AssignChore";
 import ChoreItem from "./ChoreItem";
-import DeleteChore from "./DeleteChore";
-import EditChore from "./EditChore";
+import EditModals from "./EditModals";
 
 interface Props {
   editMode: boolean;
@@ -69,21 +65,17 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
               </View>
             )
         )}
-        <Modal isVisible={editModalVisible} statusBarTranslucent>
-          <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
-        </Modal>
 
-        <Modal isVisible={deleteModalVisible} statusBarTranslucent>
-          <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
-        </Modal>
-
-        <Modal isVisible={archiveModalVisible} statusBarTranslucent>
-          <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
-        </Modal>
-
-        <Modal isVisible={assignModalVisible} statusBarTranslucent>
-          <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
-        </Modal>
+        {selectedChore && (
+          <EditModals
+            chore={selectedChore}
+            editModalVisible={editModalVisible}
+            deleteModalVisible={deleteModalVisible}
+            archiveModalVisible={archiveModalVisible}
+            assignModalVisible={assignModalVisible}
+            closeModal={closeModal}
+          />
+        )}
       </View>
     );
   }
@@ -114,21 +106,16 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
               </View>
             )
         )}
-        <Modal isVisible={editModalVisible} statusBarTranslucent>
-          <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
-        </Modal>
-
-        <Modal isVisible={deleteModalVisible} statusBarTranslucent>
-          <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
-        </Modal>
-
-        <Modal isVisible={archiveModalVisible} statusBarTranslucent>
-          <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
-        </Modal>
-
-        <Modal isVisible={assignModalVisible} statusBarTranslucent>
-          <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
-        </Modal>
+        {selectedChore && (
+          <EditModals
+            chore={selectedChore}
+            editModalVisible={editModalVisible}
+            deleteModalVisible={deleteModalVisible}
+            archiveModalVisible={archiveModalVisible}
+            assignModalVisible={assignModalVisible}
+            closeModal={closeModal}
+          />
+        )}
       </View>
     );
   }
@@ -189,21 +176,16 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
         </CenteredContainer>
       )}
 
-      <Modal isVisible={editModalVisible} statusBarTranslucent>
-        <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
-      </Modal>
-
-      <Modal isVisible={deleteModalVisible} statusBarTranslucent>
-        <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
-      </Modal>
-
-      <Modal isVisible={archiveModalVisible} statusBarTranslucent>
-        <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
-      </Modal>
-
-      <Modal isVisible={assignModalVisible} statusBarTranslucent>
-        <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
-      </Modal>
+      {selectedChore && (
+        <EditModals
+          chore={selectedChore}
+          editModalVisible={editModalVisible}
+          deleteModalVisible={deleteModalVisible}
+          archiveModalVisible={archiveModalVisible}
+          assignModalVisible={assignModalVisible}
+          closeModal={closeModal}
+        />
+      )}
     </View>
   );
 };

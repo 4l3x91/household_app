@@ -122,7 +122,7 @@ const CreateChore = ({ closeModal }: Props) => {
           );
         }}
       </Formik>
-      <Modal isVisible={soundModalOpen} statusBarTranslucent>
+      <Modal onSwipeComplete={() => setSoundModalOpen(false)} swipeDirection={"down"} isVisible={soundModalOpen} statusBarTranslucent>
         <AppModal
           title="Lägg till ljud"
           closeModal={() => {

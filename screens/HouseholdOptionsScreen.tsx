@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import Modal from "react-native-modal";
 import { Modalize } from "react-native-modalize";
-import { Button, Portal, useTheme } from "react-native-paper";
+import { Button, Portal, Snackbar ,useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import CreateHousehold from "../components/household/CreateHousehold";
 import JoinHousehold from "../components/household/JoinHousehold";
@@ -28,6 +28,8 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
   const user = useAppSelector(selectUser);
   const householdModalRef = useRef<Modalize>(null);
   const { resetStore } = useUtils();
+  const [snackBarVisible, setSnackbarVisible] = useState(false);
+  const joinHouseholdRef = useRef<Modalize>(null);
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const { error } = useAppSelector((state) => state.profile);
@@ -136,6 +138,20 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
           <CreateHousehold closeModal={() => setCreateModalVisible(false)} />
         </Modal>
       </Portal>
+      <Snackbar
+        visible={snackBarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        action={{
+          label: "Ok",
+          onPress: () => {
+            () => setSnackbarVisible(false);
+          },
+        }}
+        style={{ padding: 10 }}
+      >
+        En ansökan om att gå med i hushållet har skickats till ägaren! 🥳
+      </Snackbar>
+
     </>
   );
 };
