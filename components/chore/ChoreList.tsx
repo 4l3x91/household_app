@@ -70,19 +70,19 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
             )
         )}
         <Modal isVisible={editModalVisible} statusBarTranslucent>
-          {selectedChore ? <EditChore chore={selectedChore} closeModal={closeModal} /> : <></>}
+          <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
         <Modal isVisible={deleteModalVisible} statusBarTranslucent>
-          {selectedChore ? <DeleteChore chore={selectedChore} closeModal={closeModal} /> : <></>}
+          <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
         <Modal isVisible={archiveModalVisible} statusBarTranslucent>
-          {selectedChore ? <ArchiveChore chore={selectedChore} closeModal={closeModal} /> : <></>}
+          <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
         <Modal isVisible={assignModalVisible} statusBarTranslucent>
-          {selectedChore ? <AssignChore chore={selectedChore} closeModal={closeModal} /> : <></>}
+          <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
       </View>
     );
@@ -115,19 +115,19 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
             )
         )}
         <Modal isVisible={editModalVisible} statusBarTranslucent>
-          {selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}
+          <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
         <Modal isVisible={deleteModalVisible} statusBarTranslucent>
-          {selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}
+          <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
         <Modal isVisible={archiveModalVisible} statusBarTranslucent>
-          {selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}
+          <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
 
         <Modal isVisible={assignModalVisible} statusBarTranslucent>
-          {selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}
+          <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
         </Modal>
       </View>
     );
@@ -190,19 +190,19 @@ const ChoreList = ({ editMode, archived, asignedChores }: Props) => {
       )}
 
       <Modal isVisible={editModalVisible} statusBarTranslucent>
-        {selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}
+        <View>{selectedChore && <EditChore chore={selectedChore} closeModal={closeModal} />}</View>
       </Modal>
 
       <Modal isVisible={deleteModalVisible} statusBarTranslucent>
-        {selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}
+        <View>{selectedChore && <DeleteChore chore={selectedChore} closeModal={closeModal} />}</View>
       </Modal>
 
       <Modal isVisible={archiveModalVisible} statusBarTranslucent>
-        {selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}
+        <View>{selectedChore && <ArchiveChore chore={selectedChore} closeModal={closeModal} />}</View>
       </Modal>
 
       <Modal isVisible={assignModalVisible} statusBarTranslucent>
-        {selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}
+        <View>{selectedChore && <AssignChore chore={selectedChore} closeModal={closeModal} />}</View>
       </Modal>
     </View>
   );
