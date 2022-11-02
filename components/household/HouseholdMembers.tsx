@@ -59,7 +59,7 @@ const HouseholdMembers = () => {
               )
           )}
           {selectedMember && (
-            <Modal isVisible={modalVisible} statusBarTranslucent>
+            <Modal onSwipeComplete={() => setModalVisible(false)} swipeDirection={"down"} isVisible={modalVisible} statusBarTranslucent>
               <HouseholdMember member={selectedMember} closeModal={closeModal} />
             </Modal>
           )}
