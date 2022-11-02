@@ -16,17 +16,19 @@ export const useFirestoreListeners = () => {
   console.log(currentProfile?.profileName);
 
   useEffect(() => {
-    console.log("useEffect running");
-    const profilesCollection = collection(db, "profiles");
-    const q = query(profilesCollection, where("isApproved", "==", false), where("householdId", "==", currentProfile?.householdId));
+    if (currentProfile && household) {
+      console.log("useEffect running");
+      const profilesCollection = collection(db, "profiles");
+      const q = query(profilesCollection, where("isApproved", "==", false), where("householdId", "==", currentProfile?.householdId));
 
-    const unsub = onSnapshot(q, (snapshot) => {
-      if (user) {
-        dispatch(getAllProfiles(user));
-        console.log("in snapshot");
-      }
-    });
+      const unsub = onSnapshot(q, (snapshot) => {
+        if (user) {
+          dispatch(getAllProfiles(user));
+          console.log("in snapshot");
+        }
+      });
 
-    return () => unsub();
+      return () => unsub();
+    }
   }, [household]);
 };

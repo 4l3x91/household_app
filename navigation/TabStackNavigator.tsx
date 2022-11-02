@@ -4,7 +4,6 @@ import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/n
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { useTheme } from "react-native-paper";
-import { useFirestoreListeners } from "../hooks/useFirestoreListeners";
 import { selectMemoizedCurrentProfile, selectMemoizedPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
@@ -31,7 +30,6 @@ const TabStackNavigator = () => {
   const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
   const nrOfPendingProfiles = useAppSelector(selectMemoizedPendingProfiles).length;
   const { colors } = useTheme();
-  useFirestoreListeners();
 
   return (
     <BottomStack.Navigator
