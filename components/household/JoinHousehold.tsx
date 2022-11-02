@@ -130,6 +130,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
                           maxLength={pinCodeLength}
                           mode="outlined"
                           value={text}
+                          autoFocus
                           onChangeText={(text: string) => {
                             values.householdCode = text.toUpperCase();
                             setText(text);
