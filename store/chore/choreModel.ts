@@ -9,4 +9,5 @@ export interface Chore {
   dateCreated: Date;
   imgUrl: string;
   soundUrl: string;
+  assignedToId: string;
 }
