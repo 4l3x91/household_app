@@ -6,9 +6,11 @@ import { Button, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import CurrentWeekView from "../screens/stats/CurrentWeekView";
 import MonthView from "../screens/stats/MonthView";
+import NoDataView from "../screens/stats/NoDataView";
 import PreviousWeekView from "../screens/stats/PreviousWeekView";
 import YearView from "../screens/stats/YearView";
 import {
+  selectCompletedChores,
   selectCompletedChoresLastMonth,
   selectCompletedChoresPreviousWeek,
   selectCompletedChoresSinceLastMonday,
@@ -28,6 +30,7 @@ const StatsStackNavigator = () => {
   const completedChoresPreviousWeek = useAppSelector(selectCompletedChoresPreviousWeek);
   const completedChoresLastMonth = useAppSelector(selectCompletedChoresLastMonth);
   const completedChoresThisYear = useAppSelector(selectCompletedChoresThisYear);
+  const completedChores = useAppSelector(selectCompletedChores).completedChores;
   const getLastMonth = new Date().getMonth() - 1;
   const monthNames = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
 
@@ -37,6 +40,7 @@ const StatsStackNavigator = () => {
       {completedChoresPreviousWeek.length > 0 && <Tab.Screen name="Förra veckan" component={PreviousWeekView} />}
       {completedChoresLastMonth.length > 0 && <Tab.Screen name={monthNames[getLastMonth].toString()} component={MonthView} />}
       {completedChoresThisYear.length > 0 && <Tab.Screen name={firstDayOfTheYear.getFullYear().toLocaleString()} component={YearView} />}
+      {completedChores.length === 0 && <Tab.Screen name="Ingen data" component={NoDataView} />}
     </Tab.Navigator>
   );
 };
@@ -44,16 +48,23 @@ const StatsStackNavigator = () => {
 function CustomTabBar(props: MaterialTopTabBarProps) {
   const { colors } = useTheme();
   const { index, routeNames, routes } = props.state;
+  const completedChores = useAppSelector(selectCompletedChores).completedChores;
   return (
-    <TopBarContainer>
-      <Button onPress={() => props.jumpTo(index === 0 ? routes[index].key : routes[index - 1].key)}>
-        <MaterialIcons name="keyboard-arrow-left" size={24} color={colors.primary} />
-      </Button>
-      <Text style={{ fontSize: 24, color: colors.primary, textAlign: "center" }}>{routeNames[index]}</Text>
-      <Button onPress={() => props.jumpTo(index === routes.length - 1 ? routes[index].key : routes[index + 1].key)}>
-        <MaterialIcons name="keyboard-arrow-right" size={24} color={colors.primary} />
-      </Button>
-    </TopBarContainer>
+    <>
+      {completedChores.length !== 0 && (
+        <TopBarContainer>
+          <Button onPress={() => props.jumpTo(index === 0 ? routes[index].key : routes[index - 1].key)}>
+            <MaterialIcons name="keyboard-arrow-left" size={24} color={colors.primary} />
+          </Button>
+
+          <Text style={{ fontSize: 24, color: colors.primary, textAlign: "center" }}>{routeNames[index]}</Text>
+
+          <Button onPress={() => props.jumpTo(index === routes.length - 1 ? routes[index].key : routes[index + 1].key)}>
+            <MaterialIcons name="keyboard-arrow-right" size={24} color={colors.primary} />
+          </Button>
+        </TopBarContainer>
+      )}
+    </>
   );
 }
 
