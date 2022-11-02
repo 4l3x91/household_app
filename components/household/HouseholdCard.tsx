@@ -45,7 +45,6 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
             </Text>
             <TouchableOpacity
               onPress={() => {
-                console.log("Dela");
                 dispatch(setHousehold(household));
                 goToChores && goToChores();
                 optionsModal.current?.close();
