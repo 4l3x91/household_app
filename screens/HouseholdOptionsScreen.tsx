@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import Modal from "react-native-modal";
 import { Modalize } from "react-native-modalize";
-import { Button, Portal, Snackbar ,useTheme } from "react-native-paper";
+import { Button, Portal, Snackbar, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import CreateHousehold from "../components/household/CreateHousehold";
 import JoinHousehold from "../components/household/JoinHousehold";
@@ -73,7 +73,6 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
             mode={"outlined"}
             style={{ marginTop: 10, width: 300 }}
             onPress={() => {
-              console.log("Mina hushåll");
               openMyHouseholds();
             }}
           >
@@ -123,7 +122,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
           isVisible={joinModalVisible}
           statusBarTranslucent
         >
-          <JoinHousehold closeModal={() => setJoinModalVisible(false)} />
+          <JoinHousehold setSnackbarVisible={setSnackbarVisible} closeModal={() => setJoinModalVisible(false)} />
         </Modal>
       </Portal>
 
@@ -151,7 +150,6 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
       >
         En ansökan om att gå med i hushållet har skickats till ägaren! 🥳
       </Snackbar>
-
     </>
   );
 };
