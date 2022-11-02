@@ -80,7 +80,7 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
         </Modalize>
       </Portal>
       <Portal>
-        <Modal avoidKeyboard isVisible={modalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setModalVisible(false)} swipeDirection={"down"} avoidKeyboard isVisible={modalVisible} statusBarTranslucent>
           <DeleteProfile household={household} profile={profile} closeModal={closeModal} />
         </Modal>
       </Portal>

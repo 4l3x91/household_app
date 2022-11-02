@@ -69,13 +69,25 @@ const ProfileScreen = ({ navigation }: Props) => {
       </ScrollView>
 
       <Portal>
-        <Modal avoidKeyboard isVisible={joinModalVisible} statusBarTranslucent>
+        <Modal
+          onSwipeComplete={() => setJoinModalVisible(false)}
+          swipeDirection={"down"}
+          avoidKeyboard
+          isVisible={joinModalVisible}
+          statusBarTranslucent
+        >
           <JoinHousehold closeModal={closeJoinModal} />
         </Modal>
       </Portal>
 
       <Portal>
-        <Modal avoidKeyboard isVisible={createModalVisible} statusBarTranslucent>
+        <Modal
+          onSwipeComplete={() => setCreateModalVisible(false)}
+          swipeDirection={"down"}
+          avoidKeyboard
+          isVisible={createModalVisible}
+          statusBarTranslucent
+        >
           <CreateHousehold closeModal={closeCreateModal} />
         </Modal>
       </Portal>
