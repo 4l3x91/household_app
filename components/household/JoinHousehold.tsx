@@ -7,11 +7,9 @@ import { Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { db } from "../../config/firebase";
 import { useYup } from "../../hooks/useYup";
-import { selectHousehold } from "../../store/household/householdSelector";
-import { setError } from "../../store/household/householdSlice";
-import { getHouseholdByCode } from "../../store/household/householdThunks";
+import { HouseholdModel } from "../../store/household/householdModel";
 import { Profile } from "../../store/profile/profileModel";
-import { useAppDispatch, useAppSelector } from "../../store/store";
+import { useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
 import ErrorTranslator from "../common/ErrorTranslator";
 import CreateProfile from "../profile/CreateProfile";
@@ -22,18 +20,50 @@ interface Props {
 
 const JoinHousehold = ({ closeModal }: Props) => {
   const [text, setText] = useState<string>();
-  const dispatch = useAppDispatch();
-  const household = useAppSelector(selectHousehold);
   const user = useAppSelector(selectUser);
   const [profilesInHousehold, setProfilesInHousehold] = useState<Profile[]>([]);
   const pinCodeLength = 6;
+  const [householdToJoin, setHouseholdToJoin] = useState<HouseholdModel>();
   const { householdCodeSchema } = useYup();
   const { colors } = useTheme();
+  const [error, setError] = useState("");
+
+  const getHouseholdByCodeTest = async () => {
+    if (text && user) {
+      try {
+        const capitalizedCode = text.toUpperCase();
+        const profilesRef = collection(db, "profiles");
+        const householdRef = collection(db, "households");
+        const q = query(householdRef, where("code", "==", capitalizedCode));
+        const q2 = query(profilesRef, where("userId", "==", user.id));
+        const queryResult = await getDocs(q);
+
+        if (!queryResult.empty) {
+          const household = queryResult.docs[0].data() as HouseholdModel;
+
+          const queryResult2 = await getDocs(q2);
+          queryResult2.forEach((doc) => {
+            if (doc.get("householdId") === household.id) {
+              setError("Du har redan en profil i detta hushåll");
+            }
+          });
+          setHouseholdToJoin(household);
+        } else {
+          setError("Det här hushållet existerar inte");
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        }
+        setError("error");
+      }
+    }
+  };
 
   async function getUnavalibleAvatars() {
     const profilesRef = collection(db, "profiles");
 
-    const q = query(profilesRef, where("householdId", "==", household.household.id));
+    const q = query(profilesRef, where("householdId", "==", householdToJoin?.id));
 
     const result = await getDocs(q);
 
@@ -42,20 +72,19 @@ const JoinHousehold = ({ closeModal }: Props) => {
     }
   }
 
-  //resetting errormessage
   useEffect(() => {
     if (text?.length !== 6) {
-      dispatch(setError(""));
+      setError("");
     }
   }, [text]);
 
   useEffect(() => {
-    if (text?.toUpperCase() === household.household.code) {
+    if (text?.toUpperCase() === householdToJoin?.code) {
       setProfilesInHousehold([]);
 
       getUnavalibleAvatars();
     }
-  }, [household]);
+  }, [householdToJoin]);
 
   function InputBoxes() {
     const inputBoxes = [];
@@ -77,9 +106,9 @@ const JoinHousehold = ({ closeModal }: Props) => {
         initialValues={{
           householdCode: "",
         }}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           if (values.householdCode && user) {
-            dispatch(getHouseholdByCode({ code: values.householdCode, user: user }));
+            await getHouseholdByCodeTest();
           }
         }}
       >
@@ -88,7 +117,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
             <Content>
               <ModalContent elevation={0}>
                 <Container>
-                  {household.household.code !== values.householdCode || household.error ? (
+                  {householdToJoin?.code !== values.householdCode || error ? (
                     <>
                       <Text variant="headlineMedium">Ange hushållskod</Text>
                       <Text variant="bodySmall" style={{ textAlign: "left", margin: 4 }}>
@@ -113,7 +142,7 @@ const JoinHousehold = ({ closeModal }: Props) => {
                       </InputContainer>
                     </>
                   ) : (
-                    !household.error && (
+                    !error && (
                       <>
                         <Text variant="headlineMedium">Skapa din profil</Text>
                         <InfoBox style={{ borderColor: colors.primary }}>
@@ -121,16 +150,16 @@ const JoinHousehold = ({ closeModal }: Props) => {
                             <Text variant="bodySmall">Välkommen till </Text>
                             <Text variant="bodySmall" style={{ fontWeight: "bold" }}>
                               {" "}
-                              {household.household.name}
+                              {householdToJoin?.name}
                             </Text>
                           </View>
                           <Text variant="bodySmall">Fyll i ditt namn och välj en ledig avatar för att gå vidare.</Text>
                         </InfoBox>
-                        <CreateProfile profilesInHousehold={profilesInHousehold} closeModal={closeModal} />
+                        <CreateProfile profilesInHousehold={profilesInHousehold} householdId={householdToJoin.id} closeModal={closeModal} />
                       </>
                     )
                   )}
-                  <ErrorBox>{household.error && <ErrorTranslator error={household.error as string} />}</ErrorBox>
+                  <ErrorBox>{error && <ErrorTranslator error={error} />}</ErrorBox>
                 </Container>
               </ModalContent>
             </Content>

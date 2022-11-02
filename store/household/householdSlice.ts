@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HouseholdModel } from "./householdModel";
 import { initialState } from "./householdState";
-import { deleteHousehold, getHouseholdByCode, getHouseholdById, postHousehold, updateHouseholdName } from "./householdThunks";
+import { deleteHousehold, getHouseholdById, postHousehold, updateHouseholdName } from "./householdThunks";
 
 const householdSlice = createSlice({
   name: "household",
@@ -43,20 +43,6 @@ const householdSlice = createSlice({
     builder.addCase(updateHouseholdName.rejected, (state) => {
       state.pending = false;
       state.error = "didnt change mayne";
-    });
-
-    //GET HOUSEHOLD BY CODE
-    builder.addCase(getHouseholdByCode.pending, (state) => {
-      state.pending = true;
-      state.error = "";
-    });
-    builder.addCase(getHouseholdByCode.fulfilled, (state, action) => {
-      state.pending = false;
-      state.household = action.payload;
-    });
-    builder.addCase(getHouseholdByCode.rejected, (state, action) => {
-      state.pending = false;
-      state.error = action.payload || "unknown error";
     });
 
     //GET HOUSEHOLD BY ID
