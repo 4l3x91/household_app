@@ -92,25 +92,27 @@ const ChoreDetails = ({ chore }: Props) => {
             ))}
           </EnergyContent>
         </EnergyContainer>
-        <Divider bold style={{ marginHorizontal: 5 }} />
 
         {(chore.imgUrl || sound) && (
-          <AttachmentsContainer>
-            <Text variant="bodySmall">Bifogade filer</Text>
-            <AttachmentsContent>
-              {chore.imgUrl && <Image source={{ uri: chore.imgUrl }} style={{ width: 100, height: 100, borderRadius: 10, margin: 10 }} />}
-              {sound && (
-                <>
-                  <PlayButton
-                    onPress={() => sound.replayAsync()}
-                    style={{ backgroundColor: colors.primary, justifyContent: "center", alignItems: "center", padding: 10, borderRadius: 10 }}
-                  >
-                    <FontAwesome5 name="volume-up" size={50} color={colors.surface} />
-                  </PlayButton>
-                </>
-              )}
-            </AttachmentsContent>
-          </AttachmentsContainer>
+          <>
+            <Divider bold style={{ marginHorizontal: 5 }} />
+            <AttachmentsContainer>
+              <Text variant="bodySmall">Bifogade filer</Text>
+              <AttachmentsContent>
+                {chore.imgUrl && <Image source={{ uri: chore.imgUrl }} style={{ width: 100, height: 100, borderRadius: 10, margin: 10 }} />}
+                {sound && (
+                  <>
+                    <PlayButton
+                      onPress={() => sound.replayAsync()}
+                      style={{ backgroundColor: colors.primary, justifyContent: "center", alignItems: "center", padding: 10, borderRadius: 10 }}
+                    >
+                      <FontAwesome5 name="volume-up" size={50} color={colors.surface} />
+                    </PlayButton>
+                  </>
+                )}
+              </AttachmentsContent>
+            </AttachmentsContainer>
+          </>
         )}
       </DetailsContainer>
 
