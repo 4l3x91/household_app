@@ -19,19 +19,19 @@ interface Props {
 const EditModals = ({ chore, editModalVisible, deleteModalVisible, archiveModalVisible, assignModalVisible, closeModal }: Props) => {
   return (
     <>
-      <Modal isVisible={editModalVisible} statusBarTranslucent>
+      <Modal onSwipeComplete={closeModal} swipeDirection={"down"} isVisible={editModalVisible} statusBarTranslucent>
         <EditChore chore={chore} closeModal={closeModal} />
       </Modal>
 
-      <Modal isVisible={deleteModalVisible} statusBarTranslucent>
+      <Modal onSwipeComplete={closeModal} swipeDirection={"down"} isVisible={deleteModalVisible} statusBarTranslucent>
         <DeleteChore chore={chore} closeModal={closeModal} />
       </Modal>
 
-      <Modal isVisible={archiveModalVisible} statusBarTranslucent>
+      <Modal onSwipeComplete={closeModal} swipeDirection={"down"} isVisible={archiveModalVisible} statusBarTranslucent>
         <ArchiveChore chore={chore} closeModal={closeModal} />
       </Modal>
 
-      <Modal isVisible={assignModalVisible} statusBarTranslucent>
+      <Modal onSwipeComplete={closeModal} swipeDirection={"down"} isVisible={assignModalVisible} statusBarTranslucent>
         <AssignChore chore={chore} closeModal={closeModal} />
       </Modal>
     </>
