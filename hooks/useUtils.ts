@@ -61,7 +61,6 @@ export function useUtils() {
     }
   };
 
-
   const resetStore = () => {
     dispatch(resetProfileState());
     dispatch(resetHousehold());
@@ -75,6 +74,6 @@ export function useUtils() {
     addDays,
     pickImage,
     resetStore,
-    shareHousehold
+    shareHousehold,
   };
 }
