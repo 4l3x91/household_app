@@ -3,14 +3,17 @@ import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigatio
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
+import { useTheme } from "react-native-paper";
+import { useFirestoreListeners } from "../hooks/useFirestoreListeners";
 import {
   selectCompletedChoresLastMonth,
   selectCompletedChoresPreviousWeek,
   selectCompletedChoresSinceLastMonday,
   selectCompletedChoresThisYear,
 } from "../store/completedChore/completedChoreSelector";
-import { selectCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
-import { useAppSelector } from "../store/store";
+import { selectMemoizedCurrentProfile, selectMemoizedPendingProfiles } from "../store/profile/profileSelectors";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { selectUser } from "../store/user/userSelectors";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
 import { MenuStackParams } from "./MenuStackNavigator";
 import { RootStackParams } from "./RootStackNavigator";
@@ -32,13 +35,32 @@ export type HomeScreenNavigationProps = CompositeScreenProps<
 const BottomStack = createBottomTabNavigator<BottomTabStackParams>();
 
 const TabStackNavigator = () => {
-  const currentProfile = useAppSelector(selectCurrentProfile);
-  const nrOfPendingProfiles = useAppSelector(selectPendingProfiles).length;
+  const user = useAppSelector(selectUser);
+  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const nrOfPendingProfiles = useAppSelector(selectMemoizedPendingProfiles).length;
 
   const completedChoresSinceLastMonday = useAppSelector(selectCompletedChoresSinceLastMonday);
   const completedChoresPreviousWeek = useAppSelector(selectCompletedChoresPreviousWeek);
   const completedChoresLastMonth = useAppSelector(selectCompletedChoresLastMonth);
   const completedChoresThisYear = useAppSelector(selectCompletedChoresThisYear);
+
+  const { colors } = useTheme();
+  const dispatch = useAppDispatch();
+
+  useFirestoreListeners();
+
+  // useEffect(() => {
+  //   console.log("useEffect running");
+  //   const profilesCollection = collection(db, "profiles");
+  //   const q = query(profilesCollection, where("isApproved", "==", false), where("householdId", "==", currentProfile?.householdId));
+
+  //   onSnapshot(q, (snapshot) => {
+  //     if (user) {
+  //       dispatch(getAllProfiles(user));
+  //       console.log("in snapshot");
+  //     }
+  //   });
+  // }, []);
 
   const hasDate =
     completedChoresLastMonth.length > 0 ||
@@ -47,7 +69,13 @@ const TabStackNavigator = () => {
     completedChoresThisYear.length > 0;
 
   return (
-    <BottomStack.Navigator initialRouteName="Chores">
+    <BottomStack.Navigator
+      initialRouteName="Chores"
+      screenOptions={{
+        tabBarActiveBackgroundColor: colors.primaryContainer,
+        tabBarActiveTintColor: colors.primary,
+      }}
+    >
       <BottomStack.Screen
         name="Chores"
         component={ChoreStackNavigator}
