@@ -3,8 +3,9 @@ import React, { useRef, useState } from "react";
 import { Pressable, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
 import { Modalize } from "react-native-modalize";
-import { Portal, Surface, Text, useTheme } from "react-native-paper";
+import { Divider, Portal, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
+import { useUtils } from "../../hooks/useUtils";
 import { HouseholdModel } from "../../store/household/householdModel";
 import { setHousehold } from "../../store/household/householdSlice";
 import { Profile } from "../../store/profile/profileModel";
@@ -22,6 +23,7 @@ interface Props {
 const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) => {
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
+  const { shareHousehold } = useUtils();
   const optionsModal = useRef<Modalize>(null);
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -52,18 +54,26 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
               style={{ alignItems: "center", flexDirection: "row", paddingVertical: 15 }}
             >
               <View style={{ padding: 4, backgroundColor: colors.onPrimaryContainer, borderRadius: 10, marginRight: 10 }}>
-                <MaterialIcons name="home" size={34} color={colors.onPrimary} />
+                <MaterialIcons name="home" size={28} color={colors.onPrimary} />
               </View>
               <Text>Gå till hushåll</Text>
             </TouchableOpacity>
-            <View style={{ height: 1, backgroundColor: colors.onPrimaryContainer }} />
-            <TouchableOpacity onPress={() => console.log("Dela")} style={{ alignItems: "center", flexDirection: "row", paddingVertical: 15 }}>
-              <View style={{ padding: 4, backgroundColor: colors.onPrimaryContainer, borderRadius: 10, marginRight: 10 }}>
-                <MaterialIcons name="share" size={34} color={colors.onPrimary} />
-              </View>
-              <Text>Dela hushåll</Text>
-            </TouchableOpacity>
-            <View style={{ height: 1, backgroundColor: colors.onPrimaryContainer }} />
+            <Divider bold style={{ marginHorizontal: 5 }} />
+            {profile && (
+              <TouchableOpacity
+                onPress={() => {
+                  closeModal && closeModal();
+                  shareHousehold(household, profile);
+                }}
+                style={{ alignItems: "center", flexDirection: "row", paddingVertical: 15 }}
+              >
+                <View style={{ padding: 4, backgroundColor: colors.onPrimaryContainer, borderRadius: 10, marginRight: 10 }}>
+                  <MaterialIcons name="share" size={28} color={colors.onPrimary} />
+                </View>
+                <Text>Dela hushåll</Text>
+              </TouchableOpacity>
+            )}
+            <Divider bold style={{ marginHorizontal: 5 }} />
             <TouchableOpacity
               onPress={() => {
                 optionsModal.current?.close();
@@ -72,7 +82,7 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
               style={{ alignItems: "center", flexDirection: "row", paddingVertical: 15 }}
             >
               <View style={{ padding: 4, backgroundColor: colors.onPrimaryContainer, borderRadius: 10, marginRight: 10 }}>
-                <MaterialIcons name="delete" size={34} color={colors.onPrimary} />
+                <MaterialIcons name="delete" size={28} color={colors.onPrimary} />
               </View>
               <Text>Lämna hushåll</Text>
             </TouchableOpacity>
@@ -80,7 +90,7 @@ const HouseholdCard = ({ profile, household, goToChores, closeModal }: Props) =>
         </Modalize>
       </Portal>
       <Portal>
-        <Modal avoidKeyboard isVisible={modalVisible} statusBarTranslucent>
+        <Modal onSwipeComplete={() => setModalVisible(false)} swipeDirection={"down"} avoidKeyboard isVisible={modalVisible} statusBarTranslucent>
           <DeleteProfile household={household} profile={profile} closeModal={closeModal} />
         </Modal>
       </Portal>

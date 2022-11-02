@@ -11,9 +11,11 @@ import MyHouseholds from "../../components/household/MyHouseholds";
 import PendingProfiles from "../../components/profile/PendingProfiles";
 import ProfileComponent from "../../components/profile/ProfileComponent";
 import ProfileHeader from "../../components/profile/ProfileHeader";
+import { useUtils } from "../../hooks/useUtils";
 import { UserStackParams } from "../../navigation/UserStackNavigator";
-import { selectHouseholdId } from "../../store/household/householdSelector";
+import { selectHousehold, selectHouseholdId } from "../../store/household/householdSelector";
 import { getHouseholdById } from "../../store/household/householdThunks";
+import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { getAllProfiles } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { selectUser } from "../../store/user/userSelectors";
@@ -21,14 +23,17 @@ import { selectUser } from "../../store/user/userSelectors";
 type Props = NativeStackScreenProps<UserStackParams, "UserProfileScreen">;
 
 const ProfileScreen = ({ navigation }: Props) => {
-  const [refresh, setRefresh] = useState(false);
-  const householdId = useAppSelector(selectHouseholdId);
-  const user = useAppSelector(selectUser);
-  const dispatch = useAppDispatch();
-  const [joinModalVisible, setJoinModalVisible] = useState(false);
   const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [joinModalVisible, setJoinModalVisible] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const householdModalRef = useRef<Modalize>(null);
   const optionsModalRef = useRef<Modalize>(null);
+  const householdId = useAppSelector(selectHouseholdId);
+  const profile = useAppSelector(selectCurrentProfile);
+  const household = useAppSelector(selectHousehold);
+  const user = useAppSelector(selectUser);
+  const { shareHousehold } = useUtils();
+  const dispatch = useAppDispatch();
   const { colors } = useTheme();
 
   const openMyHouseholds = () => {
@@ -65,17 +70,30 @@ const ProfileScreen = ({ navigation }: Props) => {
         <Surface elevation={0} style={{ margin: 10, paddingHorizontal: 10, borderRadius: 10 }}>
           <HouseholdMembers />
           <PendingProfiles />
+          <Button onPress={() => profile && shareHousehold(household.household, profile)}>Dela hushållskod</Button>
         </Surface>
       </ScrollView>
 
       <Portal>
-        <Modal avoidKeyboard isVisible={joinModalVisible} statusBarTranslucent>
+        <Modal
+          onSwipeComplete={() => setJoinModalVisible(false)}
+          swipeDirection={"down"}
+          avoidKeyboard
+          isVisible={joinModalVisible}
+          statusBarTranslucent
+        >
           <JoinHousehold closeModal={closeJoinModal} />
         </Modal>
       </Portal>
 
       <Portal>
-        <Modal avoidKeyboard isVisible={createModalVisible} statusBarTranslucent>
+        <Modal
+          onSwipeComplete={() => setCreateModalVisible(false)}
+          swipeDirection={"down"}
+          avoidKeyboard
+          isVisible={createModalVisible}
+          statusBarTranslucent
+        >
           <CreateHousehold closeModal={closeCreateModal} />
         </Modal>
       </Portal>
