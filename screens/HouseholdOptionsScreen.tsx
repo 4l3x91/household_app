@@ -2,8 +2,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
+import Modal from "react-native-modal";
 import { Modalize } from "react-native-modalize";
-import { Button, Snackbar, useTheme } from "react-native-paper";
+import { Button, Portal, Snackbar ,useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import CreateHousehold from "../components/household/CreateHousehold";
 import JoinHousehold from "../components/household/JoinHousehold";
@@ -21,9 +22,10 @@ import { logout } from "../store/user/userSlice";
 type Props = NativeStackScreenProps<RootStackParams>;
 
 const HouseholdOptionsScreen = ({ navigation }: Props) => {
+  const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [joinModalVisible, setJoinModalVisible] = useState(false);
   const userProfiles = useAppSelector(selectMemoizedUserProfiles);
   const user = useAppSelector(selectUser);
-  const modalizeRef = useRef<Modalize>(null);
   const householdModalRef = useRef<Modalize>(null);
   const { resetStore } = useUtils();
   const [snackBarVisible, setSnackbarVisible] = useState(false);
@@ -31,14 +33,6 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const { error } = useAppSelector((state) => state.profile);
-
-  const openJoinHouseholdModalize = () => {
-    joinHouseholdRef.current?.open();
-  };
-
-  const openModalize = () => {
-    modalizeRef.current?.open();
-  };
 
   const openMyHouseholds = () => {
     householdModalRef.current?.open();
@@ -86,32 +80,64 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
             Mina hushåll
           </Button>
         )}
-        <Button dark mode={"outlined"} style={{ marginTop: 10, width: 300 }} onPress={openJoinHouseholdModalize}>
+        <Button
+          dark
+          mode={"outlined"}
+          style={{ marginTop: 10, width: 300 }}
+          onPress={() => {
+            setTimeout(() => {
+              setJoinModalVisible(true);
+            }, 200);
+          }}
+        >
           Gå med i hushåll
         </Button>
-        <Button dark mode={"outlined"} style={{ marginTop: 10, width: 300 }} onPress={openModalize}>
+        <Button
+          dark
+          mode={"outlined"}
+          style={{ marginTop: 10, width: 300 }}
+          onPress={() => {
+            setTimeout(() => {
+              setCreateModalVisible(true);
+            }, 200);
+          }}
+        >
           Skapa hushåll
         </Button>
       </Container>
       <Button mode={"contained"} style={{ width: 200, alignSelf: "center", marginBottom: 50 }} onPress={handleSignOut}>
         Logga ut
       </Button>
-      <Modalize ref={modalizeRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.background, padding: 10 }} adjustToContentHeight={true}>
-        <CreateHousehold closeModal={() => modalizeRef.current?.close()} />
-      </Modalize>
-      <Modalize ref={householdModalRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} modalTopOffset={50}>
-        <View style={{ padding: 10, justifyContent: "center" }}>
+
+      <Modalize ref={householdModalRef} rootStyle={{}} modalStyle={{ backgroundColor: theme.colors.surface, padding: 10 }} adjustToContentHeight>
+        <View style={{ padding: 10, justifyContent: "center", paddingBottom: 25 }}>
           <MyHouseholds goToChores={() => navigation.navigate("TabStack")} />
         </View>
       </Modalize>
-      <Modalize
-        ref={joinHouseholdRef}
-        rootStyle={{}}
-        modalStyle={{ backgroundColor: theme.colors.surface, paddingVertical: 100 }}
-        modalTopOffset={50}
-      >
-        <JoinHousehold setSnackbarVisible={setSnackbarVisible} closeModal={() => joinHouseholdRef.current?.close()} />
-      </Modalize>
+
+      <Portal>
+        <Modal
+          onSwipeComplete={() => setJoinModalVisible(false)}
+          swipeDirection={"down"}
+          avoidKeyboard
+          isVisible={joinModalVisible}
+          statusBarTranslucent
+        >
+          <JoinHousehold closeModal={() => setJoinModalVisible(false)} />
+        </Modal>
+      </Portal>
+
+      <Portal>
+        <Modal
+          onSwipeComplete={() => setCreateModalVisible(false)}
+          swipeDirection={"down"}
+          avoidKeyboard
+          isVisible={createModalVisible}
+          statusBarTranslucent
+        >
+          <CreateHousehold closeModal={() => setCreateModalVisible(false)} />
+        </Modal>
+      </Portal>
       <Snackbar
         visible={snackBarVisible}
         onDismiss={() => setSnackbarVisible(false)}
@@ -125,6 +151,7 @@ const HouseholdOptionsScreen = ({ navigation }: Props) => {
       >
         En ansökan om att gå med i hushållet har skickats till ägaren! 🥳
       </Snackbar>
+
     </>
   );
 };
