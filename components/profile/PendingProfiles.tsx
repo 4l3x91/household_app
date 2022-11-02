@@ -1,33 +1,18 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { collection, onSnapshot, query, where } from "@firebase/firestore";
-import React, { useEffect } from "react";
+import React from "react";
 import { View } from "react-native";
 import { Divider, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
-import { db } from "../../config/firebase";
-import { selectCurrentProfile, selectPendingProfiles } from "../../store/profile/profileSelectors";
-import { deleteProfile, getAllProfiles, updateProfile } from "../../store/profile/profileThunks";
+import { selectMemoizedCurrentProfile, selectMemoizedPendingProfiles } from "../../store/profile/profileSelectors";
+import { deleteProfile, updateProfile } from "../../store/profile/profileThunks";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { selectUser } from "../../store/user/userSelectors";
 import AvatarCard from "../household/AvatarCard";
 
 const PendingProfiles = () => {
-  const currentProfile = useAppSelector(selectCurrentProfile);
-  const pendingProfiles = useAppSelector(selectPendingProfiles);
-  const user = useAppSelector(selectUser);
+  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const pendingProfiles = useAppSelector(selectMemoizedPendingProfiles);
   const { colors } = useTheme();
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const profilesCollection = collection(db, "profiles");
-    const q = query(profilesCollection, where("isApproved", "==", false), where("householdId", "==", currentProfile?.householdId));
-
-    onSnapshot(q, (snapshot) => {
-      if (user) {
-        dispatch(getAllProfiles(user));
-      }
-    });
-  }, []);
 
   return (
     <View>
@@ -49,7 +34,6 @@ const PendingProfiles = () => {
                       <IconButton onPress={() => dispatch(updateProfile({ ...profile, isApproved: true }))}>
                         <MaterialIcons name="check-circle-outline" size={24} color={colors.onSecondaryContainer} />
                       </IconButton>
-
                       <IconButton onPress={() => dispatch(deleteProfile(profile))}>
                         <MaterialIcons name="cancel" size={24} color={colors.onErrorContainer} />
                       </IconButton>
