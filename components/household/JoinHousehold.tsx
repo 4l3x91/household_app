@@ -61,14 +61,16 @@ const JoinHousehold = ({ closeModal }: Props) => {
   };
 
   async function getUnavalibleAvatars() {
-    const profilesRef = collection(db, "profiles");
+    if (householdToJoin) {
+      const profilesRef = collection(db, "profiles");
 
-    const q = query(profilesRef, where("householdId", "==", householdToJoin?.id));
+      const q = query(profilesRef, where("householdId", "==", householdToJoin.id));
 
-    const result = await getDocs(q);
+      const result = await getDocs(q);
 
-    if (!result.empty) {
-      result.forEach((doc) => setProfilesInHousehold((prev) => [...prev, doc.data() as Profile]));
+      if (!result.empty) {
+        result.forEach((doc) => setProfilesInHousehold((prev) => [...prev, doc.data() as Profile]));
+      }
     }
   }
 

@@ -39,6 +39,7 @@ const AssignChore = ({ closeModal, chore }: Props) => {
         <Text variant="headlineMedium">Tilldela syssla</Text>
         {householdMembers.map((member) => (
           <ProfilesContainer
+            key={member.id}
             onTouchEnd={() => (selectedProfileId === member.id ? setSelectedProfileId("") : setSelectedProfileId(member.id))}
             selected={member.id === selectedProfileId}
           >
