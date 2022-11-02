@@ -23,7 +23,6 @@ export const useFirestoreListeners = () => {
 
       const unsub = onSnapshot(q, () => {
         if (user) {
-          console.log("changes in profiles");
           dispatch(getAllProfiles(user));
         }
       });
@@ -38,7 +37,6 @@ export const useFirestoreListeners = () => {
       const q = query(choresCollection, where("householdId", "==", household.household.id));
 
       const unsubscribe = onSnapshot(q, () => {
-        console.log("changes in chores");
         dispatch(getChores(household.household.id));
       });
 
@@ -54,7 +52,6 @@ export const useFirestoreListeners = () => {
       const q = query(completedChoresCollection, where("profileId", "in", membersIds));
 
       const unsubscribe = onSnapshot(q, () => {
-        console.log("changes in completed chores");
         dispatch(getCompletedChoresPerHousehold(members));
       });
 
