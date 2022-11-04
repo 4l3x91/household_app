@@ -43,26 +43,21 @@ const profileSlice = createSlice({
     //DELETE PROFILE
     builder.addCase(deleteProfile.pending, (state) => {
       state.pending = true;
-      console.log("pending");
     });
     builder.addCase(deleteProfile.fulfilled, (state, action) => {
       state.pending = false;
-      console.log("fullfilled");
       state.profiles = state.profiles.filter((profile) => profile.id !== action.payload.id);
     });
     builder.addCase(deleteProfile.rejected, (state, action) => {
       state.pending = false;
-      console.log("rejected");
       state.error = action.payload || "Unknown error";
     });
     // UPDATE PROFILE
     builder.addCase(updateProfile.pending, (state) => {
       state.pending = true;
-      console.log("pending");
     });
     builder.addCase(updateProfile.fulfilled, (state, action) => {
       state.pending = false;
-      console.log("fullfilled");
       state.profiles.splice(
         state.profiles.findIndex((profile) => profile.id === action.payload.id),
         1,
@@ -71,7 +66,6 @@ const profileSlice = createSlice({
     });
     builder.addCase(updateProfile.rejected, (state, action) => {
       state.pending = false;
-      console.log("rejected");
       state.error = action.payload || "Unknown error";
     });
   },

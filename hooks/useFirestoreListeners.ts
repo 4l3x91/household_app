@@ -28,6 +28,8 @@ export const useFirestoreListeners = () => {
     }
   }, [household]);
 
+  // ----- This works but are commented out because of the daily 50k reads on firebase limit ------
+
   // useEffect(() => {
   //   if (household) {
   //     const choresCollection = collection(db, "chores");
