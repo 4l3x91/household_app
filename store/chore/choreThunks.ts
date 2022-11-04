@@ -63,7 +63,7 @@ export const updateChore = createAsyncThunk<Chore, Chore, { rejectValue: string 
   }
 });
 
-export const deleteChore = createAsyncThunk<Chore, Chore, { rejectValue: string }>("profile/deleteProfile", async (chore, thunkAPI) => {
+export const deleteChore = createAsyncThunk<Chore, Chore, { rejectValue: string }>("chore/deleteChore", async (chore, thunkAPI) => {
   try {
     const choreRef = collection(db, "chores");
     const completedChoreRef = collection(db, "completedChores");
