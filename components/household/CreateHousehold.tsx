@@ -90,7 +90,7 @@ const CreateHousehold = ({ closeModal }: Props) => {
                       activeOutlineColor={colors.primary}
                     />
                   </InputContainer>
-                  {errors.householdName && <Text>{errors.householdName}</Text>}
+                  {errors.householdName && <Text style={{ color: colors.error }}>{errors.householdName}</Text>}
 
                   <HouseholdCode householdCode={householdCode} setHouseholdCode={setHouseholdCode} />
                   <InputContainer>
@@ -102,7 +102,7 @@ const CreateHousehold = ({ closeModal }: Props) => {
                       activeOutlineColor={colors.primary}
                     />
                   </InputContainer>
-                  {errors.profileName && <Text>{errors.profileName}</Text>}
+                  {errors.profileName && <Text style={{ color: colors.error }}>{errors.profileName}</Text>}
                   <AvatarPicker setAvatar={setAvatar} selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
 
                   <Button disabled={!inputsOk} mode="contained-tonal" style={{ borderRadius: 10 }} onPress={() => handleSubmit()} loading={pending}>

@@ -47,7 +47,7 @@ const EditProfile = ({ closeModal }: Props) => {
                     Redigera profil
                   </Text>
                   <Input label="Namn" value={values.profileName as string} handleChange={handleChange("profileName")} />
-                  {errors.profileName && <Text>{errors.profileName}</Text>}
+                  {errors.profileName && <Text style={{ color: colors.error }}>{errors.profileName}</Text>}
                   <AvatarPicker
                     setAvatar={setAvatar}
                     selectedAvatar={selectedAvatar}

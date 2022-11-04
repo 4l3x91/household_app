@@ -48,7 +48,7 @@ const ChangeHouseholdName = ({ setShowTooltip, showTooltip }: Props) => {
               <InputContainer>
                 <View>
                   <Input label="Title" value={values.householdName} handleChange={handleChange("householdName")} width={200} />
-                  {errors.householdName && <Text>{errors.householdName}</Text>}
+                  {errors.householdName && <Text style={{ color: colors.error }}>{errors.householdName}</Text>}
                 </View>
                 <SubmitButton
                   onPress={() => {

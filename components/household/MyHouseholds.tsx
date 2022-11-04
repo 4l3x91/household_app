@@ -17,7 +17,6 @@ const MyHouseholds = ({ goToChores, closeModal }: Props) => {
 
   useEffect(() => {
     getHouseholds();
-    console.log(households.length);
   }, []);
 
   const getHouseholds = () => {

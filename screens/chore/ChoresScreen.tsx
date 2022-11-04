@@ -54,28 +54,31 @@ const ChoresScreen = () => {
       >
         <HouseholdName householdName={household.name} role={profile?.role} />
         <ChoreList editMode={editMode} />
+
+        {profile && profile?.role === "owner" && (
+          <>
+            <ChoreList editMode={editMode} archived />
+            <ChoreList editMode={editMode} asignedChores />
+          </>
+        )}
+
+        <Portal>
+          <Modalize ref={modalizeRef} modalStyle={{ backgroundColor: theme.colors.surface }} adjustToContentHeight={true}>
+            <CreateChore closeModal={() => modalizeRef.current?.close()} />
+          </Modalize>
+        </Portal>
       </ScrollView>
-
       {profile && profile?.role === "owner" && (
-        <>
-          <ChoreList editMode={editMode} archived />
-          <BottomButtons
-            leftIcon="plus-circle-outline"
-            leftTitle="Lägg till"
-            leftOnPress={openModalize}
-            rightIcon="plus-circle-outline"
-            rightTitle="Ändra"
-            rightOnPress={() => setEditMode((prev) => !prev)}
-            topDivider
-          />
-        </>
+        <BottomButtons
+          leftIcon="plus-circle-outline"
+          leftTitle="Lägg till"
+          leftOnPress={openModalize}
+          rightIcon="plus-circle-outline"
+          rightTitle="Ändra"
+          rightOnPress={() => setEditMode((prev) => !prev)}
+          topDivider
+        />
       )}
-
-      <Portal>
-        <Modalize ref={modalizeRef} modalStyle={{ backgroundColor: theme.colors.surface }} adjustToContentHeight={true}>
-          <CreateChore closeModal={() => modalizeRef.current?.close()} />
-        </Modalize>
-      </Portal>
     </ChoreScreenContainer>
   );
 };

@@ -4,8 +4,7 @@ import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/n
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import { useTheme } from "react-native-paper";
-import { selectHouseholdName } from "../store/household/householdSelector";
-import { selectCurrentProfile, selectPendingProfiles } from "../store/profile/profileSelectors";
+import { selectMemoizedCurrentProfile, selectMemoizedPendingProfiles } from "../store/profile/profileSelectors";
 import { useAppSelector } from "../store/store";
 import ChoreStackNavigator, { ChoreStackParams } from "./ChoreStackNavigator";
 import { MenuStackParams } from "./MenuStackNavigator";
@@ -28,13 +27,18 @@ export type HomeScreenNavigationProps = CompositeScreenProps<
 const BottomStack = createBottomTabNavigator<BottomTabStackParams>();
 
 const TabStackNavigator = () => {
-  const household = useAppSelector(selectHouseholdName);
-  const currentProfile = useAppSelector(selectCurrentProfile);
-  const nrOfPendingProfiles = useAppSelector(selectPendingProfiles).length;
+  const currentProfile = useAppSelector(selectMemoizedCurrentProfile);
+  const nrOfPendingProfiles = useAppSelector(selectMemoizedPendingProfiles).length;
   const { colors } = useTheme();
 
   return (
-    <BottomStack.Navigator initialRouteName="Chores">
+    <BottomStack.Navigator
+      initialRouteName="Chores"
+      screenOptions={{
+        tabBarActiveBackgroundColor: colors.primaryContainer,
+        tabBarActiveTintColor: colors.primary,
+      }}
+    >
       <BottomStack.Screen
         name="Chores"
         component={ChoreStackNavigator}
@@ -44,11 +48,13 @@ const TabStackNavigator = () => {
           tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="broom" size={size} color={color} />,
         }}
       />
+
       <BottomStack.Screen
         name="Stats"
         component={StatsStackNavigator}
         options={{ tabBarIcon: ({ color, size }) => <FontAwesome name="pie-chart" size={size} color={color} />, headerShown: false }}
       />
+
       <BottomStack.Screen
         name="UserProfile"
         component={UserStackNavigator}

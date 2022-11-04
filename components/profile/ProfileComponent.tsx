@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View } from "react-native";
+import Modal from "react-native-modal";
 import { Button, Surface, Text } from "react-native-paper";
 import { selectHouseholdName } from "../../store/household/householdSelector";
 import { Profile } from "../../store/profile/profileModel";
 import { selectCurrentProfile } from "../../store/profile/profileSelectors";
 import { useAppSelector } from "../../store/store";
 import AvatarCard from "../household/AvatarCard";
-import Modal from "react-native-modal";
 import EditProfile from "./EditProfile";
 
 const ProfileComponent = () => {
@@ -39,8 +39,8 @@ const ProfileComponent = () => {
 
       <Modal
         onSwipeComplete={() => setModalVisible(false)}
-        avoidKeyboard
         swipeDirection={"down"}
+        avoidKeyboard
         isVisible={modalVisible}
         statusBarTranslucent
         onBackButtonPress={() => setModalVisible(false)}

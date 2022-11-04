@@ -16,11 +16,13 @@ interface Props {
   closeModal: () => void;
   profilesInHousehold?: Profile[];
   householdId: string;
+  setSnackbarVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateProfile = ({ closeModal, profilesInHousehold, householdId }: Props) => {
+const CreateProfile = ({ closeModal, profilesInHousehold, householdId, setSnackbarVisible }: Props) => {
   const [avatar, setAvatar] = useState<Avatar>({} as Avatar);
   const [selectedAvatar, setSelectedAvatar] = useState(-1);
+
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
@@ -63,7 +65,7 @@ const CreateProfile = ({ closeModal, profilesInHousehold, householdId }: Props) 
                   handleChange={handleChange("profileName")}
                   activeOutlineColor={colors.primary}
                 />
-                {errors.profileName && <Text>{errors.profileName}</Text>}
+                {errors.profileName && <Text style={{ color: colors.error }}>{errors.profileName}</Text>}
               </View>
               <AvatarPicker
                 setAvatar={setAvatar}
@@ -77,6 +79,7 @@ const CreateProfile = ({ closeModal, profilesInHousehold, householdId }: Props) 
                 mode="contained"
                 onPress={() => {
                   handleSubmit();
+                  setSnackbarVisible(true);
                   closeModal();
                 }}
                 loading={pending}
