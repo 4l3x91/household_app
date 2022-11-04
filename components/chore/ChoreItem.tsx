@@ -82,19 +82,20 @@ const ChoreItem = ({
         </Text>
       </View>
       <InnerContainer>
-        {completedForThisChore[0]?.date.toLocaleDateString() === today.toLocaleDateString() ? (
-          <DisplayCompletedAvatars choreId={chore.id} />
-        ) : timeLeft < 0 ? (
-          <Badge size={30} style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>
-            {-timeLeft}
-          </Badge>
-        ) : (
-          timeLeft >= 0 && (
-            <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
-              {timeLeft}
+        {!editMode &&
+          (completedForThisChore[0]?.date.toLocaleDateString() === today.toLocaleDateString() ? (
+            <DisplayCompletedAvatars choreId={chore.id} />
+          ) : timeLeft < 0 ? (
+            <Badge size={30} style={{ backgroundColor: theme.colors.error, alignSelf: "center" }}>
+              {-timeLeft}
             </Badge>
-          )
-        )}
+          ) : (
+            timeLeft >= 0 && (
+              <Badge size={30} style={{ backgroundColor: theme.colors.background, color: theme.colors.primary, alignSelf: "center" }}>
+                {timeLeft}
+              </Badge>
+            )
+          ))}
         {editMode && profile?.role === "owner" && (
           <OwnerButtons>
             <OwnerButton onPress={handleEditPress}>
