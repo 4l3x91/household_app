@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Text, TextInput } from "react-native-paper";
+import { Text, TextInput, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { useYup } from "../../hooks/useYup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -18,6 +18,7 @@ const CreateUser = ({ close }: Props) => {
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.userState);
   const { userSchema } = useYup();
+  const { colors } = useTheme();
 
   return (
     <Container>
@@ -38,7 +39,7 @@ const CreateUser = ({ close }: Props) => {
             <>
               <InputContainer>
                 <Input label="Email" value={values.email} handleChange={handleChange("email")} />
-                {errors.email && <Text>{errors.email}</Text>}
+                {errors.email && <Text style={{ color: colors.error }}>{errors.email}</Text>}
                 <Input
                   label="Lösenord"
                   secureTextEntry={secureTextEntry}
@@ -56,14 +57,14 @@ const CreateUser = ({ close }: Props) => {
                     />
                   }
                 />
-                {errors.password && <Text>{errors.password}</Text>}
+                {errors.password && <Text style={{ color: colors.error }}>{errors.password}</Text>}
                 <Input
                   label="Bekräfta lösenord"
                   secureTextEntry={secureTextEntry}
                   value={values.passwordConfirmation}
                   handleChange={handleChange("passwordConfirmation")}
                 />
-                {errors.passwordConfirmation && <Text>{errors.passwordConfirmation}</Text>}
+                {errors.passwordConfirmation && <Text style={{ color: colors.error }}>{errors.passwordConfirmation}</Text>}
                 {userState.error && <ErrorTranslator error={userState.error} />}
               </InputContainer>
               <BottomButtons

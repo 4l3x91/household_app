@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import React, { useState } from "react";
 import { View } from "react-native";
 import Modal from "react-native-modal";
-import { Button, Divider, Surface, Text } from "react-native-paper";
+import { Button, Divider, Surface, Text, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { useStorage } from "../../hooks/useStorage";
 import { useUtils } from "../../hooks/useUtils";
@@ -36,6 +36,7 @@ const CreateChore = ({ closeModal }: Props) => {
   const choreId = uuidv4();
   const { choreSchema } = useYup();
   const { pickImage } = useUtils();
+  const { colors } = useTheme();
   const { uploadAttatchments } = useStorage();
 
   const setDeviceImage = async () => {
@@ -77,12 +78,12 @@ const CreateChore = ({ closeModal }: Props) => {
               <ContentContainer elevation={0}>
                 <Container>
                   <Input label="Titel" value={values.name} handleChange={handleChange("name")} max={21} />
-                  {errors.name && <Text>{errors.name}</Text>}
+                  {errors.name && <Text style={{ color: colors.error }}>{errors.name}</Text>}
                 </Container>
 
                 <Container>
                   <Input label="Beskrivning" multiline value={values.description} numberOfLines={4} handleChange={handleChange("description")} />
-                  {errors.description && <Text>{errors.description}</Text>}
+                  {errors.description && <Text style={{ color: colors.error }}>{errors.description}</Text>}
                 </Container>
 
                 <Container>
