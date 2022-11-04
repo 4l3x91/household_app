@@ -16,6 +16,7 @@ interface Props {
   activeOutlineColor?: string | undefined;
   outlineColor?: string | undefined;
   numberOfLines?: number;
+  max?: number;
 }
 
 const Input = ({
@@ -32,6 +33,7 @@ const Input = ({
   outlineColor,
   right,
   width,
+  max,
 }: Props) => {
   return (
     <TextInput
@@ -46,6 +48,7 @@ const Input = ({
       secureTextEntry={secureTextEntry}
       style={{ marginHorizontal: marginHorizontal, marginVertical: marginVertical, height: height, width: width }}
       right={right}
+      maxLength={max}
     />
   );
 };
