@@ -65,7 +65,7 @@ const CreateProfile = ({ closeModal, profilesInHousehold, householdId, setSnackb
                   handleChange={handleChange("profileName")}
                   activeOutlineColor={colors.primary}
                 />
-                {errors.profileName && <Text>{errors.profileName}</Text>}
+                {errors.profileName && <Text style={{ color: colors.error }}>{errors.profileName}</Text>}
               </View>
               <AvatarPicker
                 setAvatar={setAvatar}

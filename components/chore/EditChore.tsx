@@ -65,12 +65,12 @@ const EditChore = ({ closeModal, chore }: Props) => {
                 <View style={{ width: "100%" }}>
                   <ComponentContainer>
                     <Input label="Titel" value={values.name} handleChange={handleChange("name")} />
-                    {errors.name && <Text>{errors.name}</Text>}
+                    {errors.name && <Text style={{ color: colors.error }}>{errors.name}</Text>}
                   </ComponentContainer>
 
                   <ComponentContainer>
                     <Input label="Beskrivning" multiline value={values.description} numberOfLines={4} handleChange={handleChange("description")} />
-                    {errors.description && <Text>{errors.description}</Text>}
+                    {errors.description && <Text style={{ color: colors.error }}>{errors.description}</Text>}
                   </ComponentContainer>
 
                   <ComponentContainer>
