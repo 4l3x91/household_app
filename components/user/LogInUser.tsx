@@ -1,7 +1,7 @@
 import {} from "firebase/auth";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Text, TextInput } from "react-native-paper";
+import { Text, TextInput, useTheme } from "react-native-paper";
 import styled from "styled-components/native";
 import { useYup } from "../../hooks/useYup";
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -23,6 +23,8 @@ const LoginUser = ({ close, register }: Props) => {
   const userPending = useAppSelector((state) => state.userState).pending;
   const profilePending = useAppSelector((state) => state.profile).pending;
   const householdPending = useAppSelector((state) => state.household).pending;
+
+  const { colors } = useTheme();
 
   const pending = userPending || profilePending || householdPending;
 
@@ -46,7 +48,7 @@ const LoginUser = ({ close, register }: Props) => {
               <>
                 <InputContainer>
                   <Input label="Email" value={values.email} handleChange={handleChange("email")} />
-                  {errors.email && <Text>{errors.email}</Text>}
+                  {errors.email && <Text style={{ color: colors.error }}>{errors.email}</Text>}
                   <Input
                     label="Lösenord"
                     value={values.password}
@@ -65,7 +67,7 @@ const LoginUser = ({ close, register }: Props) => {
                     }
                   />
 
-                  {errors.password && <Text>{errors.password}</Text>}
+                  {errors.password && <Text style={{ color: colors.error }}>{errors.password}</Text>}
                   {error && <ErrorTranslator error={error} register={register} />}
                 </InputContainer>
                 <BottomButtons
