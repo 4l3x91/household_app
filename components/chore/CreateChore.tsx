@@ -77,7 +77,7 @@ const CreateChore = ({ closeModal }: Props) => {
               <Divider style={{ height: 1, width: "100%" }} />
               <ContentContainer elevation={0}>
                 <Container>
-                  <Input label="Titel" value={values.name} handleChange={handleChange("name")} />
+                  <Input label="Titel" value={values.name} handleChange={handleChange("name")} max={21} />
                   {errors.name && <Text style={{ color: colors.error }}>{errors.name}</Text>}
                 </Container>
 
